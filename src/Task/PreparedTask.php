@@ -69,12 +69,12 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function on(string $queue): self
+    public function on(QueueInterface $queue): self
     {
-        assert($queue !== '', 'Precondition [queue !== ""] failed');
-
         $self = clone $this;
-        $self->queue = $queue;
+
+        $self->context = $queue;
+        $self->queue = $queue->getName();
 
         return $self;
     }

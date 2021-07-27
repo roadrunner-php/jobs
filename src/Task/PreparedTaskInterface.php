@@ -13,6 +13,7 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
+use Spiral\RoadRunner\Jobs\QueueInterface;
 
 interface PreparedTaskInterface extends TaskInterface, OptionsInterface
 {
@@ -25,10 +26,10 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      *
      * See {@see getQueue()} to retrieve information about the current value.
      *
-     * @param non-empty-string $queue
+     * @param QueueInterface $queue
      * @return static
      */
-    public function on(string $queue): self;
+    public function on(QueueInterface $queue): self;
 
     /**
      * Adds additional data to the task.
