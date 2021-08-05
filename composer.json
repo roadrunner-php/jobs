@@ -48,11 +48,9 @@
     "scripts": {
         "build": "protoc --proto_path=resources/proto/v1 --php_out=generated resources/proto/v1/jobs.proto",
         "tests": "phpunit",
-        "cs-fix": "spiral-cs fix src tests",
-        "analyze": [
-            "psalm --no-cache",
-            "spiral-cs check src tests"
-        ]
+        "cs-fix": "spiral-cs fix src",
+        "cs-check": "spiral-cs check src",
+        "psalm": "psalm --no-cache"
     },
     "extra": {
         "branch-alias": {

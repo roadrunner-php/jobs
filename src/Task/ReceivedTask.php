@@ -52,6 +52,23 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     }
 
     /**
+     * @return void
+     */
+    public function __destruct()
+    {
+        // This is a little sugar so that the status of the
+        // current task is not lost.
+        //
+        // Everything will be fine even if the task has already been marked
+        // as "completed": The current method will simply not be executed.
+        try {
+            $this->complete();
+        } catch (JobsException $e) {
+            // Suppress shutdown exception
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function complete(): void
@@ -81,22 +98,5 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     public function isCompleted(): bool
     {
         return $this->completed;
-    }
-
-    /**
-     * @return void
-     */
-    public function __destruct()
-    {
-        // This is a little sugar so that the status of the
-        // current task is not lost.
-        //
-        // Everything will be fine even if the task has already been marked
-        // as "completed": The current method will simply not be executed.
-        try {
-            $this->complete();
-        } catch (JobsException $e) {
-            // Suppress shutdown exception
-        }
     }
 }

@@ -67,13 +67,11 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     }
 
     /**
-     * @return RPCInterface
+     * @return void
      */
-    private function createRPCConnection(): RPCInterface
+    public function __clone()
     {
-        $env = Environment::fromGlobals();
-
-        return RPC::create($env->getRPCAddress());
+        $this->options = clone $this->options;
     }
 
     /**
@@ -200,10 +198,12 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     }
 
     /**
-     * @return void
+     * @return RPCInterface
      */
-    public function __clone()
+    private function createRPCConnection(): RPCInterface
     {
-        $this->options = clone $this->options;
+        $env = Environment::fromGlobals();
+
+        return RPC::create($env->getRPCAddress());
     }
 }

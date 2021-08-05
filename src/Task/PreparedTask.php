@@ -40,6 +40,14 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     }
 
     /**
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->options = clone $this->options;
+    }
+
+    /**
      * @return OptionsInterface
      */
     public function getOptions(): OptionsInterface
@@ -61,21 +69,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         $self->payload[$name] = $value;
 
         return $self;
-    }
-
-    /**
-     * @return int
-     */
-    private function getPayloadNextIndex(): int
-    {
-        /** @var array<int> $indices */
-        $indices = \array_filter(\array_keys($this->getPayload()), '\\is_int');
-
-        if ($indices === []) {
-            return 0;
-        }
-
-        return \max($indices) + 1;
     }
 
     /**
@@ -281,10 +274,17 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     }
 
     /**
-     * @return void
+     * @return int
      */
-    public function __clone()
+    private function getPayloadNextIndex(): int
     {
-        $this->options = clone $this->options;
+        /** @var array<int> $indices */
+        $indices = \array_filter(\array_keys($this->getPayload()), '\\is_int');
+
+        if ($indices === []) {
+            return 0;
+        }
+
+        return \max($indices) + 1;
     }
 }

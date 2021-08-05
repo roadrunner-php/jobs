@@ -65,16 +65,6 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     }
 
     /**
-     * @return RPCInterface
-     */
-    private function createRPCConnection(): RPCInterface
-    {
-        $env = Environment::fromGlobals();
-
-        return RPC::create($env->getRPCAddress());
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getSerializer(): SerializerInterface
@@ -115,7 +105,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 ->withCodec(new JsonCodec())
                 ->call('informer.List', true);
 
-            if (! \is_array($result)) {
+            if (!\is_array($result)) {
                 return false;
             }
 
@@ -123,29 +113,6 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
         } catch (\Throwable $e) {
             return false;
         }
-    }
-
-    /**
-     * @param QueueInterface|non-empty-string ...$queues
-     * @return array<non-empty-string>
-     */
-    private function names(...$queues): array
-    {
-        $names = [];
-
-        foreach ($queues as $queue) {
-            assert($queue instanceof QueueInterface || \is_string($queue),
-                'Queue should be an instance of ' . QueueInterface::class .
-                ' or type of string, but ' . \get_debug_type($queue) . ' passed');
-
-            if ($queue instanceof QueueInterface) {
-                $queue = $queue->getName();
-            }
-
-            $names[] = $queue;
-        }
-
-        return $names;
     }
 
     /**
@@ -202,5 +169,40 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     public function count(): int
     {
         return \iterator_count($this->getIterator());
+    }
+
+    /**
+     * @return RPCInterface
+     */
+    private function createRPCConnection(): RPCInterface
+    {
+        $env = Environment::fromGlobals();
+
+        return RPC::create($env->getRPCAddress());
+    }
+
+    /**
+     * @param QueueInterface|non-empty-string ...$queues
+     * @return array<non-empty-string>
+     */
+    private function names(...$queues): array
+    {
+        $names = [];
+
+        foreach ($queues as $queue) {
+            assert(
+                $queue instanceof QueueInterface || \is_string($queue),
+                'Queue should be an instance of ' . QueueInterface::class .
+                ' or type of string, but ' . \get_debug_type($queue) . ' passed'
+            );
+
+            if ($queue instanceof QueueInterface) {
+                $queue = $queue->getName();
+            }
+
+            $names[] = $queue;
+        }
+
+        return $names;
     }
 }
