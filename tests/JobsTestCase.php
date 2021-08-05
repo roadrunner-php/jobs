@@ -73,7 +73,7 @@ class JobsTestCase extends TestCase
     /**
      * @testdox Checking the interaction with the RPC by the method of obtaining a list of queues.
      */
-    public function testQueueList(): void
+    public function testQueueListValues(): void
     {
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
@@ -84,7 +84,7 @@ class JobsTestCase extends TestCase
         // Execute "$jobs->getIterator()"
         $this->assertSame($expected, \array_map(
             static fn(QueueInterface $queue) => $queue->getName(),
-            \iterator_to_array($jobs)
+            \array_values(\iterator_to_array($jobs))
         ));
     }
 
