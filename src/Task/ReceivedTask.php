@@ -68,6 +68,14 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     }
 
     /**
+     * @return void
+     */
+    public function fail(): void
+    {
+        $this->worker->error('jobs.fail:' . $this->id);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function isCompleted(): bool

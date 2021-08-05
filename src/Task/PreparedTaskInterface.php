@@ -11,26 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
 
-use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
-use Spiral\RoadRunner\Jobs\QueueInterface;
 
 interface PreparedTaskInterface extends TaskInterface, OptionsInterface
 {
-    /**
-     * Switches the queue for the selected task.
-     *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return an instance that has the
-     * new and/or updated queue name.
-     *
-     * See {@see getQueue()} to retrieve information about the current value.
-     *
-     * @param QueueInterface $queue
-     * @return static
-     */
-    public function on(QueueInterface $queue): self;
-
     /**
      * Adds additional data to the task.
      *
@@ -44,7 +28,7 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param array-key|null $name Optional payload data's name (key)
      * @return static
      */
-    public function with($value, $name = null): self;
+    public function withValue($value, $name = null): self;
 
     /**
      * Excludes payload data from task by given key (name).
@@ -58,7 +42,7 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param array-key $name
      * @return static
      */
-    public function except($name): self;
+    public function withoutValue($name): self;
 
     /**
      * Return an instance with the provided value replacing the specified header.
@@ -123,7 +107,7 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param positive-int|0 $seconds
      * @return static
      */
-    public function await(int $seconds): self;
+    public function withDelay(int $seconds): self;
 
     /**
      * Change the priority of a task before adding it to the queue.
@@ -137,7 +121,7 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param positive-int|0 $priority
      * @return static
      */
-    public function prioritize(int $priority): self;
+    public function withPriority(int $priority): self;
 
     /**
      * Indicates the number of execution tries (attempts) for the task.
@@ -151,7 +135,7 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param positive-int|0 $times
      * @return static
      */
-    public function retry(int $times): self;
+    public function withAttempts(int $times): self;
 
     /**
      * Sets the number of seconds to wait before retrying the job.
@@ -165,7 +149,7 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param positive-int|0 $seconds
      * @return static
      */
-    public function backoff(int $seconds): self;
+    public function withRetryDelay(int $seconds): self;
 
     /**
      * Set the number of seconds after which the task will be
@@ -180,13 +164,5 @@ interface PreparedTaskInterface extends TaskInterface, OptionsInterface
      * @param positive-int|0 $seconds
      * @return static
      */
-    public function timeout(int $seconds): self;
-
-    /**
-     * Forces the task to be queued with the selected settings.
-     *
-     * @return QueuedTaskInterface
-     * @throws JobsException
-     */
-    public function dispatch(): QueuedTaskInterface;
+    public function withTimeout(int $seconds): self;
 }

@@ -20,11 +20,6 @@ abstract class Task implements TaskInterface
     /**
      * @var non-empty-string
      */
-    protected string $queue;
-
-    /**
-     * @var non-empty-string
-     */
     protected string $name;
 
     /**
@@ -38,28 +33,17 @@ abstract class Task implements TaskInterface
     protected array $headers = [];
 
     /**
-     * @param non-empty-string $queue
      * @param non-empty-string $name
      * @param array $payload
      * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $queue, string $name, array $payload = [], array $headers = [])
+    public function __construct(string $name, array $payload = [], array $headers = [])
     {
-        assert($queue !== '', 'Precondition [queue !== ""] failed');
         assert($name !== '', 'Precondition [job !== ""] failed');
 
-        $this->queue = $queue;
         $this->name = $name;
         $this->payload = $payload;
         $this->headers = $headers;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getQueue(): string
-    {
-        return $this->queue;
     }
 
     /**
@@ -81,18 +65,18 @@ abstract class Task implements TaskInterface
     /**
      * {@inheritDoc}
      */
-    public function get($key, $default = null)
+    public function getValue($key, $default = null)
     {
         // Note: The following code "$this->payload[$key] ?? $default" will
         // work faster, but it will not work correctly if the key contains
         // a NULL value.
-        return $this->has($key) ? $this->payload[$key] : $default;
+        return $this->hasValue($key) ? $this->payload[$key] : $default;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function has($key): bool
+    public function hasValue($key): bool
     {
         // Array lookup optimization: Op ISSET_ISEMPTY_VAR faster than direct
         // array_key_exists function execution.

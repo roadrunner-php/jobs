@@ -15,9 +15,10 @@ use Spiral\Goridge\RPC\Codec\ProtobufCodec;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Environment;
+use Spiral\RoadRunner\Jobs\DTO\V1\Maintenance;
+use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
-use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
@@ -42,6 +43,11 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     private Pipeline $pipeline;
 
     /**
+     * @var RPCInterface
+     */
+    private RPCInterface $rpc;
+
+    /**
      * @param non-empty-string $name
      * @param RPCInterface|null $rpc
      * @param SerializerInterface|null $serializer
@@ -50,12 +56,11 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     {
         assert($name !== '', 'Precondition [name !== ""] failed');
 
-        $rpc ??= $this->createRPCConnection();
+        $this->rpc = ($rpc ?? $this->createRPCConnection())
+            ->withCodec(new ProtobufCodec())
+        ;
 
-        $this->pipeline = new Pipeline(
-            $rpc->withCodec(new ProtobufCodec()),
-            $serializer ?? new DefaultSerializer()
-        );
+        $this->pipeline = new Pipeline($this, $this->rpc, $serializer ?? new DefaultSerializer());
 
         $this->name = $name;
         $this->options = new Options();
@@ -111,7 +116,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function withDefaultOptions(?OptionsInterface $options): self
+    public function withDefaultOptions(?OptionsInterface $options = null): self
     {
         $self = clone $this;
         /** @psalm-suppress PropertyTypeCoercion */
@@ -123,9 +128,31 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function create(string $name, array $payload = []): PreparedTaskInterface
+    public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface
     {
-        return new PreparedTask($this, $this->options, $name, $payload);
+        $options = Options::from($this->options)
+            ->mergeOptional($options)
+        ;
+
+        return new PreparedTask($name, $payload, $options);
+    }
+
+    /**
+     * Creates a nre task and push it into specified queue.
+     *
+     * This method exists for compatibility with version RoadRunner 1.x.
+     *
+     * @param non-empty-string $name
+     * @param array $payload
+     * @param OptionsInterface|null $options
+     * @return QueuedTaskInterface
+     * @throws JobsException
+     */
+    public function push(string $name, array $payload = [], OptionsInterface $options = null): QueuedTaskInterface
+    {
+        return $this->dispatch(
+            $this->create($name, $payload, $options)
+        );
     }
 
     /**
@@ -142,6 +169,34 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable
     {
         return $this->pipeline->sendMany($tasks);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function pause(): void
+    {
+        try {
+            $this->rpc->call('jobs.Pause', new Maintenance([
+                'pipelines' => [$this->getName()],
+            ]));
+        } catch (\Throwable $e) {
+            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resume(): void
+    {
+        try {
+            $this->rpc->call('jobs.Resume', new Maintenance([
+                'pipelines' => [$this->getName()],
+            ]));
+        } catch (\Throwable $e) {
+            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+        }
     }
 
     /**

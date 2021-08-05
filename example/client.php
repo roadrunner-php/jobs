@@ -8,10 +8,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $queue = new Queue('test');
 
-$task = $queue->create('echo')
-    ->with(static fn($arg) => print $arg)
-    ->await(4)
-    ->dispatch();
+$task = $queue->dispatch(
+    $queue->create('echo')
+        ->withValue(static fn($arg) => print $arg)
+);
 
 dump($task->getId() . ' has been queued');
 

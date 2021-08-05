@@ -24,4 +24,12 @@ interface QueuedTaskInterface extends TaskInterface
      * @return non-empty-string
      */
     public function getId(): string;
+
+    /**
+     * Returns the (non-empty) name of the queue.
+     *
+     * @psalm-immutable
+     * @return non-empty-string
+     */
+    public function getQueue(): string;
 }

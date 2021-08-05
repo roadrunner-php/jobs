@@ -23,6 +23,11 @@ class QueuedTask extends Task implements QueuedTaskInterface
     protected string $id;
 
     /**
+     * @var non-empty-string
+     */
+    protected string $queue;
+
+    /**
      * @param non-empty-string $id
      * @param non-empty-string $queue
      * @param non-empty-string $name
@@ -32,8 +37,9 @@ class QueuedTask extends Task implements QueuedTaskInterface
     public function __construct(string $id, string $queue, string $name, array $payload = [], array $headers = [])
     {
         $this->id = $id;
+        $this->queue = $queue;
 
-        parent::__construct($queue, $name, $payload, $headers);
+        parent::__construct($name, $payload, $headers);
     }
 
     /**
@@ -42,5 +48,13 @@ class QueuedTask extends Task implements QueuedTaskInterface
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getQueue(): string
+    {
+        return $this->queue;
     }
 }

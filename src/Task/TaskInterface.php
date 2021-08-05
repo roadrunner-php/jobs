@@ -14,14 +14,6 @@ namespace Spiral\RoadRunner\Jobs\Task;
 interface TaskInterface
 {
     /**
-     * Returns the (non-empty) name of the queue.
-     *
-     * @psalm-immutable
-     * @return non-empty-string
-     */
-    public function getQueue(): string;
-
-    /**
      * Returns the (non-empty) name of the task/job.
      *
      * @psalm-immutable
@@ -45,7 +37,7 @@ interface TaskInterface
      * @param mixed $default
      * @return mixed
      */
-    public function get($key, $default = null);
+    public function getValue($key, $default = null);
 
     /**
      * Determines that key defined in the payload.
@@ -54,7 +46,7 @@ interface TaskInterface
      * @param array-key $key
      * @return bool
      */
-    public function has($key): bool;
+    public function hasValue($key): bool;
 
     /**
      * Returns list of the headers.

@@ -21,6 +21,7 @@ use Spiral\RoadRunner\Jobs\DTO\V1\PushRequest;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
+use Spiral\RoadRunner\Jobs\QueueInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
@@ -45,13 +46,20 @@ final class Pipeline implements SerializerAwareInterface
     private SerializerInterface $serializer;
 
     /**
+     * @var QueueInterface
+     */
+    private QueueInterface $queue;
+
+    /**
+     * @param QueueInterface $queue
      * @param RPCInterface $rpc
      * @param SerializerInterface $serializer
      */
-    public function __construct(RPCInterface $rpc, SerializerInterface $serializer)
+    public function __construct(QueueInterface $queue, RPCInterface $rpc, SerializerInterface $serializer)
     {
         $this->rpc = $rpc;
         $this->serializer = $serializer;
+        $this->queue = $queue;
     }
 
     /**
@@ -107,7 +115,7 @@ final class Pipeline implements SerializerAwareInterface
             }
 
             $this->rpc->call('jobs.PushBatch', new PushBatchRequest([
-                'job' => $jobs
+                'jobs' => $jobs
             ]));
         } catch (JobsException $e) {
             throw $e;
@@ -139,7 +147,7 @@ final class Pipeline implements SerializerAwareInterface
             'id'      => $this->createTaskId(),
             'payload' => $this->payloadToProtoData($task),
             'headers' => $this->headersToProtoData($task),
-            'options' => $this->optionsToProto($task, $options),
+            'options' => $this->optionsToProto($options),
         ]);
     }
 
@@ -175,15 +183,14 @@ final class Pipeline implements SerializerAwareInterface
     }
 
     /**
-     * @param TaskInterface $task
      * @param OptionsInterface $options
      * @return OptionsMessage
      */
-    private function optionsToProto(TaskInterface $task, OptionsInterface $options): OptionsMessage
+    private function optionsToProto(OptionsInterface $options): OptionsMessage
     {
         return new OptionsMessage([
             'priority'    => $options->getPriority(),
-            'pipeline'    => $task->getQueue(),
+            'pipeline'    => $this->queue->getName(),
             'delay'       => $options->getDelay(),
             'attempts'    => $options->getAttempts(),
             'retry_delay' => $options->getRetryDelay(),
@@ -201,7 +208,7 @@ final class Pipeline implements SerializerAwareInterface
     {
         return new QueuedTask(
             $job->getId(),
-            $task->getQueue(),
+            $this->queue->getName(),
             $task->getName(),
             $task->getPayload(),
             $task->getHeaders()

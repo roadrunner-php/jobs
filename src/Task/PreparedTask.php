@@ -13,7 +13,6 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
-use Spiral\RoadRunner\Jobs\QueueInterface;
 
 /**
  * @psalm-suppress MissingImmutableAnnotation QueuedTask class is mutable.
@@ -26,26 +25,18 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     private OptionsInterface $options;
 
     /**
-     * @var QueueInterface
-     */
-    private QueueInterface $context;
-
-    /**
-     * @param QueueInterface $context
-     * @param OptionsInterface $options
      * @param non-empty-string $name
      * @param array $payload
+     * @param OptionsInterface|null $options
      */
     public function __construct(
-        QueueInterface $context,
-        OptionsInterface $options,
         string $name,
-        array $payload
+        array $payload,
+        OptionsInterface $options = null
     ) {
-        $this->context = $context;
-        $this->options = clone $options;
+        $this->options = $options ?? new Options();
 
-        parent::__construct($this->context->getName(), $name, $payload);
+        parent::__construct($name, $payload);
     }
 
     /**
@@ -58,33 +49,10 @@ final class PreparedTask extends Task implements PreparedTaskInterface
 
     /**
      * {@inheritDoc}
-     */
-    public function dispatch(): QueuedTaskInterface
-    {
-        return $this->context->dispatch($this);
-    }
-
-    /**
-     * {@inheritDoc}
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function on(QueueInterface $queue): self
-    {
-        $self = clone $this;
-
-        $self->context = $queue;
-        $self->queue = $queue->getName();
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function with($value, $name = null): self
+    public function withValue($value, $name = null): self
     {
         $name ??= $this->getPayloadNextIndex();
         assert(\is_string($name) || \is_int($name), 'Precondition [name is string|int] failed');
@@ -115,7 +83,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function except($name): self
+    public function withoutValue($name): self
     {
         assert(\is_string($name) || \is_int($name), 'Precondition [name is string|int] failed');
 
@@ -200,7 +168,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function await(int $seconds): self
+    public function withDelay(int $seconds): self
     {
         assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
 
@@ -225,7 +193,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function prioritize(int $priority): self
+    public function withPriority(int $priority): self
     {
         assert($priority >= 0, 'Precondition [priority >= 0] failed');
 
@@ -250,7 +218,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function retry(int $times): self
+    public function withAttempts(int $times): self
     {
         assert($times >= 0, 'Precondition [times >= 0] failed');
 
@@ -275,7 +243,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function backoff(int $seconds): self
+    public function withRetryDelay(int $seconds): self
     {
         assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
 
@@ -300,7 +268,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function timeout(int $seconds): self
+    public function withTimeout(int $seconds): self
     {
         assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
 

@@ -48,9 +48,10 @@ interface QueueInterface
      *
      * @param non-empty-string $name
      * @param array $payload
+     * @param OptionsInterface|null $options
      * @return PreparedTaskInterface
      */
-    public function create(string $name, array $payload = []): PreparedTaskInterface;
+    public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface;
 
     /**
      * Sends a task to the queue.
@@ -69,4 +70,14 @@ interface QueueInterface
      * @throws JobsException
      */
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable;
+
+    /**
+     * @throws JobsException
+     */
+    public function pause(): void;
+
+    /**
+     * @throws JobsException
+     */
+    public function resume(): void;
 }
