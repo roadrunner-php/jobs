@@ -58,7 +58,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 'pipeline' => $info->toArray(),
             ]));
 
-            return $this->connect($info->name);
+            return $this->connect($info->getName());
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -188,7 +188,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
 
             /** @var string $queue */
             foreach ($result->getPipelines() as $queue) {
-                yield $this->connect($queue);
+                yield $queue => $this->connect($queue);
             }
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
