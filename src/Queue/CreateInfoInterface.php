@@ -15,7 +15,7 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  * @psalm-import-type DriverType from Driver
  *
  * @psalm-type CreateInfoArrayType = array {
- *  name: non-empty-string,
+ *  queue: non-empty-string,
  *  driver: DriverType,
  *  priority: positive-int
  * }
