@@ -66,7 +66,7 @@ class CreateInfo implements CreateInfoInterface
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
+            'queue' => $this->name,
             'driver' => $this->driver,
             'priority' => $this->priority,
         ];
