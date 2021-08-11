@@ -12,10 +12,16 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
+use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
+ * @psalm-type SuccessData = array
+ * @psalm-type ErrorData = array { message: string, requeue: bool, delay_seconds: positive-int|0 }
+ *
+ * @psalm-import-type TypeEnum from Type
+ *
  * @psalm-suppress MissingImmutableAnnotation The implementation of this task is mutable.
  */
 final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
@@ -26,9 +32,9 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     private WorkerInterface $worker;
 
     /**
-     * @var bool
+     * @var TypeEnum|null
      */
-    private bool $completed = false;
+    private ?int $completed = null;
 
     /**
      * @param WorkerInterface $worker
@@ -73,23 +79,42 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
      */
     public function complete(): void
     {
-        if ($this->completed === false) {
+        $this->respond(Type::SUCCESS);
+    }
+
+    /**
+     * @param TypeEnum $type
+     * @param SuccessData|ErrorData $data
+     * @return void
+     * @throws JobsException
+     */
+    private function respond(int $type, array $data = []): void
+    {
+        if ($this->completed === null) {
             try {
-                $this->worker->respond(new Payload('jobs.complete:' . $this->id));
+                $body = \json_encode(['type' => $type, 'data' => $data], \JSON_THROW_ON_ERROR);
+
+                $this->worker->respond(new Payload($body));
+            } catch (\JsonException $e) {
+                throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
             } catch (\Throwable $e) {
                 throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
             }
 
-            $this->completed = true;
+            $this->completed = $type;
         }
     }
 
     /**
-     * @return void
+     * {@inheritDoc}
      */
-    public function fail(): void
+    public function fail(string $message, bool $requeue = true, int $delay = 0): void
     {
-        $this->worker->error('jobs.fail:' . $this->id);
+        $this->respond(Type::ERROR, [
+            'message'       => $message,
+            'requeue'       => $requeue,
+            'delay_seconds' => $delay,
+        ]);
     }
 
     /**
@@ -97,6 +122,22 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
      */
     public function isCompleted(): bool
     {
-        return $this->completed;
+        return $this->completed !== null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isSuccessful(): bool
+    {
+        return $this->completed === Type::SUCCESS;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isFails(): bool
+    {
+        return $this->completed === Type::ERROR;
     }
 }
