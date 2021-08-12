@@ -51,7 +51,7 @@ final class Options implements OptionsInterface
     }
 
     /**
-     * @psalm-pure
+     * @psalm-immutable
      * @return positive-int|0
      */
     public function getDelay(): int
@@ -77,7 +77,7 @@ final class Options implements OptionsInterface
     }
 
     /**
-     * @psalm-pure
+     * @psalm-immutable
      * @return positive-int|0
      */
     public function getPriority(): int

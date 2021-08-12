@@ -24,13 +24,13 @@ interface OptionsInterface
     public const DEFAULT_PRIORITY = 10;
 
     /**
-     * @psalm-pure
+     * @psalm-immutable
      * @return positive-int|0
      */
     public function getDelay(): int;
 
     /**
-     * @psalm-pure
+     * @psalm-immutable
      * @return positive-int|0
      */
     public function getPriority(): int;
