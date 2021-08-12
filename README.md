@@ -1,10 +1,10 @@
-# RoadRunner KV Plugin
+# RoadRunner Jobs Plugin
 
 [![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner-jobs/version)](https://packagist.org/packages/spiral/roadrunner-jobs)
 [![Build Status](https://github.com/spiral/roadrunner-jobs/workflows/build/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
 [![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
 
-This repository contains the codebase PHP bridge using jobs RoadRunner plugin.
+This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
 
 ## Installation
 
