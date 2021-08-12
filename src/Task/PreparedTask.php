@@ -147,7 +147,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         return $self;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -168,106 +167,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         $self = clone $this;
         $self->options = Options::from($this->options)
             ->withDelay($seconds)
-        ;
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPriority(): int
-    {
-        return $this->options->getPriority();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withPriority(int $priority): self
-    {
-        assert($priority >= 0, 'Precondition [priority >= 0] failed');
-
-        $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withPriority($priority)
-        ;
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getAttempts(): int
-    {
-        return $this->options->getAttempts();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withAttempts(int $times): self
-    {
-        assert($times >= 0, 'Precondition [times >= 0] failed');
-
-        $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withAttempts($times)
-        ;
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRetryDelay(): int
-    {
-        return $this->options->getRetryDelay();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withRetryDelay(int $seconds): self
-    {
-        assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
-
-        $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withRetryDelay($seconds)
-        ;
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTimeout(): int
-    {
-        return $this->options->getTimeout();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withTimeout(int $seconds): self
-    {
-        assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
-
-        $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withTimeout($seconds)
         ;
 
         return $self;

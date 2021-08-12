@@ -189,12 +189,8 @@ final class Pipeline implements SerializerAwareInterface
     private function optionsToProto(OptionsInterface $options): OptionsMessage
     {
         return new OptionsMessage([
-            'priority'    => $options->getPriority(),
             'pipeline'    => $this->queue->getName(),
             'delay'       => $options->getDelay(),
-            'attempts'    => $options->getAttempts(),
-            'retry_delay' => $options->getRetryDelay(),
-            'timeout'     => $options->getTimeout(),
         ]);
     }
 
