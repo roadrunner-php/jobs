@@ -19,51 +19,7 @@ interface OptionsInterface
     public const DEFAULT_DELAY = 0;
 
     /**
-     * @var positive-int|0
-     */
-    public const DEFAULT_PRIORITY = 10;
-
-    /**
-     * @var positive-int|0
-     */
-    public const DEFAULT_ATTEMPTS = 3;
-
-    /**
-     * @var positive-int|0
-     */
-    public const DEFAULT_RETRY_DELAY = 10;
-
-    /**
-     * @var positive-int|0
-     */
-    public const DEFAULT_TIMEOUT = 60;
-
-    /**
      * @return positive-int|0
      */
     public function getDelay(): int;
-
-    /**
-     * @psalm-immutable
-     * @return positive-int|0
-     */
-    public function getPriority(): int;
-
-    /**
-     * @psalm-immutable
-     * @return positive-int|0
-     */
-    public function getAttempts(): int;
-
-    /**
-     * @psalm-immutable
-     * @return positive-int|0
-     */
-    public function getRetryDelay(): int;
-
-    /**
-     * @psalm-immutable
-     * @return positive-int|0
-     */
-    public function getTimeout(): int;
 }

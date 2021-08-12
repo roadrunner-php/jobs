@@ -25,18 +25,6 @@ class Options extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>int64 delay = 3;</code>
      */
     protected $delay = 0;
-    /**
-     * Generated from protobuf field <code>int64 attempts = 4;</code>
-     */
-    protected $attempts = 0;
-    /**
-     * Generated from protobuf field <code>int64 retry_delay = 5;</code>
-     */
-    protected $retry_delay = 0;
-    /**
-     * Generated from protobuf field <code>int64 timeout = 6;</code>
-     */
-    protected $timeout = 0;
 
     /**
      * Constructor.
@@ -47,9 +35,6 @@ class Options extends \Google\Protobuf\Internal\Message
      *     @type int|string $priority
      *     @type string $pipeline
      *     @type int|string $delay
-     *     @type int|string $attempts
-     *     @type int|string $retry_delay
-     *     @type int|string $timeout
      * }
      */
     public function __construct($data = NULL) {
@@ -119,72 +104,6 @@ class Options extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt64($var);
         $this->delay = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int64 attempts = 4;</code>
-     * @return int|string
-     */
-    public function getAttempts()
-    {
-        return $this->attempts;
-    }
-
-    /**
-     * Generated from protobuf field <code>int64 attempts = 4;</code>
-     * @param int|string $var
-     * @return $this
-     */
-    public function setAttempts($var)
-    {
-        GPBUtil::checkInt64($var);
-        $this->attempts = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int64 retry_delay = 5;</code>
-     * @return int|string
-     */
-    public function getRetryDelay()
-    {
-        return $this->retry_delay;
-    }
-
-    /**
-     * Generated from protobuf field <code>int64 retry_delay = 5;</code>
-     * @param int|string $var
-     * @return $this
-     */
-    public function setRetryDelay($var)
-    {
-        GPBUtil::checkInt64($var);
-        $this->retry_delay = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int64 timeout = 6;</code>
-     * @return int|string
-     */
-    public function getTimeout()
-    {
-        return $this->timeout;
-    }
-
-    /**
-     * Generated from protobuf field <code>int64 timeout = 6;</code>
-     * @param int|string $var
-     * @return $this
-     */
-    public function setTimeout($var)
-    {
-        GPBUtil::checkInt64($var);
-        $this->timeout = $var;
 
         return $this;
     }
