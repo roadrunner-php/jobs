@@ -29,11 +29,8 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @param array $payload
      * @param OptionsInterface|null $options
      */
-    public function __construct(
-        string $name,
-        array $payload,
-        OptionsInterface $options = null
-    ) {
+    public function __construct(string $name, array $payload, OptionsInterface $options = null)
+    {
         $this->options = $options ?? new Options();
 
         parent::__construct($name, $payload);
@@ -167,6 +164,31 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         $self = clone $this;
         $self->options = Options::from($this->options)
             ->withDelay($seconds)
+        ;
+
+        return $self;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPriority(): int
+    {
+        return $this->options->getPriority();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
+     */
+    public function withPriority(int $priority): self
+    {
+        assert($priority >= 0, 'Precondition [priority >= 0] failed');
+
+        $self = clone $this;
+        $self->options = Options::from($this->options)
+            ->withPriority($priority)
         ;
 
         return $self;

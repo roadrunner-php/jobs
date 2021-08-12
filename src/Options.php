@@ -19,14 +19,23 @@ final class Options implements OptionsInterface
     public int $delay = self::DEFAULT_DELAY;
 
     /**
+     * @var positive-int|0
+     */
+    public int $priority = self::DEFAULT_PRIORITY;
+
+    /**
      * @param positive-int|0 $delay
+     * @param positive-int|0 $priority
      */
     public function __construct(
-        int $delay = self::DEFAULT_DELAY
+        int $delay = self::DEFAULT_DELAY,
+        int $priority = self::DEFAULT_PRIORITY
     ) {
         assert($delay >= 0, 'Precondition [delay >= 0] failed');
+        assert($priority >= 0, 'Precondition [priority >= 0] failed');
 
         $this->delay = $delay;
+        $this->priority = $priority;
     }
 
     /**
@@ -36,11 +45,13 @@ final class Options implements OptionsInterface
     public static function from(OptionsInterface $options): self
     {
         return new self(
-            $options->getDelay()
+            $options->getDelay(),
+            $options->getPriority()
         );
     }
 
     /**
+     * @psalm-pure
      * @return positive-int|0
      */
     public function getDelay(): int
@@ -61,6 +72,32 @@ final class Options implements OptionsInterface
 
         $self = clone $this;
         $self->delay = $delay;
+
+        return $self;
+    }
+
+    /**
+     * @psalm-pure
+     * @return positive-int|0
+     */
+    public function getPriority(): int
+    {
+        assert($this->priority >= 0, 'Invariant [priority >= 0] failed');
+
+        return $this->priority;
+    }
+
+    /**
+     * @psalm-immutable
+     * @param positive-int|0 $priority
+     * @return $this
+     */
+    public function withPriority(int $priority): self
+    {
+        assert($priority >= 0, 'Precondition [priority >= 0] failed');
+
+        $self = clone $this;
+        $self->priority = $priority;
 
         return $self;
     }
@@ -88,6 +125,10 @@ final class Options implements OptionsInterface
 
         if (($delay = $options->getDelay()) !== self::DEFAULT_DELAY) {
             $self->delay = $delay;
+        }
+
+        if (($priority = $options->getPriority()) !== self::DEFAULT_PRIORITY) {
+            $self->priority = $priority;
         }
 
         return $self;
