@@ -64,11 +64,10 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     {
         // This is a little sugar so that the status of the
         // current task is not lost.
-        //
-        // Everything will be fine even if the task has already been marked
-        // as "completed": The current method will simply not be executed.
         try {
-            $this->complete();
+            if ($this->completed === null) {
+                $this->complete();
+            }
         } catch (JobsException $e) {
             // Suppress shutdown exception
         }
