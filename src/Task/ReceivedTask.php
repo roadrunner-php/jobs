@@ -26,6 +26,8 @@ use Spiral\RoadRunner\WorkerInterface;
  */
 final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 {
+    use MutableHeadersTrait;
+
     /**
      * @var WorkerInterface
      */
@@ -35,6 +37,11 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
      * @var TypeEnum|null
      */
     private ?int $completed = null;
+
+    /**
+     * @var positive-int|0
+     */
+    private int $delay = 0;
 
     /**
      * @param WorkerInterface $worker
@@ -107,12 +114,22 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     /**
      * {@inheritDoc}
      */
-    public function fail(string $message, bool $requeue = true, int $delay = 0): void
+    public function fail($error, bool $requeue = false): void
     {
+        assert(
+            // PHP 8.0+: Is string or Stringable
+            \is_string($error) || $error instanceof \Stringable
+            // PHP 7.4 or lower: Is Throwable (may be false-positive static analysis alert)
+            //                   or contains __toString() (PHP 7.4 or lower).
+            || $error instanceof \Throwable || (\is_object($error) && \method_exists($error, '__toString')),
+            'Precondition [error is string|Stringable|Throwable] failed'
+        );
+
         $this->respond(Type::ERROR, [
-            'message'       => $message,
+            'message'       => (string)$error,
             'requeue'       => $requeue,
-            'delay_seconds' => $delay,
+            'delay_seconds' => $this->delay,
+            'headers'       => $this->headers,
         ]);
     }
 
@@ -138,5 +155,20 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     public function isFails(): bool
     {
         return $this->completed === Type::ERROR;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
+     */
+    public function withDelay(int $seconds): self
+    {
+        assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
+
+        $self = clone $this;
+        $self->delay = $seconds;
+
+        return $self;
     }
 }

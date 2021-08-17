@@ -17,6 +17,8 @@ namespace Spiral\RoadRunner\Jobs\Task;
  */
 abstract class Task implements TaskInterface
 {
+    use HeadersTrait;
+
     /**
      * @var non-empty-string
      */
@@ -26,11 +28,6 @@ abstract class Task implements TaskInterface
      * @var array
      */
     protected array $payload = [];
-
-    /**
-     * @var array<non-empty-string, array<string>>
-     */
-    protected array $headers = [];
 
     /**
      * @param non-empty-string $name
@@ -81,37 +78,5 @@ abstract class Task implements TaskInterface
         // Array lookup optimization: Op ISSET_ISEMPTY_VAR faster than direct
         // array_key_exists function execution.
         return isset($this->payload[$key]) || \array_key_exists($key, $this->payload);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHeaders(): array
-    {
-        return $this->headers;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasHeader(string $name): bool
-    {
-        return isset($this->headers[$name]) && \count($this->headers[$name]) > 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHeader(string $name): array
-    {
-        return $this->headers[$name] ?? [];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHeaderLine(string $name): string
-    {
-        return \implode(',', $this->getHeader($name));
     }
 }

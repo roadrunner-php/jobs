@@ -19,6 +19,8 @@ use Spiral\RoadRunner\Jobs\OptionsInterface;
  */
 final class PreparedTask extends Task implements PreparedTaskInterface
 {
+    use MutableHeadersTrait;
+
     /**
      * @var OptionsInterface
      */
@@ -80,67 +82,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         $self = clone $this;
         unset($self->payload[$name]);
 
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withHeader(string $name, $value): self
-    {
-        assert($name !== '', 'Precondition [name !== ""] failed');
-
-        $value = \is_iterable($value) ? $value : [$value];
-
-        $self = clone $this;
-        $self->headers[$name] = [];
-
-        foreach ($value as $item) {
-            $self->headers[$name][] = $item;
-        }
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withAddedHeader(string $name, $value): self
-    {
-        assert($name !== '', 'Precondition [name !== ""] failed');
-
-        /** @var iterable<non-empty-string> $value */
-        $value = \is_iterable($value) ? $value : [$value];
-
-        /** @var array<non-empty-string> $headers */
-        $headers = $this->headers[$name] ?? [];
-
-        foreach ($value as $item) {
-            $headers[] = $item;
-        }
-
-        return $this->withHeader($name, $headers);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withoutHeader(string $name): self
-    {
-        assert($name !== '', 'Precondition [name !== ""] failed');
-
-        if (!isset($this->headers[$name])) {
-            return $this;
-        }
-
-        $self = clone $this;
-        unset($self->headers[$name]);
         return $self;
     }
 
