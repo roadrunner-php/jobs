@@ -6,17 +6,11 @@ logs:
 
 server:
   command: php consumer.php
-  relay: tcp://127.0.0.1:6002
-  relay_timeout: 20s
-
-amqp:
-  addr: amqp://guest:guest@localhost:5672
 
 jobs:
   consume:
     - "test"
   pipelines:
     test:
-      driver: amqp
-      queue: test
+      driver: ephemeral
 
