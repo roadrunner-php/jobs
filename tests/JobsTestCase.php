@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests;
 
-use Spiral\RoadRunner\Jobs\DTO\V1\Maintenance;
+use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Jobs;
 use Spiral\RoadRunner\Jobs\JobsInterface;
@@ -78,7 +78,7 @@ class JobsTestCase extends TestCase
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
         $jobs = $this->jobs(['jobs.List' => function() use ($expected) {
-            return new Maintenance(['pipelines' => $expected]);
+            return new Pipelines(['pipelines' => $expected]);
         }]);
 
         // Execute "$jobs->getIterator()"
@@ -106,7 +106,7 @@ class JobsTestCase extends TestCase
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
         $jobs = $this->jobs(['jobs.List' => function() use ($expected) {
-            return new Maintenance(['pipelines' => $expected]);
+            return new Pipelines(['pipelines' => $expected]);
         }]);
 
         $this->assertCount(2, $jobs);
@@ -129,7 +129,7 @@ class JobsTestCase extends TestCase
     {
         $actual = [];
 
-        $jobs = $this->jobs(['jobs.Resume' => function(Maintenance $req) use (&$actual) {
+        $jobs = $this->jobs(['jobs.Resume' => function(Pipelines $req) use (&$actual) {
             foreach ($req->getPipelines() as $pipeline) $actual[] = $pipeline;
         }]);
 
@@ -163,7 +163,7 @@ class JobsTestCase extends TestCase
     {
         $actual = [];
 
-        $jobs = $this->jobs(['jobs.Pause' => function(Maintenance $req) use (&$actual) {
+        $jobs = $this->jobs(['jobs.Pause' => function(Pipelines $req) use (&$actual) {
             foreach ($req->getPipelines() as $pipeline) $actual[] = $pipeline;
         }]);
 
