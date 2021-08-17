@@ -15,7 +15,7 @@ use Spiral\Goridge\RPC\Codec\ProtobufCodec;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Environment;
-use Spiral\RoadRunner\Jobs\DTO\V1\Maintenance;
+use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
@@ -175,7 +175,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     public function pause(): void
     {
         try {
-            $this->rpc->call('jobs.Pause', new Maintenance([
+            $this->rpc->call('jobs.Pause', new Pipelines([
                 'pipelines' => [$this->getName()],
             ]));
         } catch (\Throwable $e) {
@@ -189,7 +189,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     public function resume(): void
     {
         try {
-            $this->rpc->call('jobs.Resume', new Maintenance([
+            $this->rpc->call('jobs.Resume', new Pipelines([
                 'pipelines' => [$this->getName()],
             ]));
         } catch (\Throwable $e) {
