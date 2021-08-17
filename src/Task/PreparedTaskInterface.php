@@ -16,7 +16,7 @@ use Spiral\RoadRunner\Jobs\OptionsInterface;
 interface PreparedTaskInterface extends
     TaskInterface,
     OptionsInterface,
-    MutatesHeadersInterface,
+    WritableHeadersInterface,
     MutatesDelayInterface
 {
     /**

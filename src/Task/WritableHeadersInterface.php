@@ -18,7 +18,7 @@ namespace Spiral\RoadRunner\Jobs\Task;
  * The capabilities of this interface repeat those in the implementation of
  * PSR-6 MessageInterface.
  */
-interface MutatesHeadersInterface extends ProvidesHeadersInterface
+interface WritableHeadersInterface extends ProvidesHeadersInterface
 {
     /**
      * Return an instance with the provided value replacing the specified header.

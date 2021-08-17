@@ -19,7 +19,7 @@ use Spiral\RoadRunner\Jobs\OptionsInterface;
  */
 final class PreparedTask extends Task implements PreparedTaskInterface
 {
-    use MutableHeadersTrait;
+    use WritableHeadersTrait;
 
     /**
      * @var OptionsInterface

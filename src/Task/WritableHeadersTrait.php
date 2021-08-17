@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Task;
 
 /**
- * @mixin MutatesHeadersInterface
- * @psalm-require-implements MutatesHeadersInterface
+ * @mixin WritableHeadersInterface
+ * @psalm-require-implements WritableHeadersInterface
  * @psalm-immutable
  */
-trait MutableHeadersTrait
+trait WritableHeadersTrait
 {
     use HeadersTrait;
 

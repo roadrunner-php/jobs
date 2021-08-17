@@ -26,7 +26,7 @@ use Spiral\RoadRunner\WorkerInterface;
  */
 final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 {
-    use MutableHeadersTrait;
+    use WritableHeadersTrait;
 
     /**
      * @var WorkerInterface

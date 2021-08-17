@@ -18,7 +18,7 @@ use Spiral\RoadRunner\Jobs\Exception\JobsException;
  */
 interface ReceivedTaskInterface extends
     QueuedTaskInterface,
-    MutatesHeadersInterface,
+    WritableHeadersInterface,
     MutatesDelayInterface
 {
     /**
