@@ -17,7 +17,7 @@ use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
-use Spiral\RoadRunner\Jobs\DTO\V1\Maintenance;
+use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
 use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
@@ -121,7 +121,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     public function pause($queue, ...$queues): void
     {
         try {
-            $this->rpc->call('jobs.Pause', new Maintenance([
+            $this->rpc->call('jobs.Pause', new Pipelines([
                 'pipelines' => $this->names($queue, ...$queues),
             ]));
         } catch (\Throwable $e) {
@@ -135,7 +135,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     public function resume($queue, ...$queues): void
     {
         try {
-            $this->rpc->call('jobs.Resume', new Maintenance([
+            $this->rpc->call('jobs.Resume', new Pipelines([
                 'pipelines' => $this->names($queue, ...$queues),
             ]));
         } catch (\Throwable $e) {
@@ -150,8 +150,8 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     public function getIterator(): \Traversable
     {
         try {
-            /** @var Maintenance $result */
-            $result = $this->rpc->call('jobs.List', '', Maintenance::class);
+            /** @var Pipelines $result */
+            $result = $this->rpc->call('jobs.List', '', Pipelines::class);
 
             /** @var string $queue */
             foreach ($result->getPipelines() as $queue) {
