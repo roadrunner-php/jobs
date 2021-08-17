@@ -26,11 +26,11 @@ class Job extends \Google\Protobuf\Internal\Message
      */
     protected $payload = '';
     /**
-     * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 5;</code>
+     * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 4;</code>
      */
     private $headers;
     /**
-     * Generated from protobuf field <code>.jobs.v1.Options options = 4;</code>
+     * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      */
     protected $options = null;
 
@@ -119,7 +119,7 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 5;</code>
+     * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 4;</code>
      * @return \Google\Protobuf\Internal\MapField
      */
     public function getHeaders()
@@ -128,7 +128,7 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 5;</code>
+     * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 4;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
      * @return $this
      */
@@ -141,7 +141,7 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.jobs.v1.Options options = 4;</code>
+     * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      * @return \Spiral\RoadRunner\Jobs\DTO\V1\Options
      */
     public function getOptions()
@@ -150,7 +150,7 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.jobs.v1.Options options = 4;</code>
+     * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      * @param \Spiral\RoadRunner\Jobs\DTO\V1\Options $var
      * @return $this
      */

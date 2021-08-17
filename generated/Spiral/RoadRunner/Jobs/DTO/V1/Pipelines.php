@@ -9,11 +9,11 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * request to pause/resume/list
+ * request to pause/resume/list/Destroy
  *
- * Generated from protobuf message <code>jobs.v1.Maintenance</code>
+ * Generated from protobuf message <code>jobs.v1.Pipelines</code>
  */
-class Maintenance extends \Google\Protobuf\Internal\Message
+class Pipelines extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>repeated string pipelines = 1;</code>
