@@ -46,7 +46,7 @@ server:
 #
 jobs:
     consume: [ "test" ]   # List of RoadRunner queues that can be processed by 
-    # the consumer specified in the "server" section.
+                          # the consumer specified in the "server" section.
     pipelines:
         test:               # RoadRunner queue identifier
             driver: ephemeral # - Queue driver name
