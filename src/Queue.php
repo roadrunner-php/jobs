@@ -199,6 +199,9 @@ final class Queue implements QueueInterface, SerializerAwareInterface
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isPaused(): bool
     {
         try {
