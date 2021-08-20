@@ -101,8 +101,8 @@ final class SQSCreateInfo extends CreateInfo
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
-     * @param int $visibilityTimeout
-     * @param int $waitTimeSeconds
+     * @param positive-int|0 $visibilityTimeout
+     * @param positive-int|0 $waitTimeSeconds
      * @param non-empty-string $queue
      * @param array|SQSAttributesMap $attributes
      * @param array<non-empty-string, non-empty-string> $tags
