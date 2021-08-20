@@ -65,8 +65,9 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     }
 
     /**
-     * @param array<non-empty-string, mixed> $map
-     * @return array<non-empty-string, non-empty-string>
+     * @param array $map
+     * @return array<string, string>
+     * @throws \Throwable
      */
     private function toStringOfStringMap(array $map): array
     {
@@ -84,6 +85,10 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
 
                 case \is_bool($value):
                     $marshalled[$key] = $value ? 'true' : 'false';
+                    break;
+
+                case \is_array($value):
+                    $marshalled[$key] = \json_encode($value, \JSON_THROW_ON_ERROR);
                     break;
 
                 default:
