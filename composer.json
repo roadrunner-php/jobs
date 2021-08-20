@@ -1,7 +1,7 @@
 {
     "name": "spiral/roadrunner-jobs",
     "type": "library",
-    "description": "Spiral: Jobs Jobs and Queue",
+    "description": "RoadRunner Queues (Jobs) plugin API library",
     "license": "MIT",
     "authors": [
         {
