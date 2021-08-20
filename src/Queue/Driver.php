@@ -41,7 +41,15 @@ interface Driver
     public const SQS = 'sqs';
 
     /**
-     * @internal Reserved for future use.
+     * @internal NOT Available: Reserved for future use.
+     *
+     * @psalm-var DriverType
+     * @var string
+     */
+    public const REDIS = 'redis';
+
+    /**
+     * @internal NOT Available: Reserved for future use.
      *
      * @psalm-var DriverType
      * @var string
@@ -49,7 +57,7 @@ interface Driver
     public const NAST = 'nast';
 
     /**
-     * @internal Reserved for future use.
+     * @internal NOT Available: Reserved for future use.
      *
      * @psalm-var DriverType
      * @var string
