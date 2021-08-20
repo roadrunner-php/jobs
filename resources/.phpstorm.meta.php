@@ -9,7 +9,8 @@ namespace PHPSTORM_META {
         'jobs.Resume',
         'jobs.List',
         'jobs.Declare',
-        'jobs.Destroy'
+        'jobs.Destroy',
+        'jobs.Stat'
     );
 
     expectedArguments(\Spiral\Goridge\RPC\RPCInterface::call(), 0,

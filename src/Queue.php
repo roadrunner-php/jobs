@@ -16,6 +16,8 @@ use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
+use Spiral\RoadRunner\Jobs\DTO\V1\Stat;
+use Spiral\RoadRunner\Jobs\DTO\V1\Stats;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
@@ -195,6 +197,25 @@ final class Queue implements QueueInterface, SerializerAwareInterface
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
+    }
+
+    public function isPaused(): bool
+    {
+        try {
+            /** @var Stats $stats */
+            $stats = $this->rpc->call('jobs.Stat', '', Stats::class);
+        } catch (\Throwable $e) {
+            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+        }
+
+        /** @var Stat $stat */
+        foreach ($stats->getStats() as $stat) {
+            if ($stat->getPipeline() === $this->name) {
+                return $stat->getActive() !== 0;
+            }
+        }
+
+        return false;
     }
 
     /**

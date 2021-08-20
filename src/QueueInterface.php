@@ -80,4 +80,10 @@ interface QueueInterface
      * @throws JobsException
      */
     public function resume(): void;
+
+    /**
+     * @return bool
+     * @throws JobsException
+     */
+    public function isPaused(): bool;
 }
