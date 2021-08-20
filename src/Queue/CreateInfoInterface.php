@@ -26,6 +26,16 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 interface CreateInfoInterface
 {
     /**
+     * @return non-empty-string
+     */
+    public function getName(): string;
+
+    /**
+     * @return DriverType
+     */
+    public function getDriver(): string;
+
+    /**
      * When transferring to the internal RPC method of creating queues, the data
      * must be represented in the form of a Map<string, string> type, which can
      * be represented as PHP array<non-empty-string, non-empty-string>.

@@ -55,13 +55,45 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     {
         try {
             $this->rpc->call('jobs.Declare', new DeclareRequest([
-                'pipeline' => $info->toArray(),
+                'pipeline' => $this->toStringOfStringMap($info->toArray()),
             ]));
 
             return $this->connect($info->getName());
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
+    }
+
+    /**
+     * @param array<non-empty-string, mixed> $map
+     * @return array<non-empty-string, non-empty-string>
+     */
+    private function toStringOfStringMap(array $map): array
+    {
+        $marshalled = [];
+
+        foreach ($map as $key => $value) {
+            switch (true) {
+                case \is_int($value):
+                case \is_string($value):
+                case $value instanceof \Stringable:
+                // PHP 7.4 additional assertion
+                case \is_object($value) && \method_exists($value, '__toString'):
+                    $marshalled[$key] = (string)$value;
+                    break;
+
+                case \is_bool($value):
+                    $marshalled[$key] = $value ? 'true' : 'false';
+                    break;
+
+                default:
+                    throw new \InvalidArgumentException(
+                        \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
+                    );
+            }
+        }
+
+        return $marshalled;
     }
 
     /**
