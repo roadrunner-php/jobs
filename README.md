@@ -42,12 +42,6 @@ server:
     relay: pipes
 
 #
-# AMQP connection settings (for example, RabbitMQ)
-#
-amqp:
-    addr: amqp://guest:guest@localhost:5672
-
-#
 # In this section, the jobs themselves are configured
 #
 jobs:
@@ -55,12 +49,12 @@ jobs:
     # the consumer specified in the "server" section.
     pipelines:
         test:               # RoadRunner queue identifier
-            driver: amqp      # - Queue driver name
+            driver: ephemeral # - Queue driver name
             queue: test       # - Internal (driver's) queue identifier
 ```
 
 > Read more about all available drivers on the
-> [documentation](https://roadrunner.dev/docs) page.
+> [documentation](https://roadrunner.dev/docs/beep-beep-jobs) page.
 
 After starting the server with this configuration, one driver named "`test`"
 will be available to you.
@@ -71,21 +65,28 @@ RoadRunner server.
 ```php
 <?php
 
-declare(strict_types=1);
+use Spiral\RoadRunner\Jobs\Jobs;
 
-use Spiral\RoadRunner\Jobs\Queue;
+require __DIR__ . '/vendor/autoload.php';
 
-require __DIR__ . '/../vendor/autoload.php';
+// Jobs service
+$jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 
-$queue = new Queue('test', RPC::create('tcp://127.0.0.1:6001'));
+// Select "test" queue from jobs
+$queue = $jobs->connect('test');
 
+// Create task prototype with default headers
+$prototype = $queue->create('echo')
+    ->withHeader('attempts', 4)
+    ->withHeader('retry-delay', 10)
+;
+
+// Execute "echo" task with Closure as payload
 $task = $queue->dispatch(
-    $queue->create('echo')
-        ->withValue(static fn($arg) => print $arg)
+    $prototype->withValue(static fn($arg) => print $arg)
 );
 
-dump($task->getId() . ' has been queued');
-
+var_dump($task->getId() . ' has been queued');
 ```
 
 ## License
