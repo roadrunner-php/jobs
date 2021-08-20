@@ -17,12 +17,20 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 interface Driver
 {
     /**
+     * In-memory builtin RoadRunner driver.
+     *
      * @psalm-var DriverType
      * @var string
      */
     public const EPHEMERAL = 'ephemeral';
 
     /**
+     * AMQP-based queue server implementation.
+     *
+     * @link https://www.rabbitmq.com/
+     * @link http://activemq.apache.org/
+     * @link http://qpid.apache.org/
+     *
      * @psalm-var DriverType
      * @var string
      */

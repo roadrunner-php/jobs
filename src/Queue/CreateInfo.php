@@ -59,22 +59,6 @@ class CreateInfo implements CreateInfoInterface
     /**
      * {@inheritDoc}
      */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDriver(): string
-    {
-        return $this->driver;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function toArray(): array
     {
         return [

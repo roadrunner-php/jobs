@@ -22,6 +22,25 @@ use Spiral\RoadRunner\Worker;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
+ * Note that the implementation of this class depends on the environment setting
+ * of the RoadRunner. In the case that the current worker does NOT meet the
+ * queue processing tasks, then the Consumer class is not guaranteed to work.
+ *
+ * In most cases, it will be enough for you to check the availability of the
+ * environment parameter:
+ *
+ * <code>
+ *  use Spiral\RoadRunner\Environment;
+ *  use Spiral\RoadRunner\Environment\Mode;
+ *
+ *  $env = Environment::fromGlobals();
+ *  if ($env->getMode() !== Mode::MODE_JOBS) {
+ *     throw new RuntimeException('Can not create Jobs Consumer');
+ *  }
+ *
+ *  $consumer = new Consumer(...);
+ * </code>
+ *
  * @psalm-type HeaderPayload = array {
  *    id:       non-empty-string,
  *    job:      non-empty-string,

@@ -15,6 +15,9 @@ use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
 
+/**
+ * An interface that provides methods for working with a specific queue.
+ */
 interface QueueInterface
 {
     /**
