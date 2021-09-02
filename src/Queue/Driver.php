@@ -22,6 +22,13 @@ interface Driver
      * @psalm-var DriverType
      * @var string
      */
+    public const MEMORY = 'memory';
+
+    /**
+     * @see Driver::MEMORY
+     * @deprecated Old name of memory RR 2.4-beta driver. Please
+     *             use {@see Driver::MEMORY} instead.
+     */
     public const EPHEMERAL = 'ephemeral';
 
     /**
