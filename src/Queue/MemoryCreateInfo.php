@@ -16,7 +16,7 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  *
  * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
  */
-class MemoryCreateInfo extends CreateInfo
+final class MemoryCreateInfo extends CreateInfo
 {
     /**
      * @var positive-int

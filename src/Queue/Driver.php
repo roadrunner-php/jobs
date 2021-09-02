@@ -25,13 +25,6 @@ interface Driver
     public const MEMORY = 'memory';
 
     /**
-     * @see Driver::MEMORY
-     * @deprecated Old name of memory RR 2.4-beta driver. Please
-     *             use {@see Driver::MEMORY} instead.
-     */
-    public const EPHEMERAL = 'ephemeral';
-
-    /**
      * AMQP-based queue server implementation.
      *
      * @link https://www.rabbitmq.com/
