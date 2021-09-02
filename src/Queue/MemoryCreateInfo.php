@@ -38,7 +38,7 @@ class MemoryCreateInfo extends CreateInfo
         int $priority = self::PRIORITY_DEFAULT_VALUE,
         int $prefetch = self::PREFETCH_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::EPHEMERAL, $name, $priority);
+        parent::__construct(Driver::MEMORY, $name, $priority);
 
         assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
 
