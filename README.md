@@ -49,7 +49,7 @@ jobs:
                           # the consumer specified in the "server" section.
     pipelines:
         test:               # RoadRunner queue identifier
-            driver: ephemeral # - Queue driver name
+            driver: memory  # - Queue driver name
             queue: test       # - Internal (driver's) queue identifier
 ```
 

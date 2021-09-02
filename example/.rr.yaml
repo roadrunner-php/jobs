@@ -12,5 +12,5 @@ jobs:
     - "test"
   pipelines:
     test:
-      driver: ephemeral
+      driver: memory
 

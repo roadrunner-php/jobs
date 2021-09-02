@@ -22,7 +22,7 @@ interface Driver
      * @psalm-var DriverType
      * @var string
      */
-    public const EPHEMERAL = 'ephemeral';
+    public const MEMORY = 'memory';
 
     /**
      * AMQP-based queue server implementation.

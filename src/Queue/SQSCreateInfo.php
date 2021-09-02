@@ -117,7 +117,7 @@ final class SQSCreateInfo extends CreateInfo
         array $attributes = self::ATTRIBUTES_DEFAULT_VALUE,
         array $tags = self::TAGS_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::EPHEMERAL, $name, $priority);
+        parent::__construct(Driver::SQS, $name, $priority);
 
         assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
         assert($visibilityTimeout >= 0, 'Precondition [visibilityTimeout >= 0] failed');

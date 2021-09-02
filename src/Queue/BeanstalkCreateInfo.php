@@ -67,7 +67,7 @@ final class BeanstalkCreateInfo extends CreateInfo
         string $tube = self::TUBE_DEFAULT_VALUE,
         int $reserveTimeout = self::RESERVE_TIMEOUT_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::EPHEMERAL, $name, $priority);
+        parent::__construct(Driver::BEANSTALK, $name, $priority);
 
         assert($tubePriority >= 1, 'Precondition [tubePriority >= 1] failed');
         assert($tube !== '', 'Precondition [tube !== ""] failed');

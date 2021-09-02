@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Queue;
 
 /**
- * The DTO to create the Ephemeral driver.
+ * The DTO to create the Memory driver.
  *
  * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
  */
-final class EphemeralCreateInfo extends CreateInfo
+final class MemoryCreateInfo extends CreateInfo
 {
     /**
      * @var positive-int
@@ -38,7 +38,7 @@ final class EphemeralCreateInfo extends CreateInfo
         int $priority = self::PRIORITY_DEFAULT_VALUE,
         int $prefetch = self::PREFETCH_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::EPHEMERAL, $name, $priority);
+        parent::__construct(Driver::MEMORY, $name, $priority);
 
         assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
 
