@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests;
 
+use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Jobs;
 use Spiral\RoadRunner\Jobs\JobsInterface;
+use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
 class JobsTestCase extends TestCase
@@ -26,6 +28,26 @@ class JobsTestCase extends TestCase
     protected function jobs(array $mapping = []): JobsInterface
     {
         return new Jobs($this->rpc($mapping));
+    }
+
+    /**
+     * @testdox Checking creating a new queue with given info.
+     */
+    public function testCreate(): void
+    {
+        $dto = new CreateInfo('bar', 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
+
+        $jobs = $this->jobs([
+            'jobs.Declare' => function (DeclareRequest $request) use($dto) {
+                $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
+                $this->assertSame($dto->getDriver(), $request->getPipeline()->offsetGet('driver'));
+                $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
+            },
+        ]);
+
+        $queue = $jobs->create($dto);
+
+        $this->assertSame('foo', $queue->getName());
     }
 
     /**
