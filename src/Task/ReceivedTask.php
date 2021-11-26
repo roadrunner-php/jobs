@@ -65,22 +65,6 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     }
 
     /**
-     * @return void
-     */
-    public function __destruct()
-    {
-        // This is a little sugar so that the status of the
-        // current task is not lost.
-        try {
-            if ($this->completed === null) {
-                $this->complete();
-            }
-        } catch (JobsException $e) {
-            // Suppress shutdown exception
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function complete(): void
