@@ -109,12 +109,17 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
             'Precondition [error is string|Stringable|Throwable] failed'
         );
 
-        $this->respond(Type::ERROR, [
+        $data = [
             'message'       => (string)$error,
             'requeue'       => $requeue,
             'delay_seconds' => $this->delay,
-            'headers'       => $this->headers,
-        ]);
+        ];
+
+        if (!empty($this->headers)) {
+            $data['headers'] = $this->headers;
+        }
+
+        $this->respond(Type::ERROR, $data);
     }
 
     /**
