@@ -204,6 +204,20 @@ final class Queue implements QueueInterface, SerializerAwareInterface
      */
     public function isPaused(): bool
     {
+        $stat = $this->getPipelineStat();
+
+        return $stat !== null && ! $stat->getReady();
+    }
+
+    private function createRPCConnection(): RPCInterface
+    {
+        $env = Environment::fromGlobals();
+
+        return RPC::create($env->getRPCAddress());
+    }
+
+    public function getPipelineStat(): ?Stat
+    {
         try {
             /** @var Stats $stats */
             $stats = $this->rpc->call('jobs.Stat', '', Stats::class);
@@ -214,20 +228,10 @@ final class Queue implements QueueInterface, SerializerAwareInterface
         /** @var Stat $stat */
         foreach ($stats->getStats() as $stat) {
             if ($stat->getPipeline() === $this->name) {
-                return $stat->getActive() !== 0;
+                return $stat;
             }
         }
 
-        return false;
-    }
-
-    /**
-     * @return RPCInterface
-     */
-    private function createRPCConnection(): RPCInterface
-    {
-        $env = Environment::fromGlobals();
-
-        return RPC::create($env->getRPCAddress());
+        return null;
     }
 }
