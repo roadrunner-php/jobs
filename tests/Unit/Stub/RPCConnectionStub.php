@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\RoadRunner\Jobs\Tests\Stub;
+namespace Spiral\RoadRunner\Jobs\Tests\Unit\Stub;
 
 use Google\Protobuf\Internal\Message;
 use Spiral\Goridge\RPC\Codec\JsonCodec;
