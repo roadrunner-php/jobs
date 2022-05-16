@@ -192,6 +192,7 @@ final class Pipeline implements SerializerAwareInterface
             'priority'    => $options->getPriority(),
             'pipeline'    => $this->queue->getName(),
             'delay'       => $options->getDelay(),
+            'auto_ack'    => $options->getAutoAck(),
         ]);
     }
 

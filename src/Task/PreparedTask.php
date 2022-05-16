@@ -136,6 +136,27 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getAutoAck(): bool
+    {
+        return $this->options->getAutoAck();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function withAutoAck(bool $autoAck): self
+    {
+        $self = clone $this;
+        $self->options = Options::from($this->options)
+            ->withAutoAck($autoAck)
+        ;
+
+        return $self;
+    }
+
+    /**
      * @return int
      */
     private function getPayloadNextIndex(): int

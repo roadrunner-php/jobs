@@ -75,6 +75,78 @@ class OptionsTestCase extends TestCase
         $this->assertSame($modified->getDelay(), $defaults->merge($modified)->getDelay());
     }
 
+    public function testAutoAck(): void
+    {
+        $options = new Options(
+            Options::DEFAULT_DELAY,
+            Options::DEFAULT_PRIORITY,
+            $expected = true
+        );
+
+        $this->assertSame($expected, $options->getAutoAck());
+    }
+
+    public function testAutoAckImmutability(): void
+    {
+        $original = new Options(
+            Options::DEFAULT_DELAY,
+            Options::DEFAULT_PRIORITY,
+            $expected = true
+        );
+
+        $this->assertSame($expected, $original->getAutoAck());
+
+        $mutable = $original->withAutoAck(false);
+
+        $this->assertSame(true, $original->getAutoAck());
+        $this->assertSame(false, $mutable->getAutoAck());
+    }
+
+    public function testAutoAckCreationFromAnotherOne(): void
+    {
+        $copy = Options::from(
+            $original = new Options(
+                Options::DEFAULT_DELAY,
+                Options::DEFAULT_PRIORITY,
+                $autoAck = true
+            )
+        );
+
+        $this->assertNotSame($original, $copy);
+
+        $this->assertSame($autoAck, $original->autoAck);
+        $this->assertSame($original->autoAck, $copy->autoAck);
+    }
+
+    public function testAutoAckMergingWithDefaults(): void
+    {
+        $original = new Options(
+            Options::DEFAULT_DELAY,
+            Options::DEFAULT_PRIORITY,
+            $autoAck = true
+        );
+
+        $this->assertSame($autoAck, $original->merge(new Options())->getAutoAck());
+        $this->assertSame($autoAck, (new Options())->merge($original)->getAutoAck());
+    }
+
+    public function testAutoAckMergingByNewestValue(): void
+    {
+        $defaults = new Options(
+            Options::DEFAULT_DELAY,
+            Options::DEFAULT_PRIORITY,
+            false
+        );
+
+        $modified = new Options(
+            Options::DEFAULT_DELAY,
+            Options::DEFAULT_PRIORITY,
+            true
+        );
+
+        $this->assertSame(true, $defaults->merge($modified)->getAutoAck());
+    }
+
     public function testPriority(): void
     {
         $options = new Options(

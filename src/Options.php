@@ -24,18 +24,25 @@ final class Options implements OptionsInterface
     public int $priority = self::DEFAULT_PRIORITY;
 
     /**
+     * @var bool
+     */
+    public bool $autoAck = self::DEFAULT_AUTO_ACK;
+
+    /**
      * @param positive-int|0 $delay
      * @param positive-int|0 $priority
      */
     public function __construct(
         int $delay = self::DEFAULT_DELAY,
-        int $priority = self::DEFAULT_PRIORITY
+        int $priority = self::DEFAULT_PRIORITY,
+        bool $autoAck = self::DEFAULT_AUTO_ACK
     ) {
         assert($delay >= 0, 'Precondition [delay >= 0] failed');
         assert($priority >= 0, 'Precondition [priority >= 0] failed');
 
         $this->delay = $delay;
         $this->priority = $priority;
+        $this->autoAck = $autoAck;
     }
 
     /**
@@ -46,7 +53,8 @@ final class Options implements OptionsInterface
     {
         return new self(
             $options->getDelay(),
-            $options->getPriority()
+            $options->getPriority(),
+            $options->getAutoAck()
         );
     }
 
@@ -103,6 +111,28 @@ final class Options implements OptionsInterface
     }
 
     /**
+     * @psalm-immutable
+     * @return bool
+     */
+    public function getAutoAck(): bool
+    {
+        return $this->autoAck;
+    }
+
+    /**
+     * @psalm-immutable
+     * @param bool $autoAck
+     * @return $this
+     */
+    public function withAutoAck(bool $autoAck): self
+    {
+        $self = clone $this;
+        $self->autoAck = $autoAck;
+
+        return $self;
+    }
+
+    /**
      * @param OptionsInterface|null $options
      * @return OptionsInterface
      */
@@ -129,6 +159,10 @@ final class Options implements OptionsInterface
 
         if (($priority = $options->getPriority()) !== self::DEFAULT_PRIORITY) {
             $self->priority = $priority;
+        }
+
+        if (($autoAck = $options->getAutoAck()) !== self::DEFAULT_AUTO_ACK) {
+            $self->autoAck = $autoAck;
         }
 
         return $self;
