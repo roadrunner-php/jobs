@@ -33,6 +33,10 @@ class Job extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      */
     protected $options = null;
+    /**
+     * Generated from protobuf field <code>bool auto_ack = 6;</code>
+     */
+    protected $auto_ack = false;
 
     /**
      * Constructor.
@@ -45,6 +49,7 @@ class Job extends \Google\Protobuf\Internal\Message
      *     @type string $payload
      *     @type array|\Google\Protobuf\Internal\MapField $headers
      *     @type \Spiral\RoadRunner\Jobs\DTO\V1\Options $options
+     *     @type bool $auto_ack
      * }
      */
     public function __construct($data = NULL) {
@@ -146,7 +151,17 @@ class Job extends \Google\Protobuf\Internal\Message
      */
     public function getOptions()
     {
-        return $this->options;
+        return isset($this->options) ? $this->options : null;
+    }
+
+    public function hasOptions()
+    {
+        return isset($this->options);
+    }
+
+    public function clearOptions()
+    {
+        unset($this->options);
     }
 
     /**
@@ -158,6 +173,28 @@ class Job extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkMessage($var, \Spiral\RoadRunner\Jobs\DTO\V1\Options::class);
         $this->options = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool auto_ack = 6;</code>
+     * @return bool
+     */
+    public function getAutoAck()
+    {
+        return $this->auto_ack;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool auto_ack = 6;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setAutoAck($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->auto_ack = $var;
 
         return $this;
     }

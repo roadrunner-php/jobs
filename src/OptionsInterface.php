@@ -24,6 +24,11 @@ interface OptionsInterface
     public const DEFAULT_PRIORITY = 10;
 
     /**
+     * @var bool
+     */
+    public const DEFAULT_AUTO_ACK = false;
+
+    /**
      * @psalm-immutable
      * @return positive-int|0
      */
@@ -34,4 +39,10 @@ interface OptionsInterface
      * @return positive-int|0
      */
     public function getPriority(): int;
+
+    /**
+     * @psalm-immutable
+     * @return bool
+     */
+    public function getAutoAck(): bool;
 }

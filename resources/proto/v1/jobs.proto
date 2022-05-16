@@ -33,6 +33,7 @@ message Job {
     string payload = 3;
     map<string, HeaderValue> headers = 4;
     Options options = 5;
+    bool auto_ack = 6;
 }
 
 message Options {
