@@ -143,11 +143,12 @@ final class Pipeline implements SerializerAwareInterface
     private function taskToProto(TaskInterface $task, OptionsInterface $options): Job
     {
         return new Job([
-            'job'     => $task->getName(),
-            'id'      => $this->createTaskId(),
-            'payload' => $this->payloadToProtoData($task),
-            'headers' => $this->headersToProtoData($task),
-            'options' => $this->optionsToProto($options),
+            'job'      => $task->getName(),
+            'id'       => $this->createTaskId(),
+            'payload'  => $this->payloadToProtoData($task),
+            'headers'  => $this->headersToProtoData($task),
+            'options'  => $this->optionsToProto($options),
+            'auto_ack' => $options->getAutoAck(),
         ]);
     }
 
@@ -189,10 +190,9 @@ final class Pipeline implements SerializerAwareInterface
     private function optionsToProto(OptionsInterface $options): OptionsMessage
     {
         return new OptionsMessage([
-            'priority'    => $options->getPriority(),
-            'pipeline'    => $this->queue->getName(),
-            'delay'       => $options->getDelay(),
-            'auto_ack'    => $options->getAutoAck(),
+            'priority' => $options->getPriority(),
+            'pipeline' => $this->queue->getName(),
+            'delay'    => $options->getDelay(),
         ]);
     }
 
