@@ -57,12 +57,10 @@ interface Driver
     public const REDIS = 'redis';
 
     /**
-     * @internal NOT Available: Reserved for future use.
-     *
      * @psalm-var DriverType
      * @var string
      */
-    public const NAST = 'nast';
+    public const NATS = 'nats';
 
     /**
      * @internal NOT Available: Reserved for future use.
