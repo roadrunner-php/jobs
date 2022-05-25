@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\RoadRunner\Jobs\Tests;
+namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
 use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;

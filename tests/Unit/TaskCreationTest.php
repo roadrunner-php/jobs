@@ -9,9 +9,8 @@
 
 declare(strict_types=1);
 
-namespace Spiral\RoadRunner\Jobs\Tests;
+namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 

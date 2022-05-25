@@ -100,7 +100,7 @@ jobs:
 
       # Execution
       - name: Static Analysis
-        run: vendor/bin/psalm --no-cache
+        run: vendor/bin/psalm --no-cache --php-version=8.0
 
 
   coding-standards:
@@ -160,7 +160,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0']
+        php: ['7.4', '8.0', '8.1']
         os: [ubuntu-latest]
         stability: [prefer-lowest, prefer-stable]
 
