@@ -64,6 +64,11 @@ final class AMQPCreateInfo extends CreateInfo
     public const REQUEUE_ON_FAIL_DEFAULT_VALUE = false;
 
     /**
+     * @var bool
+     */
+    public const DURABLE_DEFAULT_VALUE = false;
+
+    /**
      * @var positive-int
      */
     public int $prefetch = self::PREFETCH_DEFAULT_VALUE;
@@ -104,6 +109,11 @@ final class AMQPCreateInfo extends CreateInfo
     public bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE;
 
     /**
+     * @var bool
+     */
+    public bool $durable = self::DURABLE_DEFAULT_VALUE;
+
+    /**
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
@@ -114,6 +124,7 @@ final class AMQPCreateInfo extends CreateInfo
      * @param bool $exclusive
      * @param bool $multipleAck
      * @param bool $requeueOnFail
+     * @param bool $durable
      */
     public function __construct(
         string $name,
@@ -125,7 +136,8 @@ final class AMQPCreateInfo extends CreateInfo
         string $routingKey = self::ROUTING_KEY_DEFAULT_VALUE,
         bool $exclusive = self::EXCLUSIVE_DEFAULT_VALUE,
         bool $multipleAck = self::MULTIPLE_ACK_DEFAULT_VALUE,
-        bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE
+        bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE,
+        bool $durable = self::DURABLE_DEFAULT_VALUE
     ) {
         parent::__construct(Driver::AMQP, $name, $priority);
 
@@ -142,6 +154,7 @@ final class AMQPCreateInfo extends CreateInfo
         $this->exclusive = $exclusive;
         $this->multipleAck = $multipleAck;
         $this->requeueOnFail = $requeueOnFail;
+        $this->durable = $durable;
     }
 
     /**
@@ -158,6 +171,7 @@ final class AMQPCreateInfo extends CreateInfo
             'exclusive'       => $this->exclusive,
             'multiple_ack'    => $this->multipleAck,
             'requeue_on_fail' => $this->requeueOnFail,
+            'durable'         => $this->durable,
         ]);
     }
 }
