@@ -20,7 +20,7 @@ use Spiral\RoadRunner\Jobs\DTO\V1\Stat;
 use Spiral\RoadRunner\Jobs\DTO\V1\Stats;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
-use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
+use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
@@ -62,7 +62,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
             ->withCodec(new ProtobufCodec())
         ;
 
-        $this->pipeline = new Pipeline($this, $this->rpc, $serializer ?? new DefaultSerializer());
+        $this->pipeline = new Pipeline($this, $this->rpc, $serializer ?? new JsonSerializer());
 
         $this->name = $name;
         $this->options = new Options();

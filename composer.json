@@ -20,7 +20,6 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "opis/closure": "^3.6",
         "ramsey/uuid": "^3 || ^4",
         "spiral/roadrunner-worker": "^2.0",
         "spiral/roadrunner": "^2.0",

@@ -20,7 +20,7 @@ use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
-use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
+use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 
@@ -45,7 +45,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
         $this->rpc = ($rpc ?? $this->createRPCConnection())
             ->withCodec(new ProtobufCodec());
 
-        $this->serializer = $serializer ?? new DefaultSerializer();
+        $this->serializer = $serializer ?? new JsonSerializer();
     }
 
     /**
