@@ -46,6 +46,12 @@ interface Driver
      * @psalm-var DriverType
      * @var string
      */
+    public const BOLTDB = 'boltdb';
+
+    /**
+     * @psalm-var DriverType
+     * @var string
+     */
     public const SQS = 'sqs';
 
     /**
@@ -61,6 +67,12 @@ interface Driver
      * @var string
      */
     public const NATS = 'nats';
+
+    /**
+     * @psalm-var DriverType
+     * @var string
+     */
+    public const KAFKA = 'kafka';
 
     /**
      * @internal NOT Available: Reserved for future use.

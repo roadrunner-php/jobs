@@ -9,7 +9,8 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * single job request
+ * single job request (jobs.Push RPC endpoint) -> Push(j *jobsProto.PushRequest, _ *jobsProto.Empty)
+ * response `message Empty`
  *
  * Generated from protobuf message <code>jobs.v1.PushRequest</code>
  */
@@ -18,7 +19,7 @@ class PushRequest extends \Google\Protobuf\Internal\Message
     /**
      * Generated from protobuf field <code>.jobs.v1.Job job = 1;</code>
      */
-    protected $job = null;
+    private $job = null;
 
     /**
      * Constructor.
@@ -40,17 +41,7 @@ class PushRequest extends \Google\Protobuf\Internal\Message
      */
     public function getJob()
     {
-        return isset($this->job) ? $this->job : null;
-    }
-
-    public function hasJob()
-    {
-        return isset($this->job);
-    }
-
-    public function clearJob()
-    {
-        unset($this->job);
+        return $this->job;
     }
 
     /**

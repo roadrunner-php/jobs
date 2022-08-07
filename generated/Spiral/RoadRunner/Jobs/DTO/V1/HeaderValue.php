@@ -9,6 +9,8 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
+ * HeaderValue represents []string value for the header (map[string][]string)
+ *
  * Generated from protobuf message <code>jobs.v1.HeaderValue</code>
  */
 class HeaderValue extends \Google\Protobuf\Internal\Message

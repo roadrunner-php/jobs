@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-final class Options implements OptionsInterface
+class Options implements OptionsInterface
 {
     /**
      * @var positive-int|0
