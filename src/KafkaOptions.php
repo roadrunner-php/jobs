@@ -57,11 +57,12 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         $this->topic = $topic;
         $this->offset = $offset;
         $this->partition = $partition;
+        $this->metadata = $metadata;
     }
 
     public static function from(OptionsInterface $options): self
     {
-        $self = parent::from($options);
+        $self = new self('default', $options->getDelay(), $options->getPriority(), $options->getAutoAck());
 
         if ($options instanceof KafkaOptionsInterface) {
             return $self
@@ -80,6 +81,8 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         $self = parent::merge($options);
 
         if ($options instanceof KafkaOptionsInterface) {
+            $self->topic = $options->getTopic();
+
             if (($metadata = $options->getMetadata()) !== self::DEFAULT_METADATA) {
                 $self->metadata = $metadata;
             }
@@ -174,5 +177,18 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         assert($this->partition >= 0, 'Precondition [partition >= 0] failed');
 
         return $this->partition;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'priority' => $this->priority,
+            'delay' => $this->delay,
+            'topic' => $this->topic,
+            'metadata' => $this->metadata,
+            'offset' => $this->offset,
+            'partition' => $this->partition,
+            'auto_ack' => $this->autoAck,
+        ];
     }
 }

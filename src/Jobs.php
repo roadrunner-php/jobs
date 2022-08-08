@@ -58,7 +58,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 'pipeline' => $this->toStringOfStringMap($info->toArray()),
             ]));
 
-            return $this->connect($info->getName());
+            return $this->connect($info->getName(), OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -121,15 +121,11 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
         return $self;
     }
 
-    /**
-     * @param string $queue
-     * @return QueueInterface
-     */
-    public function connect(string $queue): QueueInterface
+    public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
     {
         assert($queue !== '', 'Precondition [queue !== ""] failed');
 
-        return new Queue($queue, $this->rpc, $this->serializer);
+        return new Queue($queue, $this->rpc, $this->serializer, $options);
     }
 
     /**

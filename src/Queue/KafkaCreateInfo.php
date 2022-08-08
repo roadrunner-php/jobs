@@ -266,7 +266,8 @@ final class KafkaCreateInfo extends CreateInfo
             'compression_level' => $this->compressionLevel,
             'idempotent' => $this->idempotent,
             'heartbeat_interval' => $this->heartbeatInterval,
-            'session_timeout' => $this->sessionTimeout,;
+            'session_timeout' => $this->sessionTimeout,
+        ];
 
         if ($this->partitionsOffsets !== null) {
             $info['partitions_offsets'] = $this->partitionsOffsets;

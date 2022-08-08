@@ -103,9 +103,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
 
         $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withDelay($seconds)
-        ;
+        $self->options = $this->options->withDelay($seconds);
 
         return $self;
     }
@@ -128,9 +126,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
         assert($priority >= 0, 'Precondition [priority >= 0] failed');
 
         $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withPriority($priority)
-        ;
+        $self->options = $this->options->withPriority($priority);
 
         return $self;
     }
@@ -149,9 +145,15 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     public function withAutoAck(bool $autoAck): self
     {
         $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withAutoAck($autoAck)
-        ;
+        $self->options = $this->options->withAutoAck($autoAck);
+
+        return $self;
+    }
+
+    public function withOptions(OptionsInterface $options): self
+    {
+        $self = clone $this;
+        $self->options = $options;
 
         return $self;
     }
