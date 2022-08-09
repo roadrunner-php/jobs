@@ -194,7 +194,10 @@ final class Pipeline implements SerializerAwareInterface
         }
 
         if (\method_exists($options, 'toArray')) {
-            return new OptionsMessage(\array_merge($options->toArray(), ['pipeline' => $this->queue->getName()]));
+            /** @var array $data */
+            $data = $options->toArray();
+
+            return new OptionsMessage(\array_merge($data, ['pipeline' => $this->queue->getName()]));
         }
 
         return new OptionsMessage([

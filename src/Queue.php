@@ -131,7 +131,10 @@ final class Queue implements QueueInterface, SerializerAwareInterface
      */
     public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface
     {
-        $options = $this->options->mergeOptional($options);
+        if (\method_exists($this->options, 'mergeOptional')) {
+            /** @var OptionsInterface $options */
+            $options = $this->options->mergeOptional($options);
+        }
 
         return new PreparedTask($name, $payload, $options);
     }

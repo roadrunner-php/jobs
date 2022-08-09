@@ -33,11 +33,11 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @param non-empty-string $topic
-     * @param int $delay
-     * @param int $priority
+     * @psalm-param 0|positive-int $delay
+     * @psalm-param 0|positive-int $priority
      * @param bool $autoAck
      * @param string $metadata
-     * @param int $offset
+     * @psalm-param PartitionOffsetEnum $offset
      * @param int $partition
      */
     public function __construct(
@@ -60,6 +60,10 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         $this->metadata = $metadata;
     }
 
+    /**
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
+     */
     public static function from(OptionsInterface $options): self
     {
         $self = new self('default', $options->getDelay(), $options->getPriority(), $options->getAutoAck());
@@ -77,7 +81,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     public function merge(OptionsInterface $options): OptionsInterface
     {
-        /** @var KafkaOptionsInterface $self */
+        /** @var KafkaOptions $self */
         $self = parent::merge($options);
 
         if ($options instanceof KafkaOptionsInterface) {
@@ -141,7 +145,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
-     * @param int|PartitionOffsetEnum $offset
+     * @param PartitionOffsetEnum $offset
      * @return $this
      */
     public function withOffset(int $offset): self

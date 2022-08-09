@@ -121,6 +121,9 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
         return $self;
     }
 
+    /**
+     * @param non-empty-string $queue
+     */
     public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
     {
         assert($queue !== '', 'Precondition [queue !== ""] failed');
@@ -187,7 +190,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
             /** @var Pipelines $result */
             $result = $this->rpc->call('jobs.List', '', Pipelines::class);
 
-            /** @var string $queue */
+            /** @psalm-var non-empty-string $queue */
             foreach ($result->getPipelines() as $queue) {
                 yield $queue => $this->connect($queue);
             }

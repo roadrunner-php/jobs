@@ -47,7 +47,6 @@ class Options implements OptionsInterface
 
     /**
      * @param OptionsInterface $options
-     * @return static
      */
     public static function from(OptionsInterface $options): self
     {

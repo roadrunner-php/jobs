@@ -89,9 +89,6 @@ final class KafkaCreateInfo extends CreateInfo
      */
     public string $topic;
 
-    /**
-     * @var non-empty-string
-     */
     public string $groupId = self::GROUP_ID_DEFAULT_VALUE;
 
     /**
@@ -139,7 +136,7 @@ final class KafkaCreateInfo extends CreateInfo
     public int $maxMessageBytes = self::MAX_MESSAGE_BYTES_DEFAULT_VALUE;
 
     /**
-     * @var RequiredAcks
+     * @var RequiredAcksEnum
      */
     public int $requiredAcks = self::REQUIRED_ACKS_DEFAULT_VALUE;
 
@@ -184,9 +181,9 @@ final class KafkaCreateInfo extends CreateInfo
      * @param non-empty-string $kafkaVersion
      * @param positive-int $replicationFactor
      * @param array<positive-int, array<positive-int>>|null $replicaAssignment
-     * @param array<positive-int, array<positive-int>>|null $configEntries
+     * @param array<non-empty-string, mixed>|null $configEntries
      * @param positive-int $maxMessageBytes
-     * @psalm-param RequiredAcks $requiredAcks
+     * @psalm-param RequiredAcksEnum $requiredAcks
      * @param positive-int $timeout
      * @psalm-param CompressionCodecEnum $compressionCodec
      * @param positive-int $compressionLevel
@@ -223,10 +220,10 @@ final class KafkaCreateInfo extends CreateInfo
         assert($maxOpenRequests >= 1, 'Precondition [maxOpenRequests >= 1] failed');
         assert($replicationFactor >= 1, 'Precondition [replicationFactor >= 1] failed');
         assert($maxMessageBytes >= 1, 'Precondition [maxMessageBytes >= 1] failed');
-        assert($timeout >= 0, 'Precondition [timeout >= 1] failed');
+        assert($timeout >= 1, 'Precondition [timeout >= 1] failed');
         assert($compressionCodec !== '', 'Precondition [compressionCodec !== ""] failed');
-        assert($compressionLevel >= 0, 'Precondition [compressionLevel >= 1] failed');
-        assert($heartbeatInterval >= 0, 'Precondition [heartbeatInterval >= 1] failed');
+        assert($compressionLevel >= 1, 'Precondition [compressionLevel >= 1] failed');
+        assert($heartbeatInterval >= 1, 'Precondition [heartbeatInterval >= 1] failed');
 
         $this->topic = $topic;
         $this->groupId = $groupId;
