@@ -29,10 +29,7 @@ use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
 
 final class Queue implements QueueInterface, SerializerAwareInterface
 {
-    /**
-     * @var Options
-     */
-    private Options $options;
+    private OptionsInterface $options;
 
     /**
      * @var non-empty-string
@@ -54,8 +51,12 @@ final class Queue implements QueueInterface, SerializerAwareInterface
      * @param RPCInterface|null $rpc
      * @param SerializerInterface|null $serializer
      */
-    public function __construct(string $name, RPCInterface $rpc = null, SerializerInterface $serializer = null)
-    {
+    public function __construct(
+        string $name,
+        RPCInterface $rpc = null,
+        SerializerInterface $serializer = null,
+        OptionsInterface $options = null
+    ) {
         assert($name !== '', 'Precondition [name !== ""] failed');
 
         $this->rpc = ($rpc ?? $this->createRPCConnection())
@@ -65,7 +66,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
         $this->pipeline = new Pipeline($this, $this->rpc, $serializer ?? new DefaultSerializer());
 
         $this->name = $name;
-        $this->options = new Options();
+        $this->options = $options ?? new Options();
     }
 
     /**
@@ -130,9 +131,10 @@ final class Queue implements QueueInterface, SerializerAwareInterface
      */
     public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface
     {
-        $options = Options::from($this->options)
-            ->mergeOptional($options)
-        ;
+        if (\method_exists($this->options, 'mergeOptional')) {
+            /** @var OptionsInterface $options */
+            $options = $this->options->mergeOptional($options);
+        }
 
         return new PreparedTask($name, $payload, $options);
     }

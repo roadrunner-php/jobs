@@ -14,9 +14,9 @@ use Google\Protobuf\Internal\GPBUtil;
 class Stats extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>repeated .jobs.v1.Stat Stats = 1;</code>
+     * Generated from protobuf field <code>repeated .jobs.v1.Stat stats = 1;</code>
      */
-    private $Stats;
+    private $stats;
 
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class Stats extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type \Spiral\RoadRunner\Jobs\DTO\V1\Stat[]|\Google\Protobuf\Internal\RepeatedField $Stats
+     *     @type \Spiral\RoadRunner\Jobs\DTO\V1\Stat[]|\Google\Protobuf\Internal\RepeatedField $stats
      * }
      */
     public function __construct($data = NULL) {
@@ -33,23 +33,23 @@ class Stats extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>repeated .jobs.v1.Stat Stats = 1;</code>
+     * Generated from protobuf field <code>repeated .jobs.v1.Stat stats = 1;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getStats()
     {
-        return $this->Stats;
+        return $this->stats;
     }
 
     /**
-     * Generated from protobuf field <code>repeated .jobs.v1.Stat Stats = 1;</code>
+     * Generated from protobuf field <code>repeated .jobs.v1.Stat stats = 1;</code>
      * @param \Spiral\RoadRunner\Jobs\DTO\V1\Stat[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setStats($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \Spiral\RoadRunner\Jobs\DTO\V1\Stat::class);
-        $this->Stats = $arr;
+        $this->stats = $arr;
 
         return $this;
     }

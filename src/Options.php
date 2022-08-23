@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-final class Options implements OptionsInterface
+class Options implements OptionsInterface
 {
     /**
      * @var positive-int|0
@@ -47,7 +47,6 @@ final class Options implements OptionsInterface
 
     /**
      * @param OptionsInterface $options
-     * @return static
      */
     public static function from(OptionsInterface $options): self
     {
@@ -166,5 +165,14 @@ final class Options implements OptionsInterface
         }
 
         return $self;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'priority' => $this->getPriority(),
+            'delay' => $this->getDelay(),
+            'auto_ack' => $this->getAutoAck(),
+        ];
     }
 }

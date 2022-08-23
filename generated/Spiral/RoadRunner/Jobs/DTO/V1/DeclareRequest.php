@@ -9,6 +9,10 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
+ * ---------------------------------------------
+ * DeclareRequest used to dynamically declare pipeline -> Declare(req *jobsProto.DeclareRequest, _ *jobsProto.Empty)
+ * response `message Empty`
+ *
  * Generated from protobuf message <code>jobs.v1.DeclareRequest</code>
  */
 class DeclareRequest extends \Google\Protobuf\Internal\Message

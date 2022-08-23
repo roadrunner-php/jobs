@@ -9,7 +9,8 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * batch jobs request
+ * batch jobs request (jobs.PushBatch RPC endpoint) -> PushBatch(j *jobsProto.PushBatchRequest, _ *jobsProto.Empty)
+ * response `message Empty`
  *
  * Generated from protobuf message <code>jobs.v1.PushBatchRequest</code>
  */
