@@ -166,4 +166,13 @@ class Options implements OptionsInterface
 
         return $self;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'priority' => $this->getPriority(),
+            'delay' => $this->getDelay(),
+            'auto_ack' => $this->getAutoAck(),
+        ];
+    }
 }

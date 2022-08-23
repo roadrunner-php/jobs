@@ -20,11 +20,11 @@ use Spiral\RoadRunner\Jobs\DTO\V1\PushBatchRequest;
 use Spiral\RoadRunner\Jobs\DTO\V1\PushRequest;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
+use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
-use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\QueuedTask;
 use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
@@ -144,11 +144,11 @@ final class Pipeline implements SerializerAwareInterface
     private function taskToProto(TaskInterface $task, OptionsInterface $options): Job
     {
         return new Job([
-            'job'      => $task->getName(),
-            'id'       => $this->createTaskId(),
-            'payload'  => $this->payloadToProtoData($task),
-            'headers'  => $this->headersToProtoData($task),
-            'options'  => $this->optionsToProto($options),
+            'job' => $task->getName(),
+            'id' => $this->createTaskId(),
+            'payload' => $this->payloadToProtoData($task),
+            'headers' => $this->headersToProtoData($task),
+            'options' => $this->optionsToProto($options),
         ]);
     }
 
@@ -189,22 +189,24 @@ final class Pipeline implements SerializerAwareInterface
      */
     private function optionsToProto(OptionsInterface $options): OptionsMessage
     {
-        if ($options instanceof PreparedTask) {
+        if ($options instanceof OptionsAwareInterface) {
             $options = $options->getOptions();
         }
 
         if (\method_exists($options, 'toArray')) {
             /** @var array $data */
             $data = $options->toArray();
-
-            return new OptionsMessage(\array_merge($data, ['pipeline' => $this->queue->getName()]));
+        } else {
+            $data = [
+                'priority' => $options->getPriority(),
+                'delay' => $options->getDelay(),
+                'auto_ack' => $options->getAutoAck(),
+            ];
         }
 
-        return new OptionsMessage([
-            'priority' => $options->getPriority(),
-            'pipeline' => $this->queue->getName(),
-            'delay'    => $options->getDelay(),
-        ]);
+        return new OptionsMessage(
+            \array_merge($data, ['pipeline' => $this->queue->getName()])
+        );
     }
 
     /**

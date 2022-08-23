@@ -6,7 +6,7 @@ namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 
-class OptionsFactory
+final class OptionsFactory
 {
     public static function create(string $driver): OptionsInterface
     {

@@ -12,12 +12,13 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Options;
+use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 
 /**
  * @psalm-suppress MissingImmutableAnnotation QueuedTask class is mutable.
  */
-final class PreparedTask extends Task implements PreparedTaskInterface
+final class PreparedTask extends Task implements PreparedTaskInterface, OptionsAwareInterface
 {
     use WritableHeadersTrait;
 

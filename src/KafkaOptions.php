@@ -185,14 +185,11 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     public function toArray(): array
     {
-        return [
-            'priority' => $this->priority,
-            'delay' => $this->delay,
+        return \array_merge(parent::toArray(), [
             'topic' => $this->topic,
             'metadata' => $this->metadata,
             'offset' => $this->offset,
             'partition' => $this->partition,
-            'auto_ack' => $this->autoAck,
-        ];
+        ]);
     }
 }
