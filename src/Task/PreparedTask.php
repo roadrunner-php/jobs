@@ -48,7 +48,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
     }
 
     /**
-     * @return OptionsInterface
+     * {@inheritDoc}
      */
     public function getOptions(): OptionsInterface
     {
@@ -166,7 +166,10 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
-    public function withOptions(OptionsInterface $options): self
+    /**
+     * {@inheritDoc}
+     */
+    public function withOptions(OptionsInterface $options): OptionsAwareInterface
     {
         $self = clone $this;
         $self->options = $options;
