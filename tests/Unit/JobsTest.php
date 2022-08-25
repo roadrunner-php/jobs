@@ -30,6 +30,14 @@ class JobsTestCase extends TestCase
         return new Jobs($this->rpc($mapping));
     }
 
+    public function testIsAvailable(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectErrorMessage('Spiral\RoadRunner\Jobs\Jobs::isAvailable method is deprecated.');
+
+        $this->jobs()->isAvailable();
+    }
+
     /**
      * @testdox Checking creating a new queue with given info.
      */
