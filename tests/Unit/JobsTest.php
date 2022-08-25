@@ -51,48 +51,6 @@ class JobsTestCase extends TestCase
     }
 
     /**
-     * @testdox The "jobs" should be available when checking the list of plugins.
-     */
-    public function testIsAvailable(): void
-    {
-        $jobs = $this->jobs(['informer.List' => '["jobs"]']);
-
-        $this->assertTrue($jobs->isAvailable());
-    }
-
-    /**
-     * @testdox If the list does not return "jobs", then "isAvailable()" should return false.
-     */
-    public function testNotAvailable(): void
-    {
-        $jobs = $this->jobs(['informer.List' => '[]']);
-
-        $this->assertFalse($jobs->isAvailable());
-    }
-
-    /**
-     * @testdox When checking jobs existence, incorrect server responses are processed correctly.
-     */
-    public function testNotAvailableOnNonArrayResponse(): void
-    {
-        $jobs = $this->jobs(['informer.List' => '42']);
-
-        $this->assertFalse($jobs->isAvailable());
-    }
-
-    /**
-     * @testdox In the case that the RR returned an error, this is processed correctly and the false is returned.
-     */
-    public function testNotAvailableOnErrorResponse(): void
-    {
-        $jobs = $this->jobs(['informer.List' => (static function () {
-            throw new \Exception();
-        })]);
-
-        $this->assertFalse($jobs->isAvailable());
-    }
-
-    /**
      * @testdox Checking the interaction with the RPC by the method of obtaining a list of queues.
      */
     public function testQueueListValues(): void
