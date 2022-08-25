@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
-use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
+use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
@@ -68,7 +68,7 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
     public function __construct(WorkerInterface $worker = null, SerializerInterface $serializer = null)
     {
         $this->worker = $worker ?? Worker::create();
-        $this->serializer = $serializer ?? new DefaultSerializer();
+        $this->serializer = $serializer ?? new JsonSerializer();
     }
 
     /**
