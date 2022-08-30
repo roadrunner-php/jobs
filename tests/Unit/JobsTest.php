@@ -30,6 +30,14 @@ class JobsTestCase extends TestCase
         return new Jobs($this->rpc($mapping));
     }
 
+    public function testIsAvailable(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectErrorMessage('Spiral\RoadRunner\Jobs\Jobs::isAvailable method is deprecated.');
+
+        $this->jobs()->isAvailable();
+    }
+
     /**
      * @testdox Checking creating a new queue with given info.
      */
@@ -48,48 +56,6 @@ class JobsTestCase extends TestCase
         $queue = $jobs->create($dto);
 
         $this->assertSame('foo', $queue->getName());
-    }
-
-    /**
-     * @testdox The "jobs" should be available when checking the list of plugins.
-     */
-    public function testIsAvailable(): void
-    {
-        $jobs = $this->jobs(['informer.List' => '["jobs"]']);
-
-        $this->assertTrue($jobs->isAvailable());
-    }
-
-    /**
-     * @testdox If the list does not return "jobs", then "isAvailable()" should return false.
-     */
-    public function testNotAvailable(): void
-    {
-        $jobs = $this->jobs(['informer.List' => '[]']);
-
-        $this->assertFalse($jobs->isAvailable());
-    }
-
-    /**
-     * @testdox When checking jobs existence, incorrect server responses are processed correctly.
-     */
-    public function testNotAvailableOnNonArrayResponse(): void
-    {
-        $jobs = $this->jobs(['informer.List' => '42']);
-
-        $this->assertFalse($jobs->isAvailable());
-    }
-
-    /**
-     * @testdox In the case that the RR returned an error, this is processed correctly and the false is returned.
-     */
-    public function testNotAvailableOnErrorResponse(): void
-    {
-        $jobs = $this->jobs(['informer.List' => (static function () {
-            throw new \Exception();
-        })]);
-
-        $this->assertFalse($jobs->isAvailable());
     }
 
     /**
