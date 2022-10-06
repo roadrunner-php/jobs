@@ -121,7 +121,11 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      */
     private function getPayload(Payload $payload): array
     {
-        return $this->serializer->deserialize($payload->body);
+        if ($payload->body) {
+            return $this->serializer->deserialize($payload->body);
+        }
+
+        return [];
     }
 
     /**
