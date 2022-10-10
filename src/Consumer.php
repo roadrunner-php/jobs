@@ -123,7 +123,7 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      */
     private function getPayload(Payload $payload): array
     {
-        if (empty($payload->body)) {
+        if ($payload->body === '' || $payload->body === null) {
             return [];
         }
 
