@@ -123,7 +123,7 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      */
     private function getPayload(Payload $payload): array
     {
-        if ($payload->body === '') {
+        if (empty($payload->body)) {
             return [];
         }
 
@@ -140,7 +140,7 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      */
     private function getHeader(Payload $payload): array
     {
-        if ($payload->header === '') {
+        if (empty($payload->header)) {
             throw new ReceivedTaskException('Task payload does not have a valid header.');
         }
 
