@@ -15,7 +15,8 @@ use Spiral\RoadRunner\WorkerInterface;
 final class ConsumerTest extends TestCase
 {
     private Consumer $consumer;
-    private WorkerInterface&MockObject $woker;
+    /** @var WorkerInterface|MockObject|WorkerInterface&MockObject $woker */
+    private WorkerInterface $woker;
 
     protected function setUp(): void
     {
