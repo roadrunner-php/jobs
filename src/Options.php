@@ -11,8 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-class Options implements OptionsInterface
+use Spiral\RoadRunner\Jobs\Task\WritableHeadersInterface;
+use Spiral\RoadRunner\Jobs\Task\WritableHeadersTrait;
+
+class Options implements OptionsInterface, WritableHeadersInterface
 {
+    use WritableHeadersTrait;
+
     /**
      * @var positive-int|0
      */

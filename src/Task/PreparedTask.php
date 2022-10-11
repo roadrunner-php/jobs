@@ -36,7 +36,11 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
     {
         $this->options = $options ?? new Options();
 
-        parent::__construct($name, $payload);
+        parent::__construct(
+            $name,
+            $payload,
+            $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : []
+        );
     }
 
     /**
