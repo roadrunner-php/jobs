@@ -22,7 +22,7 @@
         "ext-json": "*",
         "opis/closure": "^3.6",
         "ramsey/uuid": "^3 || ^4",
-        "spiral/roadrunner-worker": "^2.0",
+        "spiral/roadrunner-worker": "^2.0.2",
         "spiral/roadrunner": "^2.0",
         "spiral/goridge": "^3.1",
         "google/protobuf": "^3.7"
