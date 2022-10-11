@@ -18,31 +18,37 @@ class Stat extends \Google\Protobuf\Internal\Message
     /**
      * Generated from protobuf field <code>string pipeline = 1;</code>
      */
-    protected $pipeline = '';
+    private $pipeline = '';
     /**
      * Generated from protobuf field <code>string driver = 2;</code>
      */
-    protected $driver = '';
+    private $driver = '';
     /**
      * Generated from protobuf field <code>string queue = 3;</code>
      */
-    protected $queue = '';
+    private $queue = '';
     /**
      * Generated from protobuf field <code>int64 active = 4;</code>
      */
-    protected $active = 0;
+    private $active = 0;
     /**
      * Generated from protobuf field <code>int64 delayed = 5;</code>
      */
-    protected $delayed = 0;
+    private $delayed = 0;
     /**
      * Generated from protobuf field <code>int64 reserved = 6;</code>
      */
-    protected $reserved = 0;
+    private $reserved = 0;
     /**
      * Generated from protobuf field <code>bool ready = 7;</code>
      */
-    protected $ready = false;
+    private $ready = false;
+    /**
+     * new in 2.10.5
+     *
+     * Generated from protobuf field <code>uint64 priority = 8;</code>
+     */
+    private $priority = 0;
 
     /**
      * Constructor.
@@ -57,6 +63,8 @@ class Stat extends \Google\Protobuf\Internal\Message
      *     @type int|string $delayed
      *     @type int|string $reserved
      *     @type bool $ready
+     *     @type int|string $priority
+     *           new in 2.10.5
      * }
      */
     public function __construct($data = NULL) {
@@ -214,6 +222,32 @@ class Stat extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkBool($var);
         $this->ready = $var;
+
+        return $this;
+    }
+
+    /**
+     * new in 2.10.5
+     *
+     * Generated from protobuf field <code>uint64 priority = 8;</code>
+     * @return int|string
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * new in 2.10.5
+     *
+     * Generated from protobuf field <code>uint64 priority = 8;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setPriority($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->priority = $var;
 
         return $this;
     }

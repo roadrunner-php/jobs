@@ -21,7 +21,7 @@ interface OptionsInterface
     /**
      * @var positive-int|0
      */
-    public const DEFAULT_PRIORITY = 10;
+    public const DEFAULT_PRIORITY = 0;
 
     /**
      * @var bool

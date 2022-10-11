@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
+use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
@@ -92,6 +93,7 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
     /**
      * @return ReceivedTaskInterface|null
      * @throws SerializationException
+     * @throws ReceivedTaskException
      * @psalm-suppress ArgumentTypeCoercion
      */
     public function waitTask(): ?ReceivedTaskInterface
@@ -121,6 +123,10 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      */
     private function getPayload(Payload $payload): array
     {
+        if ($payload->body === '') {
+            return [];
+        }
+
         return $this->serializer->deserialize($payload->body);
     }
 
@@ -130,9 +136,14 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      * @param Payload $payload
      * @return HeaderPayload
      * @throws SerializationException
+     * @throws ReceivedTaskException
      */
     private function getHeader(Payload $payload): array
     {
+        if (empty($payload->header)) {
+            throw new ReceivedTaskException('Task payload does not have a valid header.');
+        }
+
         try {
             return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
