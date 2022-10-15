@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
+use Spiral\RoadRunner\Jobs\Task\ProvidesHeadersInterface;
 use Spiral\RoadRunner\Jobs\Task\WritableHeadersInterface;
 use Spiral\RoadRunner\Jobs\Task\WritableHeadersTrait;
 
@@ -167,6 +168,10 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
         if (($autoAck = $options->getAutoAck()) !== self::DEFAULT_AUTO_ACK) {
             $self->autoAck = $autoAck;
+        }
+
+        if ($options instanceof ProvidesHeadersInterface && ($headers = $options->getHeaders()) !== []) {
+            $self->headers = $headers;
         }
 
         return $self;

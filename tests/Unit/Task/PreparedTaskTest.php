@@ -30,7 +30,7 @@ final class PreparedTaskTest extends TestCase
 
     public function testCreatingTaskWithHeaders(): void
     {
-        $task = new PreparedTask('foo', [], (new Options())->withHeader('foo', 'bar'));
+        $task = new PreparedTask('foo', [], null, ['foo' => ['bar']]);
 
         $this->assertSame(['foo' => ['bar']], $task->getHeaders());
     }

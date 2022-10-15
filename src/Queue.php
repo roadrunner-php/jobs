@@ -25,6 +25,7 @@ use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
+use Spiral\RoadRunner\Jobs\Task\ProvidesHeadersInterface;
 use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
 
 final class Queue implements QueueInterface, SerializerAwareInterface
@@ -136,7 +137,12 @@ final class Queue implements QueueInterface, SerializerAwareInterface
             $options = $this->options->mergeOptional($options);
         }
 
-        return new PreparedTask($name, $payload, $options);
+        return new PreparedTask(
+            $name,
+            $payload,
+            $options,
+            $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : []
+        );
     }
 
     /**
