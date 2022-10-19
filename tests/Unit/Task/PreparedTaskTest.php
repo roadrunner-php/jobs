@@ -28,6 +28,20 @@ final class PreparedTaskTest extends TestCase
         $this->assertSame('changed', $task->withOptions(new KafkaOptions('changed'))->getOptions()->getTopic());
     }
 
+    public function testCreatingTaskWithHeaders(): void
+    {
+        $task = new PreparedTask('foo', [], null, ['foo' => ['bar']]);
+
+        $this->assertSame(['foo' => ['bar']], $task->getHeaders());
+    }
+
+    public function testCreatingTaskWithoutHeaders(): void
+    {
+        $task = new PreparedTask('foo', []);
+
+        $this->assertSame([], $task->getHeaders());
+    }
+
     public function optionsDataProvider(): \Traversable
     {
         yield [new Options(), null];
