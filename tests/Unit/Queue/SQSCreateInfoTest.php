@@ -11,7 +11,16 @@ final class SQSCreateInfoTest extends TestCase
 {
     public function testCreateWithTags(): void
     {
-        $info = new SQSCreateInfo('foo', tags: ['foo' => 'bar']);
+        $info = new SQSCreateInfo(
+            'foo',
+            SQSCreateInfo::PRIORITY_DEFAULT_VALUE,
+            SQSCreateInfo::PREFETCH_DEFAULT_VALUE,
+            SQSCreateInfo::VISIBILITY_TIMEOUT_DEFAULT_VALUE,
+            SQSCreateInfo::WAIT_TIME_SECONDS_DEFAULT_VALUE,
+            SQSCreateInfo::QUEUE_DEFAULT_VALUE,
+            SQSCreateInfo::ATTRIBUTES_DEFAULT_VALUE,
+            ['foo' => 'bar']
+        );
 
         $this->assertSame([
             'name' => 'foo',
@@ -27,7 +36,15 @@ final class SQSCreateInfoTest extends TestCase
 
     public function testCreateWithAttributes(): void
     {
-        $info = new SQSCreateInfo('foo', attributes: ['foo' => 'bar']);
+        $info = new SQSCreateInfo(
+            'foo',
+            SQSCreateInfo::PRIORITY_DEFAULT_VALUE,
+            SQSCreateInfo::PREFETCH_DEFAULT_VALUE,
+            SQSCreateInfo::VISIBILITY_TIMEOUT_DEFAULT_VALUE,
+            SQSCreateInfo::WAIT_TIME_SECONDS_DEFAULT_VALUE,
+            SQSCreateInfo::QUEUE_DEFAULT_VALUE,
+            ['foo' => 'bar']
+        );
 
         $this->assertSame([
             'name' => 'foo',
@@ -43,7 +60,16 @@ final class SQSCreateInfoTest extends TestCase
 
     public function testCreateWithTagsAndAttributes(): void
     {
-        $info = new SQSCreateInfo('foo', attributes: ['foo' => 'bar'], tags: ['baz' => 'some']);
+        $info = new SQSCreateInfo(
+            'foo',
+            SQSCreateInfo::PRIORITY_DEFAULT_VALUE,
+            SQSCreateInfo::PREFETCH_DEFAULT_VALUE,
+            SQSCreateInfo::VISIBILITY_TIMEOUT_DEFAULT_VALUE,
+            SQSCreateInfo::WAIT_TIME_SECONDS_DEFAULT_VALUE,
+            SQSCreateInfo::QUEUE_DEFAULT_VALUE,
+            ['foo' => 'bar'],
+            ['baz' => 'some']
+        );
 
         $this->assertSame([
             'name' => 'foo',
