@@ -137,13 +137,19 @@ final class SQSCreateInfo extends CreateInfo
      */
     public function toArray(): array
     {
-        return \array_merge(parent::toArray(), [
+        $result = \array_merge(parent::toArray(), [
             'prefetch'           => $this->prefetch,
             'visibility_timeout' => $this->visibilityTimeout,
             'wait_time_seconds'  => $this->waitTimeSeconds,
             'queue'              => $this->queue,
-            'attributes'         => $this->attributes,
-            'tags'               => $this->tags,
         ]);
+        if ($this->attributes !== []) {
+            $result['attributes'] = $this->attributes;
+        }
+        if ($this->tags !== []) {
+            $result['tags'] = $this->tags;
+        }
+
+        return $result;
     }
 }
