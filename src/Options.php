@@ -11,8 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-final class Options implements OptionsInterface
+use Spiral\RoadRunner\Jobs\Task\ProvidesHeadersInterface;
+use Spiral\RoadRunner\Jobs\Task\WritableHeadersInterface;
+use Spiral\RoadRunner\Jobs\Task\WritableHeadersTrait;
+
+class Options implements OptionsInterface, WritableHeadersInterface
 {
+    use WritableHeadersTrait;
+
     /**
      * @var positive-int|0
      */
@@ -47,7 +53,6 @@ final class Options implements OptionsInterface
 
     /**
      * @param OptionsInterface $options
-     * @return static
      */
     public static function from(OptionsInterface $options): self
     {
@@ -165,6 +170,19 @@ final class Options implements OptionsInterface
             $self->autoAck = $autoAck;
         }
 
+        if ($options instanceof ProvidesHeadersInterface && ($headers = $options->getHeaders()) !== []) {
+            $self->headers = $headers;
+        }
+
         return $self;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'priority' => $this->getPriority(),
+            'delay' => $this->getDelay(),
+            'auto_ack' => $this->getAutoAck(),
+        ];
     }
 }

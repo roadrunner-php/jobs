@@ -9,7 +9,8 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * request to pause/resume/list/Destroy
+ * ---------------------------------------------
+ * request to pause/resume/list/destroy/declare
  *
  * Generated from protobuf message <code>jobs.v1.Pipelines</code>
  */

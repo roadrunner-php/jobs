@@ -39,7 +39,7 @@ trait WritableHeadersTrait
         $self->headers[$name] = [];
 
         foreach ($value as $item) {
-            $self->headers[$name][] = $item;
+            $self->headers[$name][] = (string)$item;
         }
 
         return $self;

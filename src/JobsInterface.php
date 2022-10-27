@@ -22,13 +22,6 @@ use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
 interface JobsInterface extends \IteratorAggregate, \Countable
 {
     /**
-     * The method returns information about the availability of the queue server.
-     *
-     * @return bool
-     */
-    public function isAvailable(): bool;
-
-    /**
      * A method that returns the selected queue. As the first argument, you
      * need to pass the name of a specific queue.
      *

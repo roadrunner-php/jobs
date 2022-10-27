@@ -14,6 +14,7 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 use Spiral\RoadRunner\Jobs\DTO\V1\PushBatchRequest;
 use Spiral\RoadRunner\Jobs\DTO\V1\PushRequest;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
+use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\Queue;
 
 class QueueTestCase extends TestCase
@@ -129,5 +130,22 @@ class QueueTestCase extends TestCase
 
         $queue = $this->queue();
         $queue->resume();
+    }
+
+    public function testCreateWithHeaders(): void
+    {
+        $queue = $this->queue();
+
+        $this->assertSame(
+            ['foo' => ['bar']],
+            $queue->create('foo', [], (new Options())->withHeader('foo', 'bar'))->getHeaders()
+        );
+    }
+
+    public function testCreateWithoutHeaders(): void
+    {
+        $queue = $this->queue();
+
+        $this->assertSame([], $queue->create('foo')->getHeaders());
     }
 }

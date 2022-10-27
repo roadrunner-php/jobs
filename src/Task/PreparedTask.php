@@ -12,12 +12,13 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Options;
+use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 
 /**
  * @psalm-suppress MissingImmutableAnnotation QueuedTask class is mutable.
  */
-final class PreparedTask extends Task implements PreparedTaskInterface
+final class PreparedTask extends Task implements PreparedTaskInterface, OptionsAwareInterface
 {
     use WritableHeadersTrait;
 
@@ -30,12 +31,13 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      * @param non-empty-string $name
      * @param array $payload
      * @param OptionsInterface|null $options
+     * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $name, array $payload, OptionsInterface $options = null)
+    public function __construct(string $name, array $payload, OptionsInterface $options = null, array $headers = [])
     {
         $this->options = $options ?? new Options();
 
-        parent::__construct($name, $payload);
+        parent::__construct($name, $payload, $headers);
     }
 
     /**
@@ -47,7 +49,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     }
 
     /**
-     * @return OptionsInterface
+     * {@inheritDoc}
      */
     public function getOptions(): OptionsInterface
     {
@@ -102,10 +104,13 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     {
         assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
 
+        if (!\method_exists($this->options, 'withDelay')) {
+            return $this;
+        }
+
         $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withDelay($seconds)
-        ;
+        /** @psalm-suppress MixedAssignment */
+        $self->options = $this->options->withDelay($seconds);
 
         return $self;
     }
@@ -127,10 +132,13 @@ final class PreparedTask extends Task implements PreparedTaskInterface
     {
         assert($priority >= 0, 'Precondition [priority >= 0] failed');
 
+        if (!\method_exists($this->options, 'withPriority')) {
+            return $this;
+        }
+
         $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withPriority($priority)
-        ;
+        /** @psalm-suppress MixedAssignment */
+        $self->options = $this->options->withPriority($priority);
 
         return $self;
     }
@@ -148,10 +156,24 @@ final class PreparedTask extends Task implements PreparedTaskInterface
      */
     public function withAutoAck(bool $autoAck): self
     {
+        if (!\method_exists($this->options, 'withAutoAck')) {
+            return $this;
+        }
+
         $self = clone $this;
-        $self->options = Options::from($this->options)
-            ->withAutoAck($autoAck)
-        ;
+        /** @psalm-suppress MixedAssignment */
+        $self->options = $this->options->withAutoAck($autoAck);
+
+        return $self;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function withOptions(OptionsInterface $options): OptionsAwareInterface
+    {
+        $self = clone $this;
+        $self->options = $options;
 
         return $self;
     }

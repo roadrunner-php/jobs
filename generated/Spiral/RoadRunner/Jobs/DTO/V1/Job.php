@@ -9,34 +9,42 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
+ * Job is a main message which user might send to the RR jobs plugin
+ *
  * Generated from protobuf message <code>jobs.v1.Job</code>
  */
 class Job extends \Google\Protobuf\Internal\Message
 {
     /**
+     * job name, usually PHP class
+     *
      * Generated from protobuf field <code>string job = 1;</code>
      */
-    protected $job = '';
+    private $job = '';
     /**
+     * unique job id
+     *
      * Generated from protobuf field <code>string id = 2;</code>
      */
-    protected $id = '';
+    private $id = '';
     /**
+     * payload, might be embedded json or just byte-string
+     *
      * Generated from protobuf field <code>string payload = 3;</code>
      */
-    protected $payload = '';
+    private $payload = '';
     /**
+     * headers map[string][]string
+     *
      * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 4;</code>
      */
     private $headers;
     /**
+     * job options, contains common and driver specific fields
+     *
      * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      */
-    protected $options = null;
-    /**
-     * Generated from protobuf field <code>bool auto_ack = 6;</code>
-     */
-    protected $auto_ack = false;
+    private $options = null;
 
     /**
      * Constructor.
@@ -45,11 +53,15 @@ class Job extends \Google\Protobuf\Internal\Message
      *     Optional. Data for populating the Message object.
      *
      *     @type string $job
+     *           job name, usually PHP class
      *     @type string $id
+     *           unique job id
      *     @type string $payload
+     *           payload, might be embedded json or just byte-string
      *     @type array|\Google\Protobuf\Internal\MapField $headers
+     *           headers map[string][]string
      *     @type \Spiral\RoadRunner\Jobs\DTO\V1\Options $options
-     *     @type bool $auto_ack
+     *           job options, contains common and driver specific fields
      * }
      */
     public function __construct($data = NULL) {
@@ -58,6 +70,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * job name, usually PHP class
+     *
      * Generated from protobuf field <code>string job = 1;</code>
      * @return string
      */
@@ -67,6 +81,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * job name, usually PHP class
+     *
      * Generated from protobuf field <code>string job = 1;</code>
      * @param string $var
      * @return $this
@@ -80,6 +96,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * unique job id
+     *
      * Generated from protobuf field <code>string id = 2;</code>
      * @return string
      */
@@ -89,6 +107,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * unique job id
+     *
      * Generated from protobuf field <code>string id = 2;</code>
      * @param string $var
      * @return $this
@@ -102,6 +122,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * payload, might be embedded json or just byte-string
+     *
      * Generated from protobuf field <code>string payload = 3;</code>
      * @return string
      */
@@ -111,6 +133,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * payload, might be embedded json or just byte-string
+     *
      * Generated from protobuf field <code>string payload = 3;</code>
      * @param string $var
      * @return $this
@@ -124,6 +148,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * headers map[string][]string
+     *
      * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 4;</code>
      * @return \Google\Protobuf\Internal\MapField
      */
@@ -133,6 +159,8 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * headers map[string][]string
+     *
      * Generated from protobuf field <code>map<string, .jobs.v1.HeaderValue> headers = 4;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
      * @return $this
@@ -146,25 +174,19 @@ class Job extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * job options, contains common and driver specific fields
+     *
      * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      * @return \Spiral\RoadRunner\Jobs\DTO\V1\Options
      */
     public function getOptions()
     {
-        return isset($this->options) ? $this->options : null;
-    }
-
-    public function hasOptions()
-    {
-        return isset($this->options);
-    }
-
-    public function clearOptions()
-    {
-        unset($this->options);
+        return $this->options;
     }
 
     /**
+     * job options, contains common and driver specific fields
+     *
      * Generated from protobuf field <code>.jobs.v1.Options options = 5;</code>
      * @param \Spiral\RoadRunner\Jobs\DTO\V1\Options $var
      * @return $this
@@ -173,28 +195,6 @@ class Job extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkMessage($var, \Spiral\RoadRunner\Jobs\DTO\V1\Options::class);
         $this->options = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>bool auto_ack = 6;</code>
-     * @return bool
-     */
-    public function getAutoAck()
-    {
-        return $this->auto_ack;
-    }
-
-    /**
-     * Generated from protobuf field <code>bool auto_ack = 6;</code>
-     * @param bool $var
-     * @return $this
-     */
-    public function setAutoAck($var)
-    {
-        GPBUtil::checkBool($var);
-        $this->auto_ack = $var;
 
         return $this;
     }
