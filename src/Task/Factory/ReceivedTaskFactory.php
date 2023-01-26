@@ -7,6 +7,7 @@ namespace Spiral\RoadRunner\Jobs\Task\Factory;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
@@ -16,12 +17,17 @@ use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
+ * @psalm-import-type PartitionOffsetEnum from PartitionOffset
  * @psalm-type HeaderPayload = array {
- *    id:       non-empty-string,
- *    job:      non-empty-string,
- *    headers:  array<string, array<string>>|null,
- *    timeout:  positive-int,
- *    pipeline: non-empty-string
+ *    id:         non-empty-string,
+ *    job:        non-empty-string,
+ *    headers:    array<string, array<string>>|null,
+ *    timeout:    positive-int,
+ *    pipeline:   non-empty-string,
+ *    driver?:    non-empty-string,
+ *    topic:      non-empty-string,
+ *    partition:  positive-int,
+ *    offset:     PartitionOffsetEnum
  * }
  */
 final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, SerializerAwareInterface
@@ -38,6 +44,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
     /**
      * @throws SerializationException
      * @throws ReceivedTaskException
+     * @psalm-suppress ArgumentTypeCoercion
      */
     public function create(Payload $payload): ReceivedTaskInterface
     {
@@ -108,6 +115,9 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
         return $this->serializer;
     }
 
+    /**
+     * @return ReceivedTaskFactory
+     */
     public function withSerializer(SerializerInterface $serializer): self
     {
         $self = clone $this;

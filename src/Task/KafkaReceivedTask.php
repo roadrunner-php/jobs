@@ -9,6 +9,7 @@ use Spiral\RoadRunner\WorkerInterface;
 
 /**
  * @psalm-import-type PartitionOffsetEnum from PartitionOffset
+ * @psalm-suppress MutableDependency, MissingImmutableAnnotation
  */
 final class KafkaReceivedTask extends ReceivedTask
 {
