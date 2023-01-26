@@ -24,7 +24,7 @@ use Spiral\RoadRunner\WorkerInterface;
  *
  * @psalm-suppress MissingImmutableAnnotation The implementation of this task is mutable.
  */
-final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
+class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 {
     use WritableHeadersTrait;
 
