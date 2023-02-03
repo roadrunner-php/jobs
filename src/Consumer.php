@@ -16,9 +16,9 @@ use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Serializer\DefaultSerializer;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
 use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
-use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
+use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactory;
+use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactoryInterface;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
-use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\Worker;
 use Spiral\RoadRunner\WorkerInterface;
 
@@ -41,35 +41,21 @@ use Spiral\RoadRunner\WorkerInterface;
  *
  *  $consumer = new Consumer(...);
  * </code>
- *
- * @psalm-type HeaderPayload = array {
- *    id:       non-empty-string,
- *    job:      non-empty-string,
- *    headers:  array<string, array<string>>|null,
- *    timeout:  positive-int,
- *    pipeline: non-empty-string
- * }
  */
 final class Consumer implements ConsumerInterface, SerializerAwareInterface
 {
-    /**
-     * @var WorkerInterface
-     */
     private WorkerInterface $worker;
-
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
+    private ReceivedTaskFactoryInterface $receivedTaskFactory;
 
-    /**
-     * @param WorkerInterface|null $worker
-     * @param SerializerInterface|null $serializer
-     */
-    public function __construct(WorkerInterface $worker = null, SerializerInterface $serializer = null)
-    {
+    public function __construct(
+        WorkerInterface $worker = null,
+        SerializerInterface $serializer = null,
+        ReceivedTaskFactoryInterface $receivedTaskFactory = null
+    ) {
         $this->worker = $worker ?? Worker::create();
         $this->serializer = $serializer ?? new DefaultSerializer();
+        $this->receivedTaskFactory = $receivedTaskFactory ?? new ReceivedTaskFactory($this->serializer, $this->worker);
     }
 
     /**
@@ -87,6 +73,11 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
     {
         $self = clone $this;
         $self->serializer = $serializer;
+
+        if ($self->receivedTaskFactory instanceof SerializerAwareInterface) {
+            $self->receivedTaskFactory = $self->receivedTaskFactory->withSerializer($serializer);
+        }
+
         return $self;
     }
 
@@ -94,7 +85,6 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      * @return ReceivedTaskInterface|null
      * @throws SerializationException
      * @throws ReceivedTaskException
-     * @psalm-suppress ArgumentTypeCoercion
      */
     public function waitTask(): ?ReceivedTaskInterface
     {
@@ -104,50 +94,6 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
             return null;
         }
 
-        $header = $this->getHeader($payload);
-
-        return new ReceivedTask(
-            $this->worker,
-            $header['id'],
-            $header['pipeline'],
-            $header['job'],
-            $this->getPayload($payload),
-            (array)$header['headers']
-        );
-    }
-
-    /**
-     * @param Payload $payload
-     * @return array
-     * @throws SerializationException
-     */
-    private function getPayload(Payload $payload): array
-    {
-        if ($payload->body === '') {
-            return [];
-        }
-
-        return $this->serializer->deserialize($payload->body);
-    }
-
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     *
-     * @param Payload $payload
-     * @return HeaderPayload
-     * @throws SerializationException
-     * @throws ReceivedTaskException
-     */
-    private function getHeader(Payload $payload): array
-    {
-        if (empty($payload->header)) {
-            throw new ReceivedTaskException('Task payload does not have a valid header.');
-        }
-
-        try {
-            return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        return $this->receivedTaskFactory->create($payload);
     }
 }
