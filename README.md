@@ -74,7 +74,7 @@ require __DIR__ . '/vendor/autoload.php';
 // Jobs service
 $jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 
-// Select "test" queue from jobs
+// Select "local" queue from jobs
 $queue = $jobs->connect('local');
 
 // Create task prototype with default headers
