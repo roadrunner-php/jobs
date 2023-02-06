@@ -45,12 +45,14 @@ server:
 # In this section, the jobs themselves are configured
 #
 jobs:
-    consume: [ "local" ]   # List of RoadRunner queues that can be processed by 
-                           # the consumer specified in the "server" section.
+    consume: [ "local" ]        # List of RoadRunner queues that can be processed by 
+                                # the consumer specified in the "server" section.
     pipelines:
-        local:               # RoadRunner queue identifier
-            driver: memory   # - Queue driver name
-            queue: test      # - Internal (driver's) queue identifier
+        local:                  # RoadRunner queue identifier
+            driver: memory      # - Queue driver name
+            config:
+                priority: 10    # - Pipeline priority
+                prefetch: 10000 # - Number of job to prefetch from the driver until ACK/NACK.
 ```
 
 > Read more about all available drivers on the
@@ -73,7 +75,7 @@ require __DIR__ . '/vendor/autoload.php';
 $jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 
 // Select "test" queue from jobs
-$queue = $jobs->connect('test');
+$queue = $jobs->connect('local');
 
 // Create task prototype with default headers
 $prototype = $queue->create('echo')
