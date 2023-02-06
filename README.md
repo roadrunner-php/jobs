@@ -45,18 +45,20 @@ server:
 # In this section, the jobs themselves are configured
 #
 jobs:
-    consume: [ "test" ]   # List of RoadRunner queues that can be processed by 
-                          # the consumer specified in the "server" section.
+    consume: [ "local" ]        # List of RoadRunner queues that can be processed by 
+                                # the consumer specified in the "server" section.
     pipelines:
-        test:               # RoadRunner queue identifier
-            driver: memory  # - Queue driver name
-            queue: test       # - Internal (driver's) queue identifier
+        local:                  # RoadRunner queue identifier
+            driver: memory      # - Queue driver name
+            config:
+                priority: 10    # - Pipeline priority
+                prefetch: 10000 # - Number of job to prefetch from the driver until ACK/NACK.
 ```
 
 > Read more about all available drivers on the
-> [documentation](https://roadrunner.dev/docs/beep-beep-jobs) page.
+> [documentation](https://roadrunner.dev/docs/plugins-jobs/2.x/en) page.
 
-After starting the server with this configuration, one driver named "`test`"
+After starting the server with this configuration, one driver named `local`
 will be available to you.
 
 The following code will allow writing and reading an arbitrary value from the
@@ -72,8 +74,8 @@ require __DIR__ . '/vendor/autoload.php';
 // Jobs service
 $jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 
-// Select "test" queue from jobs
-$queue = $jobs->connect('test');
+// Select "local" queue from jobs
+$queue = $jobs->connect('local');
 
 // Create task prototype with default headers
 $prototype = $queue->create('echo')
