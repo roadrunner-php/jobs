@@ -16,6 +16,7 @@ use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Jobs;
 use Spiral\RoadRunner\Jobs\JobsInterface;
+use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
@@ -56,6 +57,24 @@ class JobsTestCase extends TestCase
         $queue = $jobs->create($dto);
 
         $this->assertSame('foo', $queue->getName());
+    }
+
+    public function testCreateWithOptions(): void
+    {
+        $dto = new CreateInfo('bar', 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
+
+        $jobs = $this->jobs([
+            'jobs.Declare' => function (DeclareRequest $request) use($dto) {
+                $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
+                $this->assertSame($dto->getDriver(), $request->getPipeline()->offsetGet('driver'));
+                $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
+            },
+        ]);
+
+        $queue = $jobs->create($dto, new Options(100, 200, true));
+
+        $this->assertSame('foo', $queue->getName());
+        $this->assertEquals(new Options(100, 200, true), $queue->getDefaultOptions());
     }
 
     /**

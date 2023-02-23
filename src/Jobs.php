@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-use Spiral\Goridge\RPC\Codec\JsonCodec;
 use Spiral\Goridge\RPC\Codec\ProtobufCodec;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
@@ -51,14 +50,14 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function create(CreateInfoInterface $info): QueueInterface
+    public function create(CreateInfoInterface $info, ?OptionsInterface $options = null): QueueInterface
     {
         try {
             $this->rpc->call('jobs.Declare', new DeclareRequest([
                 'pipeline' => $this->toStringOfStringMap($info->toArray()),
             ]));
 
-            return $this->connect($info->getName(), OptionsFactory::create($info->getDriver()));
+            return $this->connect($info->getName(), $options ?? OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
