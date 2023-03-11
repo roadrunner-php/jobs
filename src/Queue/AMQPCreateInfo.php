@@ -179,7 +179,7 @@ final class AMQPCreateInfo extends CreateInfo
             'prefetch'        => $this->prefetch,
             'queue'           => $this->queue,
             'exchange'        => $this->exchange,
-            'exchangeDurable' => $this->exchangeDurable,
+            'exchange_durable'=> $this->exchangeDurable,
             'exchange_type'   => $this->exchangeType,
             'routing_key'     => $this->routingKey,
             'exclusive'       => $this->exclusive,
