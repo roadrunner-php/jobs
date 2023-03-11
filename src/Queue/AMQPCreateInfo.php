@@ -39,6 +39,11 @@ final class AMQPCreateInfo extends CreateInfo
     public const EXCHANGE_DEFAULT_VALUE = 'amqp.default';
 
     /**
+     * @var bool
+     */
+    public const EXCHANGE_DURABLE_DEFAULT_VALUE = false;
+
+    /**
      * @var ExchangeTypeEnum
      */
     public const EXCHANGE_TYPE_DEFAULT_VALUE = ExchangeType::TYPE_DIRECT;
@@ -114,6 +119,11 @@ final class AMQPCreateInfo extends CreateInfo
     public bool $durable = self::DURABLE_DEFAULT_VALUE;
 
     /**
+     * @var bool
+     */
+    public bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE;
+
+    /**
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
@@ -125,6 +135,7 @@ final class AMQPCreateInfo extends CreateInfo
      * @param bool $multipleAck
      * @param bool $requeueOnFail
      * @param bool $durable
+     * @param bool $exchangeDurable
      */
     public function __construct(
         string $name,
@@ -137,7 +148,8 @@ final class AMQPCreateInfo extends CreateInfo
         bool $exclusive = self::EXCLUSIVE_DEFAULT_VALUE,
         bool $multipleAck = self::MULTIPLE_ACK_DEFAULT_VALUE,
         bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE,
-        bool $durable = self::DURABLE_DEFAULT_VALUE
+        bool $durable = self::DURABLE_DEFAULT_VALUE,
+        bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE
     ) {
         parent::__construct(Driver::AMQP, $name, $priority);
 
@@ -155,6 +167,7 @@ final class AMQPCreateInfo extends CreateInfo
         $this->multipleAck = $multipleAck;
         $this->requeueOnFail = $requeueOnFail;
         $this->durable = $durable;
+        $this->exchangeDurable = $exchangeDurable;
     }
 
     /**
@@ -166,6 +179,7 @@ final class AMQPCreateInfo extends CreateInfo
             'prefetch'        => $this->prefetch,
             'queue'           => $this->queue,
             'exchange'        => $this->exchange,
+            'exchangeDurable' => $this->exchangeDurable,
             'exchange_type'   => $this->exchangeType,
             'routing_key'     => $this->routingKey,
             'exclusive'       => $this->exclusive,
