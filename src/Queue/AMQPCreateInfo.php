@@ -74,6 +74,11 @@ final class AMQPCreateInfo extends CreateInfo
     public const DURABLE_DEFAULT_VALUE = false;
 
     /**
+     * @var bool
+     */
+    public const CONSUME_ALL_DEFAULT_VALUE = false;
+
+    /**
      * @var positive-int
      */
     public int $prefetch = self::PREFETCH_DEFAULT_VALUE;
@@ -124,6 +129,11 @@ final class AMQPCreateInfo extends CreateInfo
     public bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE;
 
     /**
+     * @var bool
+     */
+    public bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE;
+
+    /**
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
@@ -136,6 +146,7 @@ final class AMQPCreateInfo extends CreateInfo
      * @param bool $requeueOnFail
      * @param bool $durable
      * @param bool $exchangeDurable
+     * @param bool $consumeAll
      */
     public function __construct(
         string $name,
@@ -149,7 +160,8 @@ final class AMQPCreateInfo extends CreateInfo
         bool $multipleAck = self::MULTIPLE_ACK_DEFAULT_VALUE,
         bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE,
         bool $durable = self::DURABLE_DEFAULT_VALUE,
-        bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE
+        bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE,
+        bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::AMQP, $name, $priority);
 
@@ -168,6 +180,7 @@ final class AMQPCreateInfo extends CreateInfo
         $this->requeueOnFail = $requeueOnFail;
         $this->durable = $durable;
         $this->exchangeDurable = $exchangeDurable;
+        $this->consumeAll = $consumeAll;
     }
 
     /**
@@ -176,16 +189,17 @@ final class AMQPCreateInfo extends CreateInfo
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'prefetch'        => $this->prefetch,
-            'queue'           => $this->queue,
-            'exchange'        => $this->exchange,
-            'exchange_durable'=> $this->exchangeDurable,
-            'exchange_type'   => $this->exchangeType,
-            'routing_key'     => $this->routingKey,
-            'exclusive'       => $this->exclusive,
-            'multiple_ack'    => $this->multipleAck,
-            'requeue_on_fail' => $this->requeueOnFail,
-            'durable'         => $this->durable,
+            'prefetch'         => $this->prefetch,
+            'queue'            => $this->queue,
+            'exchange'         => $this->exchange,
+            'exchange_durable' => $this->exchangeDurable,
+            'exchange_type'    => $this->exchangeType,
+            'routing_key'      => $this->routingKey,
+            'exclusive'        => $this->exclusive,
+            'multiple_ack'     => $this->multipleAck,
+            'requeue_on_fail'  => $this->requeueOnFail,
+            'durable'          => $this->durable,
+            'consume_all'      => $this->consumeAll,
         ]);
     }
 }
