@@ -137,10 +137,10 @@ final class AMQPCreateInfo extends CreateInfo
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
-     * @param non-empty-string $queue
+     * @param non-empty-string $queue Queue name. Required for consumer.
      * @param non-empty-string $exchange
      * @param ExchangeTypeEnum $exchangeType
-     * @param string $routingKey
+     * @param string $routingKey Routing key. Required for publisher.
      * @param bool $exclusive
      * @param bool $multipleAck
      * @param bool $requeueOnFail
@@ -166,7 +166,6 @@ final class AMQPCreateInfo extends CreateInfo
         parent::__construct(Driver::AMQP, $name, $priority);
 
         assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
-        assert($queue !== '', 'Precondition [queue !== ""] failed');
         assert($exchange !== '', 'Precondition [exchange !== ""] failed');
         assert($exchangeType !== '', 'Precondition [exchangeType !== ""] failed');
 
