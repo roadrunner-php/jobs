@@ -36,12 +36,12 @@ class TaskCreationTestCase extends TestCase
      */
     protected function queue(array $mapping = [], string $name = 'queue', ?string $driver = null): QueueInterface
     {
-        return new Queue($name, $this->rpc($mapping), null, $driver !== null ? OptionsFactory::create($driver) : null);
+        return new Queue($name, $this->rpc($mapping), $driver !== null ? OptionsFactory::create($driver) : null);
     }
 
     public function testTaskCreationWithPayload(): void
     {
-        $expected = ['a' => \random_int(0, \PHP_INT_MAX), 'b' => \random_bytes(32)];
+        $expected = 'payload';
 
         $task = $this->queue()
             ->create('task', $expected);
@@ -79,7 +79,7 @@ class TaskCreationTestCase extends TestCase
     {
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
-        $task = $this->queue()->create($expected, [], new Options(10, 100, true));
+        $task = $this->queue()->create($expected, 'bar', new Options(10, 100, true));
 
         $this->assertSame($expected, $task->getName());
         $this->assertSame(10, $task->getDelay());
@@ -93,7 +93,7 @@ class TaskCreationTestCase extends TestCase
 
         $queue = $this->queue()->withDefaultOptions(new Options(10, 100, true));
 
-        $task = $queue->create($expected, [], new Options(10, 150, true));
+        $task = $queue->create($expected, 'bar', new Options(10, 150, true));
 
         $this->assertSame($expected, $task->getName());
         $this->assertSame(10, $task->getDelay());
@@ -107,7 +107,7 @@ class TaskCreationTestCase extends TestCase
 
         $task = $this
             ->queue([], 'queue', Queue\Driver::KAFKA)
-            ->create($expected, [], new KafkaOptions('kafka-topic', 15, 30, false));
+            ->create($expected,'bar', new KafkaOptions('kafka-topic', 15, 30, false));
         $options = $task->getOptions();
 
         $this->assertInstanceOf(KafkaOptions::class, $options);

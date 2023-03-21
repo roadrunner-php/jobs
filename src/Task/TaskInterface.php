@@ -25,26 +25,7 @@ interface TaskInterface extends ProvidesHeadersInterface
      * Returns payload of the task/job.
      *
      * @psalm-mutation-free
-     * @return array
+     * @return string
      */
-    public function getPayload(): array;
-
-    /**
-     * Retrieves value from payload by its key.
-     *
-     * @psalm-mutation-free
-     * @param array-key $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getValue($key, $default = null);
-
-    /**
-     * Determines that key defined in the payload.
-     *
-     * @psalm-mutation-free
-     * @param array-key $key
-     * @return bool
-     */
-    public function hasValue($key): bool;
+    public function getPayload(): string;
 }

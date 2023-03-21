@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-use Spiral\Goridge\RPC\Codec\JsonCodec;
 use Spiral\Goridge\RPC\Codec\ProtobufCodec;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
@@ -20,11 +19,8 @@ use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
-use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 
-final class Jobs implements JobsInterface, SerializerAwareInterface
+final class Jobs implements JobsInterface
 {
     /**
      * @var RPCInterface
@@ -32,20 +28,12 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     private RPCInterface $rpc;
 
     /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
-
-    /**
      * @param RPCInterface|null $rpc
-     * @param SerializerInterface|null $serializer
      */
-    public function __construct(RPCInterface $rpc = null, SerializerInterface $serializer = null)
+    public function __construct(RPCInterface $rpc = null)
     {
         $this->rpc = ($rpc ?? $this->createRPCConnection())
             ->withCodec(new ProtobufCodec());
-
-        $this->serializer = $serializer ?? new JsonSerializer();
     }
 
     /**
@@ -103,32 +91,13 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getSerializer(): SerializerInterface
-    {
-        return $this->serializer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function withSerializer(SerializerInterface $serializer): SerializerAwareInterface
-    {
-        $self = clone $this;
-        $self->serializer = $serializer;
-
-        return $self;
-    }
-
-    /**
      * @param non-empty-string $queue
      */
     public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
     {
         assert($queue !== '', 'Precondition [queue !== ""] failed');
 
-        return new Queue($queue, $this->rpc, $this->serializer, $options);
+        return new Queue($queue, $this->rpc, $options);
     }
 
     /**

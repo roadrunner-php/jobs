@@ -12,7 +12,6 @@ use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\QueueInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 
 final class PipelineTest extends TestCase
@@ -22,14 +21,13 @@ final class PipelineTest extends TestCase
     {
         $pipeline = new Pipeline(
             $this->createMock(QueueInterface::class),
-            $this->createMock(RPCInterface::class),
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(RPCInterface::class)
         );
 
         $method = new \ReflectionMethod($pipeline, 'taskToProto');
         $method->setAccessible(true);
 
-        $task = new PreparedTask('foo', [], $options);
+        $task = new PreparedTask('foo', '', $options);
         $job = $method->invoke($pipeline, $task, $task);
 
         $this->assertEquals($expected, $job->getOptions());

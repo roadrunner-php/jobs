@@ -20,15 +20,12 @@ use Spiral\RoadRunner\Jobs\DTO\V1\Stat;
 use Spiral\RoadRunner\Jobs\DTO\V1\Stats;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
-use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\ProvidesHeadersInterface;
 use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
 
-final class Queue implements QueueInterface, SerializerAwareInterface
+final class Queue implements QueueInterface
 {
     private OptionsInterface $options;
 
@@ -50,12 +47,10 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     /**
      * @param non-empty-string $name
      * @param RPCInterface|null $rpc
-     * @param SerializerInterface|null $serializer
      */
     public function __construct(
         string $name,
         RPCInterface $rpc = null,
-        SerializerInterface $serializer = null,
         OptionsInterface $options = null
     ) {
         assert($name !== '', 'Precondition [name !== ""] failed');
@@ -64,7 +59,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
             ->withCodec(new ProtobufCodec())
         ;
 
-        $this->pipeline = new Pipeline($this, $this->rpc, $serializer ?? new JsonSerializer());
+        $this->pipeline = new Pipeline($this, $this->rpc);
 
         $this->name = $name;
         $this->options = $options ?? new Options();
@@ -84,25 +79,6 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSerializer(): SerializerInterface
-    {
-        return $this->pipeline->getSerializer();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function withSerializer(SerializerInterface $serializer): SerializerAwareInterface
-    {
-        $self = clone $this;
-        $self->pipeline = $this->pipeline->withSerializer($serializer);
-
-        return $self;
     }
 
     /**
@@ -130,7 +106,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface
+    public function create(string $name, string $payload = '', OptionsInterface $options = null): PreparedTaskInterface
     {
         if (\method_exists($this->options, 'mergeOptional')) {
             /** @var OptionsInterface $options */
@@ -146,17 +122,17 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     }
 
     /**
-     * Creates a nre task and push it into specified queue.
+     * Creates a new task and push it into specified queue.
      *
      * This method exists for compatibility with version RoadRunner 1.x.
      *
      * @param non-empty-string $name
-     * @param array $payload
+     * @param string $payload
      * @param OptionsInterface|null $options
      * @return QueuedTaskInterface
      * @throws JobsException
      */
-    public function push(string $name, array $payload = [], OptionsInterface $options = null): QueuedTaskInterface
+    public function push(string $name, string $payload = '', OptionsInterface $options = null): QueuedTaskInterface
     {
         return $this->dispatch(
             $this->create($name, $payload, $options)

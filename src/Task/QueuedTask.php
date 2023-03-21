@@ -31,10 +31,10 @@ class QueuedTask extends Task implements QueuedTaskInterface
      * @param non-empty-string $id
      * @param non-empty-string $queue
      * @param non-empty-string $name
-     * @param array $payload
+     * @param string $payload
      * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $id, string $queue, string $name, array $payload = [], array $headers = [])
+    public function __construct(string $id, string $queue, string $name, string $payload, array $headers = [])
     {
         $this->id = $id;
         $this->queue = $queue;

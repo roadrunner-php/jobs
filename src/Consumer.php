@@ -13,9 +13,6 @@ namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
-use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
 use Spiral\RoadRunner\Payload;
@@ -50,7 +47,7 @@ use Spiral\RoadRunner\WorkerInterface;
  *    pipeline: non-empty-string
  * }
  */
-final class Consumer implements ConsumerInterface, SerializerAwareInterface
+final class Consumer implements ConsumerInterface
 {
     /**
      * @var WorkerInterface
@@ -58,41 +55,15 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
     private WorkerInterface $worker;
 
     /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
-
-    /**
      * @param WorkerInterface|null $worker
-     * @param SerializerInterface|null $serializer
      */
-    public function __construct(WorkerInterface $worker = null, SerializerInterface $serializer = null)
+    public function __construct(WorkerInterface $worker = null)
     {
         $this->worker = $worker ?? Worker::create();
-        $this->serializer = $serializer ?? new JsonSerializer();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSerializer(): SerializerInterface
-    {
-        return $this->serializer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function withSerializer(SerializerInterface $serializer): SerializerAwareInterface
-    {
-        $self = clone $this;
-        $self->serializer = $serializer;
-        return $self;
     }
 
     /**
      * @return ReceivedTaskInterface|null
-     * @throws SerializationException
      * @throws ReceivedTaskException
      * @psalm-suppress ArgumentTypeCoercion
      */
@@ -111,23 +82,9 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
             $header['id'],
             $header['pipeline'],
             $header['job'],
-            $this->getPayload($payload),
+            $payload->body,
             (array)$header['headers']
         );
-    }
-
-    /**
-     * @param Payload $payload
-     * @return array
-     * @throws SerializationException
-     */
-    private function getPayload(Payload $payload): array
-    {
-        if ($payload->body === '') {
-            return [];
-        }
-
-        return $this->serializer->deserialize($payload->body);
     }
 
     /**
@@ -135,7 +92,6 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
      *
      * @param Payload $payload
      * @return HeaderPayload
-     * @throws SerializationException
      * @throws ReceivedTaskException
      */
     private function getHeader(Payload $payload): array

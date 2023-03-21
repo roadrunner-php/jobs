@@ -50,11 +50,11 @@ interface QueueInterface
      * Creates a new task to run on the specified queue.
      *
      * @param non-empty-string $name
-     * @param array $payload
+     * @param string $payload
      * @param OptionsInterface|null $options
      * @return PreparedTaskInterface
      */
-    public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface;
+    public function create(string $name, string $payload = '', OptionsInterface $options = null): PreparedTaskInterface;
 
     /**
      * Sends a task to the queue.

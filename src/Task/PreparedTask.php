@@ -29,11 +29,11 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * @param non-empty-string $name
-     * @param array $payload
+     * @param string $payload
      * @param OptionsInterface|null $options
      * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $name, array $payload, OptionsInterface $options = null, array $headers = [])
+    public function __construct(string $name, string $payload, OptionsInterface $options = null, array $headers = [])
     {
         $this->options = $options ?? new Options();
 
@@ -54,37 +54,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
     public function getOptions(): OptionsInterface
     {
         return $this->options;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withValue($value, $name = null): self
-    {
-        $name ??= $this->getPayloadNextIndex();
-        assert(\is_string($name) || \is_int($name), 'Precondition [name is string|int] failed');
-
-        $self = clone $this;
-        $self->payload[$name] = $value;
-
-        return $self;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
-    public function withoutValue($name): self
-    {
-        assert(\is_string($name) || \is_int($name), 'Precondition [name is string|int] failed');
-
-        $self = clone $this;
-        unset($self->payload[$name]);
-
-        return $self;
     }
 
     /**
@@ -176,20 +145,5 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         $self->options = $options;
 
         return $self;
-    }
-
-    /**
-     * @return int
-     */
-    private function getPayloadNextIndex(): int
-    {
-        /** @var array<int> $indices */
-        $indices = \array_filter(\array_keys($this->getPayload()), '\\is_int');
-
-        if ($indices === []) {
-            return 0;
-        }
-
-        return \max($indices) + 1;
     }
 }
