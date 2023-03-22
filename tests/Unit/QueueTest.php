@@ -138,7 +138,12 @@ class QueueTestCase extends TestCase
 
         $this->assertSame(
             ['foo' => ['bar']],
-            $queue->create('foo', [], (new Options())->withHeader('foo', 'bar'))->getHeaders()
+            $queue->create(
+                name: 'foo',
+                payload: 'bar',
+                options: (new Options())->withHeader('foo', 'bar')
+            )
+                ->getHeaders()
         );
     }
 

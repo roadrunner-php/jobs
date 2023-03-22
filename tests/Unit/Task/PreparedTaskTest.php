@@ -15,14 +15,14 @@ final class PreparedTaskTest extends TestCase
     /** @dataProvider optionsDataProvider */
     public function testGetOptions(OptionsInterface $expected, ?OptionsInterface $options = null): void
     {
-        $task = new PreparedTask('foo', [], $options);
+        $task = new PreparedTask(name: 'foo', payload: 'bar', options: $options);
 
         $this->assertEquals($expected, $task->getOptions());
     }
 
     public function testWithOptions(): void
     {
-        $task = new PreparedTask('foo', []);
+        $task = new PreparedTask(name: 'foo', payload: 'bar');
 
         $this->assertSame(5, $task->withOptions(new Options(5))->getDelay());
         $this->assertSame('changed', $task->withOptions(new KafkaOptions('changed'))->getOptions()->getTopic());
@@ -30,14 +30,14 @@ final class PreparedTaskTest extends TestCase
 
     public function testCreatingTaskWithHeaders(): void
     {
-        $task = new PreparedTask('foo', [], null, ['foo' => ['bar']]);
+        $task = new PreparedTask(name: 'foo', payload: 'bar', options: null, headers: ['foo' => ['bar']]);
 
         $this->assertSame(['foo' => ['bar']], $task->getHeaders());
     }
 
     public function testCreatingTaskWithoutHeaders(): void
     {
-        $task = new PreparedTask('foo', []);
+        $task = new PreparedTask(name: 'foo', payload: 'bar');
 
         $this->assertSame([], $task->getHeaders());
     }

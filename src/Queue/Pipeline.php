@@ -23,8 +23,6 @@ use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\QueueInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\QueuedTask;
 use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
@@ -34,17 +32,12 @@ use Spiral\RoadRunner\Jobs\Task\TaskInterface;
  * @internal Executor is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\RoadRunner\Jobs
  */
-final class Pipeline implements SerializerAwareInterface
+final class Pipeline
 {
     /**
      * @var RPCInterface
      */
     private RPCInterface $rpc;
-
-    /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
 
     /**
      * @var QueueInterface
@@ -54,31 +47,11 @@ final class Pipeline implements SerializerAwareInterface
     /**
      * @param QueueInterface $queue
      * @param RPCInterface $rpc
-     * @param SerializerInterface $serializer
      */
-    public function __construct(QueueInterface $queue, RPCInterface $rpc, SerializerInterface $serializer)
+    public function __construct(QueueInterface $queue, RPCInterface $rpc)
     {
         $this->rpc = $rpc;
-        $this->serializer = $serializer;
         $this->queue = $queue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSerializer(): SerializerInterface
-    {
-        return $this->serializer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function withSerializer(SerializerInterface $serializer): SerializerAwareInterface
-    {
-        $self = clone $this;
-        $self->serializer = $serializer;
-        return $self;
     }
 
     /**
@@ -139,27 +112,16 @@ final class Pipeline implements SerializerAwareInterface
      * @param TaskInterface $task
      * @param OptionsInterface $options
      * @return Job
-     * @throws SerializationException
      */
     private function taskToProto(TaskInterface $task, OptionsInterface $options): Job
     {
         return new Job([
             'job' => $task->getName(),
             'id' => $this->createTaskId(),
-            'payload' => $this->payloadToProtoData($task),
+            'payload' => $task->getPayload(),
             'headers' => $this->headersToProtoData($task),
             'options' => $this->optionsToProto($options),
         ]);
-    }
-
-    /**
-     * @param TaskInterface $task
-     * @return string
-     * @throws SerializationException
-     */
-    private function payloadToProtoData(TaskInterface $task): string
-    {
-        return $this->serializer->serialize($task->getPayload());
     }
 
     /**

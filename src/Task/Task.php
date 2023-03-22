@@ -25,16 +25,16 @@ abstract class Task implements TaskInterface
     protected string $name;
 
     /**
-     * @var array
+     * @var string
      */
-    protected array $payload = [];
+    protected string $payload;
 
     /**
      * @param non-empty-string $name
-     * @param array $payload
+     * @param string $payload
      * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $name, array $payload = [], array $headers = [])
+    public function __construct(string $name, string $payload, array $headers = [])
     {
         assert($name !== '', 'Precondition [job !== ""] failed');
 
@@ -43,40 +43,13 @@ abstract class Task implements TaskInterface
         $this->headers = $headers;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getPayload(): array
+    public function getPayload(): string
     {
         return $this->payload;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getValue($key, $default = null)
-    {
-        // Note: The following code "$this->payload[$key] ?? $default" will
-        // work faster, but it will not work correctly if the key contains
-        // a NULL value.
-        return $this->hasValue($key) ? $this->payload[$key] : $default;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasValue($key): bool
-    {
-        // Array lookup optimization: Op ISSET_ISEMPTY_VAR faster than direct
-        // array_key_exists function execution.
-        return isset($this->payload[$key]) || \array_key_exists($key, $this->payload);
     }
 }

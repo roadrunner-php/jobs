@@ -48,7 +48,7 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
      * @param non-empty-string $id
      * @param non-empty-string $queue
      * @param non-empty-string $job
-     * @param array $payload
+     * @param string $payload
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
@@ -56,7 +56,7 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         string $id,
         string $queue,
         string $job,
-        array $payload = [],
+        string $payload,
         array $headers = []
     ) {
         $this->worker = $worker;

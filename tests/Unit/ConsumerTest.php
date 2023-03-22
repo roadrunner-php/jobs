@@ -7,8 +7,6 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
 use Spiral\RoadRunner\Jobs\Consumer;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
-use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
@@ -23,8 +21,7 @@ final class ConsumerTest extends TestCase
         parent::setUp();
 
         $this->consumer = new Consumer(
-            $this->woker = $this->createMock(WorkerInterface::class),
-            new JsonSerializer()
+            $this->woker = $this->createMock(WorkerInterface::class)
         );
     }
 
@@ -32,7 +29,7 @@ final class ConsumerTest extends TestCase
     {
         $this->woker->method('waitPayload')->willReturn(
             new Payload(
-                \json_encode($payload = ['baz' => 'bar']),
+                $payload = 'foo',
                 \json_encode([
                     'id' => 'job-id',
                     'pipeline' => 'job-pipeline',
@@ -65,7 +62,7 @@ final class ConsumerTest extends TestCase
         );
         $task = $this->consumer->waitTask();
 
-        $this->assertSame([], $task->getPayload());
+        $this->assertSame('', $task->getPayload());
     }
 
     public function testEmptyHeader(): void
@@ -77,31 +74,5 @@ final class ConsumerTest extends TestCase
             new Payload(null)
         );
         $this->consumer->waitTask();
-    }
-
-    public function testSerializer()
-    {
-        $serializer = $this->createMock(SerializerInterface::class);
-
-        $this->woker->method('waitPayload')->willReturn(
-            new Payload(
-                'foo=bar',
-                \json_encode([
-                    'id' => 'job-id',
-                    'pipeline' => 'job-pipeline',
-                    'job' => 'job-name',
-                    'headers' => ['foo' => 'bar'],
-                ])
-            )
-        );
-
-        $serializer->expects($this->once())
-            ->method('deserialize')
-            ->with($this->equalTo('foo=bar'))
-            ->willReturn(['foo' => 'bar']);
-
-        $task = $this->consumer->withSerializer($serializer)->waitTask();
-
-        $this->assertSame(['foo' => 'bar'], $task->getPayload());
     }
 }
