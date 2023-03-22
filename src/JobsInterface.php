@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
@@ -26,7 +19,6 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      * need to pass the name of a specific queue.
      *
      * @param non-empty-string $queue
-     * @return QueueInterface
      */
     public function connect(string $queue): QueueInterface;
 
@@ -34,8 +26,6 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      * A method that creates an arbitrary queue. The first argument should be
      * information about the queue being created.
      *
-     * @param CreateInfoInterface $info
-     * @return QueueInterface
      * @throws JobsException
      */
     public function create(CreateInfoInterface $info): QueueInterface;
@@ -48,7 +38,7 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      * @param QueueInterface|non-empty-string ...$queues
      * @throws JobsException
      */
-    public function pause($queue, ...$queues): void;
+    public function pause(QueueInterface|string $queue, QueueInterface|string ...$queues): void;
 
     /**
      * A method that resumes (unpauses) an arbitrary number of queues whose
@@ -58,5 +48,5 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      * @param QueueInterface|non-empty-string ...$queues
      * @throws JobsException
      */
-    public function resume($queue, ...$queues): void;
+    public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void;
 }

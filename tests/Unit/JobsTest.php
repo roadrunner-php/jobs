@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
@@ -28,14 +21,6 @@ class JobsTestCase extends TestCase
     protected function jobs(array $mapping = []): JobsInterface
     {
         return new Jobs($this->rpc($mapping));
-    }
-
-    public function testIsAvailable(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectErrorMessage('Spiral\RoadRunner\Jobs\Jobs::isAvailable method is deprecated.');
-
-        $this->jobs()->isAvailable();
     }
 
     /**

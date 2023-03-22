@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
@@ -14,7 +7,7 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 /**
  * The DTO to create the Boltdb driver.
  *
- * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
+ * @psalm-import-type DriverType from Driver
  */
 final class BoltdbCreateInfo extends CreateInfo
 {
@@ -29,37 +22,31 @@ final class BoltdbCreateInfo extends CreateInfo
     public const FILE_DEFAULT_VALUE = 'rr.db';
 
     /**
-     * @var positive-int
-     */
-    public int $prefetch = self::PREFETCH_DEFAULT_VALUE;
-
-    /**
-     * @var non-empty-string
-     */
-    public string $file = self::FILE_DEFAULT_VALUE;
-
-    /**
      * @param non-empty-string $name
+     * @param non-empty-string $file
      * @param positive-int $priority
      * @param positive-int $prefetch
      */
     public function __construct(
         string $name,
-        string $file = self::FILE_DEFAULT_VALUE,
+        public readonly string $file = self::FILE_DEFAULT_VALUE,
         int $priority = self::PRIORITY_DEFAULT_VALUE,
-        int $prefetch = self::PREFETCH_DEFAULT_VALUE
+        public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE
     ) {
         parent::__construct(Driver::BOLTDB, $name, $priority);
 
-        assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
-        assert($file !== '', 'Precondition [file !== ""] failed');
-
-        $this->prefetch = $prefetch;
-        $this->file = $file;
+        \assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
+        \assert($file !== '', 'Precondition [file !== ""] failed');
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-return array{
+     *     name: non-empty-string,
+     *     driver: DriverType,
+     *     priority: positive-int,
+     *     prefetch: positive-int,
+     *     file: non-empty-string
+     * }
      */
     public function toArray(): array
     {

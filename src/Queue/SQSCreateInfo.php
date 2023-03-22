@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
@@ -16,7 +9,6 @@ use JetBrains\PhpStorm\ArrayShape;
 /**
  * The DTO to create the SQS driver.
  *
- * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
  * @psalm-type SQSAttributesMap = array {
  *      DelaySeconds?: positive-int|0,
  *      MaximumMessageSize?: positive-int|0,
@@ -34,6 +26,7 @@ use JetBrains\PhpStorm\ArrayShape;
  *      DeduplicationScope?: mixed,
  *      FifoThroughputLimit?: mixed,
  * }
+ * @psalm-import-type DriverType from Driver
  */
 final class SQSCreateInfo extends CreateInfo
 {
@@ -68,41 +61,11 @@ final class SQSCreateInfo extends CreateInfo
     public const QUEUE_DEFAULT_VALUE = 'default';
 
     /**
-     * @var positive-int
-     */
-    public int $prefetch = self::PREFETCH_DEFAULT_VALUE;
-
-    /**
-     * @var positive-int|0
-     */
-    public int $visibilityTimeout = self::VISIBILITY_TIMEOUT_DEFAULT_VALUE;
-
-    /**
-     * @var positive-int|0
-     */
-    public int $waitTimeSeconds = self::WAIT_TIME_SECONDS_DEFAULT_VALUE;
-
-    /**
-     * @var non-empty-string
-     */
-    public string $queue = self::QUEUE_DEFAULT_VALUE;
-
-    /**
-     * @var array|SQSAttributesMap
-     */
-    public array $attributes = self::ATTRIBUTES_DEFAULT_VALUE;
-
-    /**
-     * @var array<non-empty-string, non-empty-string>
-     */
-    public array $tags = self::TAGS_DEFAULT_VALUE;
-
-    /**
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
-     * @param positive-int|0 $visibilityTimeout
-     * @param positive-int|0 $waitTimeSeconds
+     * @param int<0, max> $visibilityTimeout
+     * @param int<0, max> $waitTimeSeconds
      * @param non-empty-string $queue
      * @param array|SQSAttributesMap $attributes
      * @param array<non-empty-string, non-empty-string> $tags
@@ -110,30 +73,33 @@ final class SQSCreateInfo extends CreateInfo
     public function __construct(
         string $name,
         int $priority = self::PRIORITY_DEFAULT_VALUE,
-        int $prefetch = self::PREFETCH_DEFAULT_VALUE,
-        int $visibilityTimeout = self::VISIBILITY_TIMEOUT_DEFAULT_VALUE,
-        int $waitTimeSeconds = self::WAIT_TIME_SECONDS_DEFAULT_VALUE,
-        string $queue = self::QUEUE_DEFAULT_VALUE,
-        array $attributes = self::ATTRIBUTES_DEFAULT_VALUE,
-        array $tags = self::TAGS_DEFAULT_VALUE
+        public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE,
+        public readonly int $visibilityTimeout = self::VISIBILITY_TIMEOUT_DEFAULT_VALUE,
+        public readonly int $waitTimeSeconds = self::WAIT_TIME_SECONDS_DEFAULT_VALUE,
+        public readonly string $queue = self::QUEUE_DEFAULT_VALUE,
+        public readonly array $attributes = self::ATTRIBUTES_DEFAULT_VALUE,
+        public readonly array $tags = self::TAGS_DEFAULT_VALUE
     ) {
         parent::__construct(Driver::SQS, $name, $priority);
 
-        assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
-        assert($visibilityTimeout >= 0, 'Precondition [visibilityTimeout >= 0] failed');
-        assert($waitTimeSeconds >= 0, 'Precondition [waitTimeSeconds >= 0] failed');
-        assert($queue !== '', 'Precondition [queue !== ""] failed');
-
-        $this->prefetch = $prefetch;
-        $this->visibilityTimeout = $visibilityTimeout;
-        $this->waitTimeSeconds = $waitTimeSeconds;
-        $this->queue = $queue;
-        $this->attributes = $attributes;
-        $this->tags = $tags;
+        \assert($this->prefetch >= 1, 'Precondition [prefetch >= 1] failed');
+        \assert($this->visibilityTimeout >= 0, 'Precondition [visibilityTimeout >= 0] failed');
+        \assert($this->waitTimeSeconds >= 0, 'Precondition [waitTimeSeconds >= 0] failed');
+        \assert($this->queue !== '', 'Precondition [queue !== ""] failed');
     }
 
     /**
-     * {@inheritDoc}
+     * @return array{
+     *     name: string,
+     *     driver: DriverType,
+     *     priority: positive-int,
+     *     prefetch: positive-int,
+     *     visibility_timeout: int<0, max>,
+     *     wait_time_seconds: int<0, max>,
+     *     queue: string,
+     *     attributes?: array|SQSAttributesMap,
+     *     tags?: array<non-empty-string, non-empty-string>
+     * }
      */
     public function toArray(): array
     {

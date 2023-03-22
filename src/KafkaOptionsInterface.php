@@ -34,7 +34,6 @@ interface KafkaOptionsInterface extends OptionsInterface
 
     /**
      * @psalm-immutable
-     * @return string
      */
     public function getMetadata(): string;
 

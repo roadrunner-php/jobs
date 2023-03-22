@@ -12,52 +12,24 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 final class KafkaOptions extends Options implements KafkaOptionsInterface
 {
     /**
-     * @var non-empty-string
-     */
-    public string $topic;
-
-    /**
-     * @var string
-     */
-    public string $metadata = self::DEFAULT_METADATA;
-
-    /**
-     * @var PartitionOffsetEnum
-     */
-    public int $offset = self::DEFAULT_OFFSET;
-
-    /**
-     * @var positive-int|0
-     */
-    public int $partition = self::DEFAULT_PARTITION;
-
-    /**
      * @param non-empty-string $topic
      * @psalm-param 0|positive-int $delay
      * @psalm-param 0|positive-int $priority
-     * @param bool $autoAck
-     * @param string $metadata
      * @psalm-param PartitionOffsetEnum $offset
-     * @param int $partition
      */
     public function __construct(
-        string $topic,
+        public string $topic,
         int $delay = self::DEFAULT_DELAY,
         int $priority = self::DEFAULT_PRIORITY,
         bool $autoAck = self::DEFAULT_AUTO_ACK,
-        string $metadata = self::DEFAULT_METADATA,
-        int $offset = self::DEFAULT_OFFSET,
-        int $partition = self::DEFAULT_PARTITION
+        public string $metadata = self::DEFAULT_METADATA,
+        public int $offset = self::DEFAULT_OFFSET,
+        public int $partition = self::DEFAULT_PARTITION
     ) {
         parent::__construct($delay, $priority, $autoAck);
 
-        assert($topic !== '', 'Precondition [topic !== ""] failed');
-        assert($partition >= 0, 'Precondition [partition >= 0] failed');
-
-        $this->topic = $topic;
-        $this->offset = $offset;
-        $this->partition = $partition;
-        $this->metadata = $metadata;
+        \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
+        \assert($this->partition >= 0, 'Precondition [partition >= 0] failed');
     }
 
     /**
@@ -110,7 +82,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
      */
     public function withTopic(string $topic): self
     {
-        assert($topic !== '', 'Precondition [topic !== ""] failed');
+        \assert($topic !== '', 'Precondition [topic !== ""] failed');
 
         $self = clone $this;
         $self->topic = $topic;
@@ -120,14 +92,13 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     public function getTopic(): string
     {
-        assert($this->topic !== '', 'Precondition [topic !== ""] failed');
+        \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
 
         return $this->topic;
     }
 
     /**
      * @psalm-immutable
-     * @param string $metadata
      * @return $this
      */
     public function withMetadata(string $metadata): self

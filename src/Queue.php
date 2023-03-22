@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
@@ -28,40 +21,24 @@ use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
 final class Queue implements QueueInterface
 {
     private OptionsInterface $options;
-
-    /**
-     * @var non-empty-string
-     */
-    private string $name;
-
-    /**
-     * @var Pipeline
-     */
     private Pipeline $pipeline;
-
-    /**
-     * @var RPCInterface
-     */
     private RPCInterface $rpc;
 
     /**
      * @param non-empty-string $name
-     * @param RPCInterface|null $rpc
      */
     public function __construct(
-        string $name,
-        RPCInterface $rpc = null,
-        OptionsInterface $options = null
+        public readonly string $name,
+        ?RPCInterface $rpc = null,
+        ?OptionsInterface $options = null
     ) {
-        assert($name !== '', 'Precondition [name !== ""] failed');
+        \assert($name !== '', 'Precondition [name !== ""] failed');
 
         $this->rpc = ($rpc ?? $this->createRPCConnection())
             ->withCodec(new ProtobufCodec())
         ;
 
         $this->pipeline = new Pipeline($this, $this->rpc);
-
-        $this->name = $name;
         $this->options = $options ?? new Options();
     }
 
@@ -74,23 +51,19 @@ final class Queue implements QueueInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @return non-empty-string
      */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getDefaultOptions(): OptionsInterface
     {
         return $this->options;
     }
 
     /**
-     * {@inheritDoc}
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -103,9 +76,6 @@ final class Queue implements QueueInterface
         return $self;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function create(string $name, string $payload = '', OptionsInterface $options = null): PreparedTaskInterface
     {
         if (\method_exists($this->options, 'mergeOptional')) {
@@ -127,9 +97,7 @@ final class Queue implements QueueInterface
      * This method exists for compatibility with version RoadRunner 1.x.
      *
      * @param non-empty-string $name
-     * @param string $payload
      * @param OptionsInterface|null $options
-     * @return QueuedTaskInterface
      * @throws JobsException
      */
     public function push(string $name, string $payload = '', OptionsInterface $options = null): QueuedTaskInterface
@@ -139,25 +107,16 @@ final class Queue implements QueueInterface
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface
     {
         return $this->pipeline->send($task);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable
     {
         return $this->pipeline->sendMany($tasks);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function pause(): void
     {
         try {
@@ -169,9 +128,6 @@ final class Queue implements QueueInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function resume(): void
     {
         try {
@@ -183,9 +139,6 @@ final class Queue implements QueueInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function isPaused(): bool
     {
         $stat = $this->getPipelineStat();
@@ -200,6 +153,9 @@ final class Queue implements QueueInterface
         return RPC::create($env->getRPCAddress());
     }
 
+    /**
+     * @throws JobsException
+     */
     public function getPipelineStat(): ?Stat
     {
         try {

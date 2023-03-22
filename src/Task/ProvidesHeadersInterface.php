@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -86,7 +79,6 @@ interface ProvidesHeadersInterface
      *
      * @psalm-mutation-free
      * @param non-empty-string $name
-     * @return string
      */
     public function getHeaderLine(string $name): string;
 }
