@@ -9,8 +9,6 @@ use Spiral\RoadRunner\Jobs\Queue\AMQP\ExchangeType;
 /**
  * The DTO to create the AMQP driver.
  *
- * @psalm-import-type ExchangeTypeEnum from ExchangeType
- *
  * @see ExchangeType
  */
 final class AMQPCreateInfo extends CreateInfo
@@ -29,11 +27,6 @@ final class AMQPCreateInfo extends CreateInfo
      * @var non-empty-string
      */
     public const EXCHANGE_DEFAULT_VALUE = 'amqp.default';
-
-    /**
-     * @var ExchangeTypeEnum
-     */
-    public const EXCHANGE_TYPE_DEFAULT_VALUE = ExchangeType::TYPE_DIRECT;
 
     /**
      * @var string
@@ -66,7 +59,6 @@ final class AMQPCreateInfo extends CreateInfo
      * @param positive-int $prefetch
      * @param non-empty-string $queue
      * @param non-empty-string $exchange
-     * @param ExchangeTypeEnum $exchangeType
      */
     public function __construct(
         string $name,
@@ -74,7 +66,7 @@ final class AMQPCreateInfo extends CreateInfo
         public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE,
         public readonly string $queue = self::QUEUE_DEFAULT_VALUE,
         public readonly string $exchange = self::EXCHANGE_DEFAULT_VALUE,
-        public readonly string $exchangeType = self::EXCHANGE_TYPE_DEFAULT_VALUE,
+        public readonly ExchangeType $exchangeType = ExchangeType::Direct,
         public readonly string $routingKey = self::ROUTING_KEY_DEFAULT_VALUE,
         public readonly bool $exclusive = self::EXCLUSIVE_DEFAULT_VALUE,
         public readonly bool $multipleAck = self::MULTIPLE_ACK_DEFAULT_VALUE,
@@ -86,7 +78,6 @@ final class AMQPCreateInfo extends CreateInfo
         \assert($this->prefetch >= 1, 'Precondition [prefetch >= 1] failed');
         \assert($this->queue !== '', 'Precondition [queue !== ""] failed');
         \assert($this->exchange !== '', 'Precondition [exchange !== ""] failed');
-        \assert($this->exchangeType !== '', 'Precondition [exchangeType !== ""] failed');
     }
 
     public function toArray(): array
@@ -95,7 +86,7 @@ final class AMQPCreateInfo extends CreateInfo
             'prefetch'        => $this->prefetch,
             'queue'           => $this->queue,
             'exchange'        => $this->exchange,
-            'exchange_type'   => $this->exchangeType,
+            'exchange_type'   => $this->exchangeType->value,
             'routing_key'     => $this->routingKey,
             'exclusive'       => $this->exclusive,
             'multiple_ack'    => $this->multipleAck,

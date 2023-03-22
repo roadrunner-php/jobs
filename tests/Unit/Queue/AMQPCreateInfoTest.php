@@ -17,7 +17,7 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertSame(AMQPCreateInfo::PREFETCH_DEFAULT_VALUE, $amqpCreateInfo->prefetch);
         $this->assertSame(AMQPCreateInfo::QUEUE_DEFAULT_VALUE, $amqpCreateInfo->queue);
         $this->assertSame(AMQPCreateInfo::EXCHANGE_DEFAULT_VALUE, $amqpCreateInfo->exchange);
-        $this->assertSame(ExchangeType::TYPE_DIRECT, $amqpCreateInfo->exchangeType);
+        $this->assertSame(ExchangeType::Direct, $amqpCreateInfo->exchangeType);
         $this->assertSame(AMQPCreateInfo::ROUTING_KEY_DEFAULT_VALUE, $amqpCreateInfo->routingKey);
         $this->assertFalse($amqpCreateInfo->exclusive);
         $this->assertFalse($amqpCreateInfo->multipleAck);
@@ -33,7 +33,7 @@ final class AMQPCreateInfoTest extends TestCase
             200,
             'custom_queue',
             'custom_exchange',
-            ExchangeType::TYPE_TOPICS,
+            ExchangeType::Topics,
             'custom_routing_key',
             true,
             true,
@@ -44,7 +44,7 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertSame(200, $amqpCreateInfo->prefetch);
         $this->assertSame('custom_queue', $amqpCreateInfo->queue);
         $this->assertSame('custom_exchange', $amqpCreateInfo->exchange);
-        $this->assertSame(ExchangeType::TYPE_TOPICS, $amqpCreateInfo->exchangeType);
+        $this->assertSame(ExchangeType::Topics, $amqpCreateInfo->exchangeType);
         $this->assertSame('custom_routing_key', $amqpCreateInfo->routingKey);
         $this->assertTrue($amqpCreateInfo->exclusive);
         $this->assertTrue($amqpCreateInfo->multipleAck);
@@ -60,7 +60,7 @@ final class AMQPCreateInfoTest extends TestCase
             200,
             'custom_queue',
             'custom_exchange',
-            ExchangeType::TYPE_FANOUT,
+            ExchangeType::Fanout,
             'custom_routing_key',
             true,
             true,
@@ -75,7 +75,7 @@ final class AMQPCreateInfoTest extends TestCase
             'prefetch' => 200,
             'queue' => 'custom_queue',
             'exchange' => 'custom_exchange',
-            'exchange_type' => ExchangeType::TYPE_FANOUT,
+            'exchange_type' => ExchangeType::Fanout->value,
             'routing_key' => 'custom_routing_key',
             'exclusive' => true,
             'multiple_ack' => true,
