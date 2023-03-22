@@ -10,6 +10,7 @@ use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Jobs;
 use Spiral\RoadRunner\Jobs\JobsInterface;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
 class JobsTestCase extends TestCase
@@ -28,12 +29,12 @@ class JobsTestCase extends TestCase
      */
     public function testCreate(): void
     {
-        $dto = new CreateInfo('bar', 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
+        $dto = new CreateInfo(Driver::Memory, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
             'jobs.Declare' => function (DeclareRequest $request) use($dto) {
                 $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
-                $this->assertSame($dto->getDriver(), $request->getPipeline()->offsetGet('driver'));
+                $this->assertSame($dto->getDriver()->value, $request->getPipeline()->offsetGet('driver'));
                 $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
             },
         ]);

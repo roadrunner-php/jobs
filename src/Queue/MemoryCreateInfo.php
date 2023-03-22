@@ -6,8 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 
 /**
  * The DTO to create the Memory driver.
- *
- * @psalm-import-type DriverType from Driver
  */
 final class MemoryCreateInfo extends CreateInfo
 {
@@ -26,19 +24,11 @@ final class MemoryCreateInfo extends CreateInfo
         int $priority = self::PRIORITY_DEFAULT_VALUE,
         public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::MEMORY, $name, $priority);
+        parent::__construct(Driver::Memory, $name, $priority);
 
         \assert($this->prefetch >= 1, 'Precondition [prefetch >= 1] failed');
     }
 
-    /**
-     * @return array{
-     *     name: non-empty-string,
-     *     driver: DriverType,
-     *     priority: int<1, max>,
-     *     prefetch: int<1, max>
-     * }
-     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

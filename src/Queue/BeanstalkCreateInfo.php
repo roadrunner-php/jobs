@@ -6,8 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 
 /**
  * The DTO to create the Beanstalk driver.
- *
- * @psalm-import-type DriverType from Driver
  */
 final class BeanstalkCreateInfo extends CreateInfo
 {
@@ -45,23 +43,13 @@ final class BeanstalkCreateInfo extends CreateInfo
         public readonly string $tube = self::TUBE_DEFAULT_VALUE,
         public readonly int $reserveTimeout = self::RESERVE_TIMEOUT_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::BEANSTALK, $name, $priority);
+        parent::__construct(Driver::Beanstalk, $name, $priority);
 
         \assert($this->tubePriority >= 1, 'Precondition [tubePriority >= 1] failed');
         \assert($this->tube !== '', 'Precondition [tube !== ""] failed');
         \assert($this->reserveTimeout >= 0, 'Precondition [reserveTimeout >= 0] failed');
     }
 
-    /**
-     * @return array{
-     *     name: non-empty-string,
-     *     driver: DriverType,
-     *     priority: positive-int,
-     *     tube_priority: positive-int,
-     *     tube: non-empty-string,
-     *     reserve_timeout: int<0, max>
-     * }
-     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

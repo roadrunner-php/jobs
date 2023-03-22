@@ -14,7 +14,6 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\RequiredAcks;
  * @psalm-import-type CompressionCodecEnum from CompressionCodec
  * @psalm-import-type RequiredAcksEnum from RequiredAcks
  * @psalm-import-type PartitionOffsetEnum from PartitionOffset
- * @psalm-import-type DriverType from Driver
  */
 final class KafkaCreateInfo extends CreateInfo
 {
@@ -128,7 +127,7 @@ final class KafkaCreateInfo extends CreateInfo
         public readonly int $heartbeatInterval = self::HEARTBEAT_INTERVAL_DEFAULT_VALUE,
         public readonly int $sessionTimeout = self::SESSION_TIMEOUT_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::KAFKA, $name, $priority);
+        parent::__construct(Driver::Kafka, $name, $priority);
 
         \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
         \assert($this->clientId !== '', 'Precondition [clientId !== ""] failed');
@@ -142,30 +141,6 @@ final class KafkaCreateInfo extends CreateInfo
         \assert($this->heartbeatInterval >= 1, 'Precondition [heartbeatInterval >= 1] failed');
     }
 
-    /**
-     * @return array{
-     *     name: non-empty-string,
-     *     driver: DriverType,
-     *     priority: positive-int,
-     *     topic: non-empty-string,
-     *     group_id: string,
-     *     max_open_requests: positive-int,
-     *     client_id: string,
-     *     version: non-empty-string,
-     *     replication_factor: positive-int,
-     *     max_message_bytes: positive-int,
-     *     required_acks: RequiredAcksEnum,
-     *     timeout: positive-int,
-     *     compression_codec: CompressionCodecEnum,
-     *     compression_level: positive-int,
-     *     idempotent: bool,
-     *     heartbeat_interval: positive-int,
-     *     session_timeout: positive-int,
-     *     partitions_offsets?: array<positive-int, positive-int|PartitionOffsetEnum>|null,
-     *     replica_assignment?: array<positive-int, array<positive-int>>|null,
-     *     config_entries?: array<non-empty-string, mixed>|null
-     * }
-     */
     public function toArray(): array
     {
         $info = [

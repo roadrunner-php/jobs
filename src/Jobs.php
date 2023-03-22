@@ -13,6 +13,9 @@ use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
 
+/**
+ * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
+ */
 final class Jobs implements JobsInterface
 {
     private readonly RPCInterface $rpc;
@@ -37,8 +40,8 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * @param array<string, mixed> $map
-     * @return array<string, string>
+     * @param CreateInfoArrayType $map
+     * @return non-empty-array<array-key, string>
      * @throws \Throwable
      * @psalm-suppress MixedAssignment
      */

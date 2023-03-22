@@ -9,7 +9,6 @@ use Spiral\RoadRunner\Jobs\Queue\AMQP\ExchangeType;
 /**
  * The DTO to create the AMQP driver.
  *
- * @psalm-import-type DriverType from Driver
  * @psalm-import-type ExchangeTypeEnum from ExchangeType
  *
  * @see ExchangeType
@@ -90,22 +89,6 @@ final class AMQPCreateInfo extends CreateInfo
         \assert($this->exchangeType !== '', 'Precondition [exchangeType !== ""] failed');
     }
 
-    /**
-     * @return array{
-     *     name: non-empty-string,
-     *     driver: DriverType,
-     *     priority: positive-int,
-     *     prefetch: positive-int,
-     *     queue: non-empty-string,
-     *     exchange: non-empty-string,
-     *     exchange_type: ExchangeTypeEnum,
-     *     routing_key: string,
-     *     exclusive: bool,
-     *     multiple_ack: bool,
-     *     requeue_on_fail: bool,
-     *     durable: bool
-     * }
-     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

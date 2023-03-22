@@ -6,8 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 
 /**
  * The DTO to create the NATS driver.
- *
- * @psalm-import-type DriverType from Driver
  */
 final class NatsCreateInfo extends CreateInfo
 {
@@ -68,20 +66,6 @@ final class NatsCreateInfo extends CreateInfo
         \assert($stream !== '', 'Precondition [stream !== ""] failed');
     }
 
-    /**
-     * @psalm-return array{
-     *     name: non-empty-string,
-     *     driver: DriverType,
-     *     priority: positive-int,
-     *     prefetch: positive-int,
-     *     subject: non-empty-string,
-     *     deliver_new: bool,
-     *     rate_limit: positive-int,
-     *     stream: non-empty-string,
-     *     delete_stream_on_stop: bool,
-     *     delete_after_ack: bool
-     * }
-     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

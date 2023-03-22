@@ -52,7 +52,7 @@ final class NatsCreateInfoTest extends TestCase
 
         $expectedArray = [
             'name' => 'test_name',
-            'driver' => Driver::NATS,
+            'driver' => Driver::NATS->value,
             'priority' => 3,
             'prefetch' => 200,
             'subject' => 'test_subject',

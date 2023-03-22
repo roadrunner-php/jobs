@@ -6,8 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 
 /**
  * The DTO to create the Boltdb driver.
- *
- * @psalm-import-type DriverType from Driver
  */
 final class BoltdbCreateInfo extends CreateInfo
 {
@@ -33,21 +31,12 @@ final class BoltdbCreateInfo extends CreateInfo
         int $priority = self::PRIORITY_DEFAULT_VALUE,
         public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE
     ) {
-        parent::__construct(Driver::BOLTDB, $name, $priority);
+        parent::__construct(Driver::BoltDB, $name, $priority);
 
         \assert($prefetch >= 1, 'Precondition [prefetch >= 1] failed');
         \assert($file !== '', 'Precondition [file !== ""] failed');
     }
 
-    /**
-     * @psalm-return array{
-     *     name: non-empty-string,
-     *     driver: DriverType,
-     *     priority: positive-int,
-     *     prefetch: positive-int,
-     *     file: non-empty-string
-     * }
-     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

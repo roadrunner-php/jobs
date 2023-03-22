@@ -26,7 +26,6 @@ use JetBrains\PhpStorm\ArrayShape;
  *      DeduplicationScope?: mixed,
  *      FifoThroughputLimit?: mixed,
  * }
- * @psalm-import-type DriverType from Driver
  */
 final class SQSCreateInfo extends CreateInfo
 {
@@ -88,19 +87,6 @@ final class SQSCreateInfo extends CreateInfo
         \assert($this->queue !== '', 'Precondition [queue !== ""] failed');
     }
 
-    /**
-     * @return array{
-     *     name: string,
-     *     driver: DriverType,
-     *     priority: positive-int,
-     *     prefetch: positive-int,
-     *     visibility_timeout: int<0, max>,
-     *     wait_time_seconds: int<0, max>,
-     *     queue: string,
-     *     attributes?: array|SQSAttributesMap,
-     *     tags?: array<non-empty-string, non-empty-string>
-     * }
-     */
     public function toArray(): array
     {
         $result = \array_merge(parent::toArray(), [

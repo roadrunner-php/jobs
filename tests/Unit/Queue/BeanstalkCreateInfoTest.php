@@ -15,7 +15,7 @@ final class BeanstalkCreateInfoTest extends TestCase
         $beanstalkCreateInfo = new BeanstalkCreateInfo('test',);
 
         $this->assertInstanceOf(BeanstalkCreateInfo::class, $beanstalkCreateInfo);
-        $this->assertEquals(Driver::BEANSTALK, $beanstalkCreateInfo->driver);
+        $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
         $this->assertEquals('test', $beanstalkCreateInfo->name);
         $this->assertEquals(BeanstalkCreateInfo::PRIORITY_DEFAULT_VALUE, $beanstalkCreateInfo->priority);
         $this->assertEquals(BeanstalkCreateInfo::TUBE_PRIORITY_DEFAULT_VALUE, $beanstalkCreateInfo->tubePriority);
@@ -33,7 +33,7 @@ final class BeanstalkCreateInfoTest extends TestCase
 
         $beanstalkCreateInfo = new BeanstalkCreateInfo($name, $priority, $tubePriority, $tube, $reserveTimeout);
 
-        $this->assertEquals('beanstalk', $beanstalkCreateInfo->driver);
+        $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
         $this->assertEquals($name, $beanstalkCreateInfo->name);
         $this->assertEquals($priority, $beanstalkCreateInfo->priority);
         $this->assertEquals($tubePriority, $beanstalkCreateInfo->tubePriority);
@@ -52,7 +52,7 @@ final class BeanstalkCreateInfoTest extends TestCase
         $beanstalkCreateInfo = new BeanstalkCreateInfo($name, $priority, $tubePriority, $tube, $reserveTimeout);
 
         $expectedArray = [
-            'driver' => Driver::BEANSTALK,
+            'driver' => Driver::Beanstalk->value,
             'name' => $name,
             'priority' => $priority,
             'tube_priority' => $tubePriority,

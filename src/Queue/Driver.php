@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
 
-/**
- * @psalm-type DriverType = Driver::*
- */
-interface Driver
+enum Driver: string
 {
     /**
      * In-memory builtin RoadRunner driver.
-     *
-     * @psalm-var DriverType
-     * @var string
      */
-    public const MEMORY = 'memory';
+    case Memory = 'memory';
 
     /**
      * AMQP-based queue server implementation.
@@ -23,55 +17,26 @@ interface Driver
      * @link https://www.rabbitmq.com/
      * @link http://activemq.apache.org/
      * @link http://qpid.apache.org/
-     *
-     * @psalm-var DriverType
-     * @var string
      */
-    public const AMQP = 'amqp';
+    case AMQP = 'amqp';
 
-    /**
-     * @psalm-var DriverType
-     * @var string
-     */
-    public const BEANSTALK = 'beanstalk';
+    case Beanstalk = 'beanstalk';
 
-    /**
-     * @psalm-var DriverType
-     * @var string
-     */
-    public const BOLTDB = 'boltdb';
+    case BoltDB = 'boltdb';
 
-    /**
-     * @psalm-var DriverType
-     * @var string
-     */
-    public const SQS = 'sqs';
+    case SQS = 'sqs';
 
     /**
      * @internal NOT Available: Reserved for future use.
-     *
-     * @psalm-var DriverType
-     * @var string
      */
-    public const REDIS = 'redis';
+    case Redis = 'redis';
 
-    /**
-     * @psalm-var DriverType
-     * @var string
-     */
-    public const NATS = 'nats';
+    case NATS = 'nats';
 
-    /**
-     * @psalm-var DriverType
-     * @var string
-     */
-    public const KAFKA = 'kafka';
+    case Kafka = 'kafka';
 
     /**
      * @internal NOT Available: Reserved for future use.
-     *
-     * @psalm-var DriverType
-     * @var string
      */
-    public const NSQ = 'nsq';
+    case NSQ = 'nsq';
 }
