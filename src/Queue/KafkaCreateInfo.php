@@ -10,10 +10,6 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\RequiredAcks;
 
 /**
  * The DTO to create the Kafka driver.
- *
- * @psalm-import-type CompressionCodecEnum from CompressionCodec
- * @psalm-import-type RequiredAcksEnum from RequiredAcks
- * @psalm-import-type PartitionOffsetEnum from PartitionOffset
  */
 final class KafkaCreateInfo extends CreateInfo
 {
@@ -48,19 +44,9 @@ final class KafkaCreateInfo extends CreateInfo
     public const MAX_MESSAGE_BYTES_DEFAULT_VALUE = 1000000;
 
     /**
-     * @var RequiredAcksEnum
-     */
-    public const REQUIRED_ACKS_DEFAULT_VALUE = RequiredAcks::TYPE_WAIT_FOR_LOCAL;
-
-    /**
      * @var positive-int
      */
     public const TIMEOUT_DEFAULT_VALUE = 10;
-
-    /**
-     * @var CompressionCodecEnum
-     */
-    public const COMPRESSION_CODEC_DEFAULT_VALUE = CompressionCodec::CODEC_SNAPPY;
 
     /**
      * @var positive-int
@@ -86,7 +72,7 @@ final class KafkaCreateInfo extends CreateInfo
      * @param non-empty-string $name
      * @param non-empty-string $topic
      * @param positive-int $priority
-     * @param array<positive-int, positive-int|PartitionOffsetEnum>|null $partitionsOffsets
+     * @param array<positive-int, value-of<PartitionOffset>|int>|null $partitionsOffsets
      * @param positive-int $maxOpenRequests
      * @param non-empty-string $clientId
      * @param non-empty-string $kafkaVersion
@@ -94,9 +80,9 @@ final class KafkaCreateInfo extends CreateInfo
      * @param array<positive-int, array<positive-int>>|null $replicaAssignment
      * @param array<non-empty-string, mixed>|null $configEntries
      * @param positive-int $maxMessageBytes
-     * @param RequiredAcksEnum $requiredAcks
+     * @param RequiredAcks|value-of<RequiredAcks> $requiredAcks
      * @param positive-int $timeout
-     * @param CompressionCodecEnum $compressionCodec
+     * @param CompressionCodec|value-of<CompressionCodec> $compressionCodec
      * @param positive-int $compressionLevel
      * @param positive-int $heartbeatInterval
      * @param positive-int $sessionTimeout
@@ -119,9 +105,9 @@ final class KafkaCreateInfo extends CreateInfo
         /** @see https://kafka.apache.org/documentation/#configuration */
         public readonly ?array $configEntries = null,
         public readonly int $maxMessageBytes = self::MAX_MESSAGE_BYTES_DEFAULT_VALUE,
-        public readonly int $requiredAcks = self::REQUIRED_ACKS_DEFAULT_VALUE,
+        public readonly int|RequiredAcks $requiredAcks = RequiredAcks::TypeWaitForLocal,
         public readonly int $timeout = self::TIMEOUT_DEFAULT_VALUE,
-        public readonly string $compressionCodec = self::COMPRESSION_CODEC_DEFAULT_VALUE,
+        public readonly string|CompressionCodec $compressionCodec = CompressionCodec::Snappy,
         public readonly int $compressionLevel = self::COMPRESSION_LEVEL_DEFAULT_VALUE,
         public readonly bool $idempotent = self::IDEMPOTENT_DEFAULT_VALUE,
         public readonly int $heartbeatInterval = self::HEARTBEAT_INTERVAL_DEFAULT_VALUE,
@@ -136,7 +122,6 @@ final class KafkaCreateInfo extends CreateInfo
         \assert($this->replicationFactor >= 1, 'Precondition [replicationFactor >= 1] failed');
         \assert($this->maxMessageBytes >= 1, 'Precondition [maxMessageBytes >= 1] failed');
         \assert($this->timeout >= 1, 'Precondition [timeout >= 1] failed');
-        \assert($this->compressionCodec !== '', 'Precondition [compressionCodec !== ""] failed');
         \assert($this->compressionLevel >= 1, 'Precondition [compressionLevel >= 1] failed');
         \assert($this->heartbeatInterval >= 1, 'Precondition [heartbeatInterval >= 1] failed');
     }
@@ -151,9 +136,11 @@ final class KafkaCreateInfo extends CreateInfo
             'version' => $this->kafkaVersion,
             'replication_factor' => $this->replicationFactor,
             'max_message_bytes' => $this->maxMessageBytes,
-            'required_acks' => $this->requiredAcks,
+            'required_acks' => \is_int($this->requiredAcks) ? $this->requiredAcks : $this->requiredAcks->value,
             'timeout' => $this->timeout,
-            'compression_codec' => $this->compressionCodec,
+            'compression_codec' => \is_string($this->compressionCodec)
+                ? $this->compressionCodec
+                : $this->compressionCodec->value,
             'compression_level' => $this->compressionLevel,
             'idempotent' => $this->idempotent,
             'heartbeat_interval' => $this->heartbeatInterval,
@@ -161,7 +148,9 @@ final class KafkaCreateInfo extends CreateInfo
         ];
 
         if ($this->partitionsOffsets !== null) {
-            $info['partitions_offsets'] = $this->partitionsOffsets;
+            foreach ($this->partitionsOffsets as $key => $offset) {
+                $info['partitions_offsets'][$key] = $offset instanceof PartitionOffset ? $offset->value : $offset;
+            }
         }
 
         if ($this->replicaAssignment !== null) {

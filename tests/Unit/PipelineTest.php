@@ -25,7 +25,6 @@ final class PipelineTest extends TestCase
         );
 
         $method = new \ReflectionMethod($pipeline, 'taskToProto');
-        $method->setAccessible(true);
 
         $task = new PreparedTask('foo', '', $options);
         $job = $method->invoke($pipeline, $task, $task);
@@ -44,14 +43,14 @@ final class PipelineTest extends TestCase
             'metadata' => ''
         ])];
 
-        yield [new KafkaOptions('some', 10, 5, true, 'other', 5, 7), new DTOOptions([
+        yield [new KafkaOptions('some', 10, 5, true, 'other', -2, 7), new DTOOptions([
             'priority' => 5,
             'pipeline' => '',
             'delay' => 10,
             'auto_ack' => true,
             'topic' => 'some',
             'metadata' => 'other',
-            'offset' => 5,
+            'offset' => -2,
             'partition' => 7
         ])];
     }

@@ -6,20 +6,12 @@ namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 
-/**
- * @psalm-import-type PartitionOffsetEnum from PartitionOffset
- */
 interface KafkaOptionsInterface extends OptionsInterface
 {
     /**
      * @var string
      */
     public const DEFAULT_METADATA = '';
-
-    /**
-     * @var PartitionOffsetEnum
-     */
-    public const DEFAULT_OFFSET = PartitionOffset::OFFSET_NEWEST;
 
     /**
      * @var positive-int|0
@@ -39,9 +31,8 @@ interface KafkaOptionsInterface extends OptionsInterface
 
     /**
      * @psalm-immutable
-     * @return PartitionOffsetEnum
      */
-    public function getOffset(): int;
+    public function getOffset(): PartitionOffset;
 
     /**
      * @psalm-immutable

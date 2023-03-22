@@ -6,16 +6,15 @@ namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 
-/**
- * @psalm-import-type PartitionOffsetEnum from PartitionOffset
- */
 final class KafkaOptions extends Options implements KafkaOptionsInterface
 {
+    public PartitionOffset $offset;
+
     /**
      * @param non-empty-string $topic
      * @psalm-param 0|positive-int $delay
      * @psalm-param 0|positive-int $priority
-     * @psalm-param PartitionOffsetEnum $offset
+     * @psalm-param value-of<PartitionOffset>|PartitionOffset $offset
      */
     public function __construct(
         public string $topic,
@@ -23,13 +22,15 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         int $priority = self::DEFAULT_PRIORITY,
         bool $autoAck = self::DEFAULT_AUTO_ACK,
         public string $metadata = self::DEFAULT_METADATA,
-        public int $offset = self::DEFAULT_OFFSET,
+        int|PartitionOffset $offset = PartitionOffset::Newest,
         public int $partition = self::DEFAULT_PARTITION
     ) {
         parent::__construct($delay, $priority, $autoAck);
 
         \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
         \assert($this->partition >= 0, 'Precondition [partition >= 0] failed');
+
+        $this->offset = \is_int($offset) ? PartitionOffset::from($offset) : $offset;
     }
 
     /**
@@ -63,7 +64,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
                 $self->metadata = $metadata;
             }
 
-            if (($offset = $options->getOffset()) !== self::DEFAULT_OFFSET) {
+            if (($offset = $options->getOffset()) !== PartitionOffset::Newest) {
                 $self->offset = $offset;
             }
 
@@ -116,18 +117,18 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
-     * @param PartitionOffsetEnum $offset
+     * @param value-of<PartitionOffset>|PartitionOffset $offset
      * @return $this
      */
-    public function withOffset(int $offset): self
+    public function withOffset(int|PartitionOffset $offset): self
     {
         $self = clone $this;
-        $self->offset = $offset;
+        $self->offset = \is_int($offset) ? PartitionOffset::from($offset) : $offset;
 
         return $self;
     }
 
-    public function getOffset(): int
+    public function getOffset(): PartitionOffset
     {
         return $this->offset;
     }
@@ -159,7 +160,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return \array_merge(parent::toArray(), [
             'topic' => $this->topic,
             'metadata' => $this->metadata,
-            'offset' => $this->offset,
+            'offset' => $this->offset->value,
             'partition' => $this->partition,
         ]);
     }
