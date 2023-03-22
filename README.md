@@ -1,8 +1,13 @@
 # RoadRunner Jobs Plugin
 
-[![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner-jobs/version)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![Build Status](https://github.com/spiral/roadrunner-jobs/workflows/build/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
-[![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
+[![PHP Version Require](https://poser.pugx.org/spiral/roadrunner-jobs/require/php)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![Latest Stable Version](https://poser.pugx.org/spiral/spiral/roadrunner-jobs/v/stable)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![phpunit](https://github.com/spiral/roadrunner-jobs/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
+[![psalm](https://github.com/spiral/roadrunner-jobs/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
+[![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/3.x/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
+[![Total Downloads](https://poser.pugx.org/spiral/roadrunner-jobs/downloads)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![StyleCI](https://github.styleci.io/repos/447581540/shield)](https://github.styleci.io/repos/447581540)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
 
@@ -11,15 +16,15 @@ This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
 To install application server and Jobs codebase
 
 ```bash
-$ composer require spiral/roadrunner-jobs
+composer require spiral/roadrunner-jobs
 ```
 
 You can use the convenient installer to download the latest available compatible
 version of RoadRunner assembly:
 
 ```bash
-$ composer require spiral/roadrunner-cli --dev
-$ vendor/bin/rr get
+composer require spiral/roadrunner-cli --dev
+vendor/bin/rr get
 ```
 
 ## Usage
@@ -53,6 +58,7 @@ jobs:
             queue: test       # - Internal (driver's) queue identifier
 ```
 
+> **Note**
 > Read more about all available drivers on the
 > [documentation](https://roadrunner.dev/docs/beep-beep-jobs) page.
 
