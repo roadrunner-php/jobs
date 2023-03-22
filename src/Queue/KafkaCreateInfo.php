@@ -80,9 +80,7 @@ final class KafkaCreateInfo extends CreateInfo
      * @param array<positive-int, array<positive-int>>|null $replicaAssignment
      * @param array<non-empty-string, mixed>|null $configEntries
      * @param positive-int $maxMessageBytes
-     * @param RequiredAcks|value-of<RequiredAcks> $requiredAcks
      * @param positive-int $timeout
-     * @param CompressionCodec|value-of<CompressionCodec> $compressionCodec
      * @param positive-int $compressionLevel
      * @param positive-int $heartbeatInterval
      * @param positive-int $sessionTimeout
@@ -105,9 +103,9 @@ final class KafkaCreateInfo extends CreateInfo
         /** @see https://kafka.apache.org/documentation/#configuration */
         public readonly ?array $configEntries = null,
         public readonly int $maxMessageBytes = self::MAX_MESSAGE_BYTES_DEFAULT_VALUE,
-        public readonly int|RequiredAcks $requiredAcks = RequiredAcks::TypeWaitForLocal,
+        public readonly RequiredAcks $requiredAcks = RequiredAcks::TypeWaitForLocal,
         public readonly int $timeout = self::TIMEOUT_DEFAULT_VALUE,
-        public readonly string|CompressionCodec $compressionCodec = CompressionCodec::Snappy,
+        public readonly CompressionCodec $compressionCodec = CompressionCodec::Snappy,
         public readonly int $compressionLevel = self::COMPRESSION_LEVEL_DEFAULT_VALUE,
         public readonly bool $idempotent = self::IDEMPOTENT_DEFAULT_VALUE,
         public readonly int $heartbeatInterval = self::HEARTBEAT_INTERVAL_DEFAULT_VALUE,
@@ -136,11 +134,9 @@ final class KafkaCreateInfo extends CreateInfo
             'version' => $this->kafkaVersion,
             'replication_factor' => $this->replicationFactor,
             'max_message_bytes' => $this->maxMessageBytes,
-            'required_acks' => \is_int($this->requiredAcks) ? $this->requiredAcks : $this->requiredAcks->value,
+            'required_acks' => $this->requiredAcks->value,
             'timeout' => $this->timeout,
-            'compression_codec' => \is_string($this->compressionCodec)
-                ? $this->compressionCodec
-                : $this->compressionCodec->value,
+            'compression_codec' => $this->compressionCodec->value,
             'compression_level' => $this->compressionLevel,
             'idempotent' => $this->idempotent,
             'heartbeat_interval' => $this->heartbeatInterval,
