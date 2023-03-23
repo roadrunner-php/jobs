@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -24,8 +17,6 @@ trait HeadersTrait
     protected array $headers = [];
 
     /**
-     * {@inheritDoc}
-     *
      * @psalm-return array<non-empty-string, array<string>>
      */
     public function getHeaders(): array
@@ -34,8 +25,6 @@ trait HeadersTrait
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @psalm-param non-empty-string $name Header field name.
      * @psalm-return bool
      */
@@ -45,8 +34,6 @@ trait HeadersTrait
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @psalm-param non-empty-string $name
      * @psalm-return array<string>
      */
@@ -56,8 +43,6 @@ trait HeadersTrait
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @psalm-param non-empty-string $name
      * @psalm-return string
      */

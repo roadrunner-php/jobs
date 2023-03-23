@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -35,7 +28,7 @@ interface WritableHeadersInterface extends ProvidesHeadersInterface
      * @param non-empty-string|iterable<non-empty-string> $value Header value(s).
      * @return static
      */
-    public function withHeader(string $name, $value): self;
+    public function withHeader(string $name, string|iterable $value): self;
 
     /**
      * Return an instance with the specified header appended with the given value.
@@ -56,7 +49,7 @@ interface WritableHeadersInterface extends ProvidesHeadersInterface
      * @param non-empty-string|iterable<non-empty-string> $value Header value(s).
      * @return static
      */
-    public function withAddedHeader(string $name, $value): self;
+    public function withAddedHeader(string $name, string|iterable $value): self;
 
     /**
      * Return an instance without the specified header.

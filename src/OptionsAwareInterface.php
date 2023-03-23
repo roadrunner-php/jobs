@@ -8,8 +8,6 @@ interface OptionsAwareInterface
 {
     /**
      * Returns the {@see OptionsInterface} from the current implementation.
-     *
-     * @return OptionsInterface
      */
     public function getOptions(): OptionsInterface;
 

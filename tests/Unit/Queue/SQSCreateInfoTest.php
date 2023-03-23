@@ -49,7 +49,7 @@ final class SQSCreateInfoTest extends TestCase
 
         $result = $sqsCreateInfo->toArray();
         $expected = [
-            'driver' => Driver::SQS,
+            'driver' => Driver::SQS->value,
             'name' => 'testName',
             'priority' => 1,
             'prefetch' => 20,
@@ -119,7 +119,7 @@ final class SQSCreateInfoTest extends TestCase
 
         $result = $sqsCreateInfo->toArray();
         $expected = [
-            'driver'             => Driver::SQS,
+            'driver'             => Driver::SQS->value,
             'name'               => 'testName',
             'priority'           => SQSCreateInfo::PRIORITY_DEFAULT_VALUE,
             'prefetch'           => SQSCreateInfo::PREFETCH_DEFAULT_VALUE,

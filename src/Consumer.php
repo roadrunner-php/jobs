@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
@@ -49,21 +42,14 @@ use Spiral\RoadRunner\WorkerInterface;
  */
 final class Consumer implements ConsumerInterface
 {
-    /**
-     * @var WorkerInterface
-     */
-    private WorkerInterface $worker;
+    private readonly WorkerInterface $worker;
 
-    /**
-     * @param WorkerInterface|null $worker
-     */
     public function __construct(WorkerInterface $worker = null)
     {
         $this->worker = $worker ?? Worker::create();
     }
 
     /**
-     * @return ReceivedTaskInterface|null
      * @throws ReceivedTaskException
      * @psalm-suppress ArgumentTypeCoercion
      */
@@ -90,9 +76,9 @@ final class Consumer implements ConsumerInterface
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      *
-     * @param Payload $payload
      * @return HeaderPayload
      * @throws ReceivedTaskException
+     * @throws SerializationException
      */
     private function getHeader(Payload $payload): array
     {
@@ -103,7 +89,7 @@ final class Consumer implements ConsumerInterface
         try {
             return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new SerializationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

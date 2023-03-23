@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
@@ -20,25 +13,19 @@ use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
 
+/**
+ * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
+ */
 final class Jobs implements JobsInterface
 {
-    /**
-     * @var RPCInterface
-     */
-    private RPCInterface $rpc;
+    private readonly RPCInterface $rpc;
 
-    /**
-     * @param RPCInterface|null $rpc
-     */
     public function __construct(RPCInterface $rpc = null)
     {
         $this->rpc = ($rpc ?? $this->createRPCConnection())
             ->withCodec(new ProtobufCodec());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function create(CreateInfoInterface $info): QueueInterface
     {
         try {
@@ -53,8 +40,8 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * @param array<string, mixed> $map
-     * @return array<string, string>
+     * @param CreateInfoArrayType $map
+     * @return non-empty-array<array-key, string>
      * @throws \Throwable
      * @psalm-suppress MixedAssignment
      */
@@ -63,28 +50,17 @@ final class Jobs implements JobsInterface
         $marshalled = [];
 
         foreach ($map as $key => $value) {
-            switch (true) {
-                case \is_int($value):
-                case \is_string($value):
-                case $value instanceof \Stringable:
-                // PHP 7.4 additional assertion
-                case \is_object($value) && \method_exists($value, '__toString'):
-                    $marshalled[$key] = (string)$value;
-                    break;
-
-                case \is_bool($value):
-                    $marshalled[$key] = $value ? 'true' : 'false';
-                    break;
-
-                case \is_array($value):
-                    $marshalled[$key] = (string)\json_encode($value, \JSON_THROW_ON_ERROR);
-                    break;
-
-                default:
-                    throw new \InvalidArgumentException(
-                        \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
-                    );
-            }
+            $marshalled[$key] = match (true) {
+                \is_int($value),
+                \is_string($value),
+                    $value instanceof \Stringable,
+                    \is_object($value) && \method_exists($value, '__toString') => (string) $value,
+                \is_bool($value) => $value ? 'true' : 'false',
+                \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
+                default => throw new \InvalidArgumentException(
+                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
+                ),
+            };
         }
 
         return $marshalled;
@@ -95,15 +71,12 @@ final class Jobs implements JobsInterface
      */
     public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
     {
-        assert($queue !== '', 'Precondition [queue !== ""] failed');
+        \assert($queue !== '', 'Precondition [queue !== ""] failed');
 
         return new Queue($queue, $this->rpc, $options);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function pause($queue, ...$queues): void
+    public function pause(string|QueueInterface $queue, string|QueueInterface ...$queues): void
     {
         try {
             $this->rpc->call('jobs.Pause', new Pipelines([
@@ -114,10 +87,7 @@ final class Jobs implements JobsInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function resume($queue, ...$queues): void
+    public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void
     {
         try {
             $this->rpc->call('jobs.Resume', new Pipelines([
@@ -129,7 +99,6 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * {@inheritDoc}
      * @throws JobsException
      */
     public function getIterator(): \Traversable
@@ -148,7 +117,6 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * {@inheritDoc}
      * @throws JobsException
      */
     public function count(): int
@@ -156,9 +124,6 @@ final class Jobs implements JobsInterface
         return \iterator_count($this->getIterator());
     }
 
-    /**
-     * @return RPCInterface
-     */
     private function createRPCConnection(): RPCInterface
     {
         $env = Environment::fromGlobals();
@@ -170,12 +135,12 @@ final class Jobs implements JobsInterface
      * @param QueueInterface|non-empty-string ...$queues
      * @return array<non-empty-string>
      */
-    private function names(...$queues): array
+    private function names(QueueInterface|string ...$queues): array
     {
         $names = [];
 
         foreach ($queues as $queue) {
-            assert(
+            \assert(
                 $queue instanceof QueueInterface || \is_string($queue),
                 'Queue should be an instance of ' . QueueInterface::class .
                 ' or type of string, but ' . \get_debug_type($queue) . ' passed'
@@ -189,13 +154,5 @@ final class Jobs implements JobsInterface
         }
 
         return $names;
-    }
-
-    /**
-     * @deprecated Information about RoadRunner plugins is not available since RoadRunner version 2.2
-     */
-    public function isAvailable(): bool
-    {
-        throw new \RuntimeException(\sprintf('%s::isAvailable method is deprecated.', self::class));
     }
 }

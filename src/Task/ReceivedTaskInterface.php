@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -24,7 +17,6 @@ interface ReceivedTaskInterface extends
     /**
      * Marks the current task as completed.
      *
-     * @return void
      * @throws JobsException
      */
     public function complete(): void;
@@ -33,17 +25,15 @@ interface ReceivedTaskInterface extends
      * Marks the current task as failed.
      *
      * @param string|\Stringable|\Throwable $error
-     * @param bool $requeue
      * @throws JobsException
      */
-    public function fail($error, bool $requeue = false): void;
+    public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void;
 
     /**
      * Returns bool {@see true} if the task is completed and {@see false}
      * otherwise.
      *
      * @psalm-mutation-free
-     * @return bool
      */
     public function isCompleted(): bool;
 
@@ -52,7 +42,6 @@ interface ReceivedTaskInterface extends
      * and {@see false} otherwise.
      *
      * @psalm-mutation-free
-     * @return bool
      */
     public function isSuccessful(): bool;
 
@@ -61,7 +50,6 @@ interface ReceivedTaskInterface extends
      * otherwise.
      *
      * @psalm-mutation-free
-     * @return bool
      */
     public function isFails(): bool;
 }

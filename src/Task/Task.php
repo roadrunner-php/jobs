@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -20,29 +13,22 @@ abstract class Task implements TaskInterface
     use HeadersTrait;
 
     /**
-     * @var non-empty-string
-     */
-    protected string $name;
-
-    /**
-     * @var string
-     */
-    protected string $payload;
-
-    /**
      * @param non-empty-string $name
-     * @param string $payload
      * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $name, string $payload, array $headers = [])
-    {
-        assert($name !== '', 'Precondition [job !== ""] failed');
+    public function __construct(
+        protected string $name,
+        protected string $payload,
+        array $headers = []
+    ) {
+        \assert($this->name !== '', 'Precondition [job !== ""] failed');
 
-        $this->name = $name;
-        $this->payload = $payload;
         $this->headers = $headers;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->name;

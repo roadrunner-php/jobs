@@ -6,38 +6,16 @@ namespace Spiral\RoadRunner\Jobs\Queue\Kafka;
 
 /**
  * The enum that represents the type of compression to use on messages.
- *
- * @psalm-type CompressionCodecEnum = CompressionCodec::CODEC_*
  */
-interface CompressionCodec
+enum CompressionCodec: string
 {
-    /**
-     * @var string
-     * @psalm-var CompressionCodecEnum
-     */
-    public const CODEC_NONE = 'none';
+    case None = 'none';
 
-    /**
-     * @var string
-     * @psalm-var CompressionCodecEnum
-     */
-    public const CODEC_GZIP = 'gzip';
+    case Gzip = 'gzip';
 
-    /**
-     * @var string
-     * @psalm-var CompressionCodecEnum
-     */
-    public const CODEC_SNAPPY = 'snappy';
+    case Snappy = 'snappy';
 
-    /**
-     * @var string
-     * @psalm-var CompressionCodecEnum
-     */
-    public const CODEC_LZ4 = 'lz4';
+    case Lz4 = 'lz4';
 
-    /**
-     * @var string
-     * @psalm-var CompressionCodecEnum
-     */
-    public const CODEC_ZSTD = 'zstd';
+    case Zstd = 'zstd';
 }
