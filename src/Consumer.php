@@ -6,9 +6,9 @@ namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
-use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
-use Spiral\RoadRunner\Payload;
+use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactory;
+use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactoryInterface;
 use Spiral\RoadRunner\Worker;
 use Spiral\RoadRunner\WorkerInterface;
 
@@ -43,10 +43,14 @@ use Spiral\RoadRunner\WorkerInterface;
 final class Consumer implements ConsumerInterface
 {
     private readonly WorkerInterface $worker;
+    private readonly ReceivedTaskFactoryInterface $receivedTaskFactory;
 
-    public function __construct(WorkerInterface $worker = null)
-    {
+    public function __construct(
+        WorkerInterface $worker = null,
+        ReceivedTaskFactoryInterface $receivedTaskFactory = null
+    ) {
         $this->worker = $worker ?? Worker::create();
+        $this->receivedTaskFactory = $receivedTaskFactory ?? new ReceivedTaskFactory($this->worker);
     }
 
     /**
@@ -62,35 +66,6 @@ final class Consumer implements ConsumerInterface
             return null;
         }
 
-        $header = $this->getHeader($payload);
-
-        return new ReceivedTask(
-            $this->worker,
-            $header['id'],
-            $header['pipeline'],
-            $header['job'],
-            $payload->body,
-            (array)$header['headers']
-        );
-    }
-
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     *
-     * @return HeaderPayload
-     * @throws ReceivedTaskException
-     * @throws SerializationException
-     */
-    private function getHeader(Payload $payload): array
-    {
-        if (empty($payload->header)) {
-            throw new ReceivedTaskException('Task payload does not have a valid header.');
-        }
-
-        try {
-            return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            throw new SerializationException($e->getMessage(), $e->getCode(), $e);
-        }
+        return $this->receivedTaskFactory->create($payload);
     }
 }

@@ -24,14 +24,14 @@ final class Jobs implements JobsInterface
         $this->rpc = $rpc->withCodec(new ProtobufCodec());
     }
 
-    public function create(CreateInfoInterface $info): QueueInterface
+    public function create(CreateInfoInterface $info, ?OptionsInterface $options = null): QueueInterface
     {
         try {
             $this->rpc->call('jobs.Declare', new DeclareRequest([
                 'pipeline' => $this->toStringOfStringMap($info->toArray()),
             ]));
 
-            return $this->connect($info->getName(), OptionsFactory::create($info->getDriver()));
+            return $this->connect($info->getName(), $options ?? OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }

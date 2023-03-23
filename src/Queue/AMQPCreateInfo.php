@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * This file is part of RoadRunner package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
@@ -16,6 +23,8 @@ final class AMQPCreateInfo extends CreateInfo
     public const PREFETCH_DEFAULT_VALUE = 100;
     public const QUEUE_DEFAULT_VALUE = 'default';
     public const EXCHANGE_DEFAULT_VALUE = 'amqp.default';
+    public const EXCHANGE_DURABLE_DEFAULT_VALUE = false;
+    public const EXCHANGE_TYPE_DEFAULT_VALUE = ExchangeType::TYPE_DIRECT;
     public const ROUTING_KEY_DEFAULT_VALUE = '';
     public const EXCLUSIVE_DEFAULT_VALUE = false;
     public const MULTIPLE_ACK_DEFAULT_VALUE = false;
@@ -26,8 +35,9 @@ final class AMQPCreateInfo extends CreateInfo
      * @param non-empty-string $name
      * @param positive-int $priority
      * @param positive-int $prefetch
-     * @param non-empty-string $queue
+     * @param string $queue Queue name. Required for consumer.
      * @param non-empty-string $exchange
+     * @param string $routingKey Routing key. Required for publisher.
      */
     public function __construct(
         string $name,
@@ -40,13 +50,15 @@ final class AMQPCreateInfo extends CreateInfo
         public readonly bool $exclusive = self::EXCLUSIVE_DEFAULT_VALUE,
         public readonly bool $multipleAck = self::MULTIPLE_ACK_DEFAULT_VALUE,
         public readonly bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE,
-        public readonly bool $durable = self::DURABLE_DEFAULT_VALUE
+        public readonly bool $durable = self::DURABLE_DEFAULT_VALUEб
+        public readonly bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE,
+        public readonly bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::AMQP, $name, $priority);
 
         \assert($this->prefetch >= 1, 'Precondition [prefetch >= 1] failed');
-        \assert($this->queue !== '', 'Precondition [queue !== ""] failed');
         \assert($this->exchange !== '', 'Precondition [exchange !== ""] failed');
+        \assert($this->exchangeType !== '', 'Precondition [exchangeType !== ""] failed');
     }
 
     public function toArray(): array
@@ -55,12 +67,14 @@ final class AMQPCreateInfo extends CreateInfo
             'prefetch'        => $this->prefetch,
             'queue'           => $this->queue,
             'exchange'        => $this->exchange,
+            'exchange_durable' => $this->exchangeDurable,
             'exchange_type'   => $this->exchangeType->value,
             'routing_key'     => $this->routingKey,
             'exclusive'       => $this->exclusive,
             'multiple_ack'    => $this->multipleAck,
             'requeue_on_fail' => $this->requeueOnFail,
             'durable'         => $this->durable,
+            'consume_all'      => $this->consumeAll,
         ]);
     }
 }
