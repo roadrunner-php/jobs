@@ -24,12 +24,12 @@ final class AMQPCreateInfo extends CreateInfo
     public const QUEUE_DEFAULT_VALUE = 'default';
     public const EXCHANGE_DEFAULT_VALUE = 'amqp.default';
     public const EXCHANGE_DURABLE_DEFAULT_VALUE = false;
-    public const EXCHANGE_TYPE_DEFAULT_VALUE = ExchangeType::TYPE_DIRECT;
     public const ROUTING_KEY_DEFAULT_VALUE = '';
     public const EXCLUSIVE_DEFAULT_VALUE = false;
     public const MULTIPLE_ACK_DEFAULT_VALUE = false;
     public const REQUEUE_ON_FAIL_DEFAULT_VALUE = false;
     public const DURABLE_DEFAULT_VALUE = false;
+    public const CONSUME_ALL_DEFAULT_VALUE = false;
 
     /**
      * @param non-empty-string $name
@@ -50,7 +50,7 @@ final class AMQPCreateInfo extends CreateInfo
         public readonly bool $exclusive = self::EXCLUSIVE_DEFAULT_VALUE,
         public readonly bool $multipleAck = self::MULTIPLE_ACK_DEFAULT_VALUE,
         public readonly bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE,
-        public readonly bool $durable = self::DURABLE_DEFAULT_VALUEб
+        public readonly bool $durable = self::DURABLE_DEFAULT_VALUE,
         public readonly bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE,
         public readonly bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE,
     ) {
@@ -58,7 +58,6 @@ final class AMQPCreateInfo extends CreateInfo
 
         \assert($this->prefetch >= 1, 'Precondition [prefetch >= 1] failed');
         \assert($this->exchange !== '', 'Precondition [exchange !== ""] failed');
-        \assert($this->exchangeType !== '', 'Precondition [exchangeType !== ""] failed');
     }
 
     public function toArray(): array

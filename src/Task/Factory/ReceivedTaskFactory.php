@@ -8,8 +8,6 @@ use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerAwareInterface;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
@@ -30,15 +28,11 @@ use Spiral\RoadRunner\WorkerInterface;
  *    offset:     PartitionOffsetEnum
  * }
  */
-final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, SerializerAwareInterface
+final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
 {
-    private WorkerInterface $worker;
-    private SerializerInterface $serializer;
-
-    public function __construct(SerializerInterface $serializer, WorkerInterface $worker)
-    {
-        $this->serializer = $serializer;
-        $this->worker = $worker;
+    public function __construct(
+        private readonly WorkerInterface $worker,
+    ) {
     }
 
     /**
@@ -50,43 +44,27 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
     {
         $header = $this->getHeader($payload);
 
-        switch ($header['driver'] ?? null) {
-            case Driver::KAFKA:
-                return new KafkaReceivedTask(
-                    $this->worker,
-                    $header['id'],
-                    $header['pipeline'],
-                    $header['job'],
-                    $header['topic'],
-                    (int)$header['partition'],
-                    (int)$header['offset'],
-                    $this->getPayload($payload),
-                    (array)$header['headers']
-                );
-            default:
-                return new ReceivedTask(
-                    $this->worker,
-                    $header['id'],
-                    $header['pipeline'],
-                    $header['job'],
-                    $this->getPayload($payload),
-                    (array)$header['headers']
-                );
-        }
-    }
-
-    /**
-     * @param Payload $payload
-     * @return array
-     * @throws SerializationException
-     */
-    private function getPayload(Payload $payload): array
-    {
-        if ($payload->body === '') {
-            return [];
-        }
-
-        return $this->serializer->deserialize($payload->body);
+        return match ($header['driver'] ?? null) {
+            Driver::Kafka->value => new KafkaReceivedTask(
+                $this->worker,
+                $header['id'],
+                $header['pipeline'],
+                $header['job'],
+                $header['topic'],
+                (int)$header['partition'],
+                (int)$header['offset'],
+                $payload->body,
+                (array)$header['headers']
+            ),
+            default => new ReceivedTask(
+                $this->worker,
+                $header['id'],
+                $header['pipeline'],
+                $header['job'],
+                $payload->body,
+                (array)$header['headers']
+            ),
+        };
     }
 
     /**
@@ -108,21 +86,5 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
         } catch (\JsonException $e) {
             throw new SerializationException($e->getMessage(), $e->getCode(), $e);
         }
-    }
-
-    public function getSerializer(): SerializerInterface
-    {
-        return $this->serializer;
-    }
-
-    /**
-     * @return ReceivedTaskFactory
-     */
-    public function withSerializer(SerializerInterface $serializer): self
-    {
-        $self = clone $this;
-        $self->serializer = $serializer;
-
-        return $self;
     }
 }

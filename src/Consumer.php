@@ -31,14 +31,6 @@ use Spiral\RoadRunner\WorkerInterface;
  *
  *  $consumer = new Consumer(...);
  * </code>
- *
- * @psalm-type HeaderPayload = array {
- *    id:       non-empty-string,
- *    job:      non-empty-string,
- *    headers:  array<string, array<string>>|null,
- *    timeout:  positive-int,
- *    pipeline: non-empty-string
- * }
  */
 final class Consumer implements ConsumerInterface
 {

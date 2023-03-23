@@ -28,9 +28,9 @@ final class KafkaReceivedTask extends ReceivedTask
      * @param non-empty-string $queue
      * @param non-empty-string $job
      * @param non-empty-string $topic
-     * @param positive-int|0 $partition
+     * @param int<0, max> $partition
      * @param PartitionOffsetEnum $offset
-     * @param array $payload
+     * @param string $payload
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
@@ -41,7 +41,7 @@ final class KafkaReceivedTask extends ReceivedTask
         string $topic,
         int $partition,
         int $offset,
-        array $payload = [],
+        string $payload = '',
         array $headers = []
     ) {
         $this->topic = $topic;
