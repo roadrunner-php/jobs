@@ -13,44 +13,13 @@ use Spiral\RoadRunner\Jobs\Queue\AMQP\ExchangeType;
  */
 final class AMQPCreateInfo extends CreateInfo
 {
-    /**
-     * @var positive-int
-     */
     public const PREFETCH_DEFAULT_VALUE = 100;
-
-    /**
-     * @var non-empty-string
-     */
     public const QUEUE_DEFAULT_VALUE = 'default';
-
-    /**
-     * @var non-empty-string
-     */
     public const EXCHANGE_DEFAULT_VALUE = 'amqp.default';
-
-    /**
-     * @var string
-     */
     public const ROUTING_KEY_DEFAULT_VALUE = '';
-
-    /**
-     * @var bool
-     */
     public const EXCLUSIVE_DEFAULT_VALUE = false;
-
-    /**
-     * @var bool
-     */
     public const MULTIPLE_ACK_DEFAULT_VALUE = false;
-
-    /**
-     * @var bool
-     */
     public const REQUEUE_ON_FAIL_DEFAULT_VALUE = false;
-
-    /**
-     * @var bool
-     */
     public const DURABLE_DEFAULT_VALUE = false;
 
     /**

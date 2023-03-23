@@ -14,9 +14,9 @@ trait WritableHeadersTrait
     use HeadersTrait;
 
     /**
-     * @psalm-param non-empty-string $name
-     * @psalm-param non-empty-string|iterable<non-empty-string> $value
-     * @psalm-return static
+     * @param non-empty-string $name
+     * @param non-empty-string|iterable<non-empty-string> $value
+     * @return static
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -37,9 +37,9 @@ trait WritableHeadersTrait
     }
 
     /**
-     * @psalm-param non-empty-string $name
-     * @psalm-param non-empty-string|iterable<non-empty-string> $value
-     * @psalm-return static
+     * @param non-empty-string $name
+     * @param non-empty-string|iterable<non-empty-string> $value
+     * @return static
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -61,8 +61,8 @@ trait WritableHeadersTrait
     }
 
     /**
-     * @psalm-param non-empty-string $name
-     * @psalm-return static
+     * @param non-empty-string $name
+     * @return static
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */

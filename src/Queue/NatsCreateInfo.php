@@ -9,34 +9,11 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  */
 final class NatsCreateInfo extends CreateInfo
 {
-    /**
-     * @var positive-int
-     */
     public const PREFETCH_DEFAULT_VALUE = 100;
-
-    /**
-     * @var bool
-     */
     public const DELIVER_NEW_DEFAULT_VALUE = true;
-
-    /**
-     * @var positive-int
-     */
     public const RATE_LIMIT_DEFAULT_VALUE = 100;
-
-    /**
-     * @var bool
-     */
     public const DELETE_STREAM_ON_STOP_DEFAULT_VALUE = false;
-
-    /**
-     * @var bool
-     */
     public const DELETE_AFTER_ACK_DEFAULT_VALUE = false;
-
-    /**
-     * @var positive-int
-     */
     public const PRIORITY_DEFAULT_VALUE = 2;
 
     /**

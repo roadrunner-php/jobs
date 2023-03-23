@@ -6,30 +6,19 @@ namespace Spiral\RoadRunner\Jobs;
 
 interface OptionsInterface
 {
-    /**
-     * @var positive-int|0
-     */
     public const DEFAULT_DELAY = 0;
-
-    /**
-     * @var positive-int|0
-     */
     public const DEFAULT_PRIORITY = 0;
-
-    /**
-     * @var bool
-     */
     public const DEFAULT_AUTO_ACK = false;
 
     /**
      * @psalm-immutable
-     * @return positive-int|0
+     * @return int<0, max>
      */
     public function getDelay(): int;
 
     /**
      * @psalm-immutable
-     * @return positive-int|0
+     * @return int<0, max>
      */
     public function getPriority(): int;
 

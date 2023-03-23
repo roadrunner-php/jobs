@@ -6,7 +6,7 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Goridge\RPC\RPCInterface;
-use Spiral\RoadRunner\Jobs\DTO\V1\Options as DTOOptions;
+use RoadRunner\Jobs\DTO\V1\Options as DTOOptions;
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;

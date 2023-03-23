@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
-use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
+use RoadRunner\Jobs\DTO\V1\DeclareRequest;
+use RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Jobs;
 use Spiral\RoadRunner\Jobs\JobsInterface;

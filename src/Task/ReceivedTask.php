@@ -27,7 +27,7 @@ final class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     private ?int $completed = null;
 
     /**
-     * @var positive-int|0
+     * @var int<0, max>
      */
     private int $delay = 0;
 

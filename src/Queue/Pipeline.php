@@ -6,11 +6,11 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 
 use Ramsey\Uuid\Uuid;
 use Spiral\Goridge\RPC\RPCInterface;
-use Spiral\RoadRunner\Jobs\DTO\V1\HeaderValue;
-use Spiral\RoadRunner\Jobs\DTO\V1\Job;
-use Spiral\RoadRunner\Jobs\DTO\V1\Options as OptionsMessage;
-use Spiral\RoadRunner\Jobs\DTO\V1\PushBatchRequest;
-use Spiral\RoadRunner\Jobs\DTO\V1\PushRequest;
+use RoadRunner\Jobs\DTO\V1\HeaderValue;
+use RoadRunner\Jobs\DTO\V1\Job;
+use RoadRunner\Jobs\DTO\V1\Options as OptionsMessage;
+use RoadRunner\Jobs\DTO\V1\PushBatchRequest;
+use RoadRunner\Jobs\DTO\V1\PushRequest;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;

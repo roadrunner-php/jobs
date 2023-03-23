@@ -12,9 +12,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @param non-empty-string $topic
-     * @psalm-param 0|positive-int $delay
-     * @psalm-param 0|positive-int $priority
-     * @psalm-param value-of<PartitionOffset>|PartitionOffset $offset
+     * @param int<0, max> $delay
+     * @param int<0, max> $priority
+     * @param value-of<PartitionOffset>|PartitionOffset $offset
      */
     public function __construct(
         public string $topic,
@@ -91,6 +91,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return $self;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getTopic(): string
     {
         \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
@@ -135,7 +138,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
-     * @param positive-int|0 $offset
+     * @param int<0, max> $partition
      * @return $this
      */
     public function withPartition(int $partition): self

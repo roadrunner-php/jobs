@@ -13,59 +13,16 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\RequiredAcks;
  */
 final class KafkaCreateInfo extends CreateInfo
 {
-    /**
-     * @var string
-     */
     public const GROUP_ID_DEFAULT_VALUE = '';
-
-    /**
-     * @var positive-int
-     */
     public const MAX_OPEN_REQUESTS_DEFAULT_VALUE = 5;
-
-    /**
-     * @var non-empty-string
-     */
     public const CLIENT_ID_DEFAULT_VALUE = 'roadrunner';
-
-    /**
-     * @var non-empty-string
-     */
     public const KAFKA_VERSION_DEFAULT_VALUE = '3.2.0.0';
-
-    /**
-     * @var positive-int
-     */
     public const REPLICATION_FACTOR_DEFAULT_VALUE = 1;
-
-    /**
-     * @var positive-int
-     */
     public const MAX_MESSAGE_BYTES_DEFAULT_VALUE = 1000000;
-
-    /**
-     * @var positive-int
-     */
     public const TIMEOUT_DEFAULT_VALUE = 10;
-
-    /**
-     * @var positive-int
-     */
     public const COMPRESSION_LEVEL_DEFAULT_VALUE = 100;
-
-    /**
-     * @var bool
-     */
     public const IDEMPOTENT_DEFAULT_VALUE = false;
-
-    /**
-     * @var positive-int
-     */
     public const HEARTBEAT_INTERVAL_DEFAULT_VALUE = 3;
-
-    /**
-     * @var positive-int
-     */
     public const SESSION_TIMEOUT_DEFAULT_VALUE = 10;
 
     /**

@@ -9,19 +9,19 @@ use JetBrains\PhpStorm\ArrayShape;
 /**
  * The DTO to create the SQS driver.
  *
- * @psalm-type SQSAttributesMap = array {
- *      DelaySeconds?: positive-int|0,
- *      MaximumMessageSize?: positive-int|0,
- *      MessageRetentionPeriod?: positive-int|0,
+ * @psalm-type SQSAttributesMap = array{
+ *      DelaySeconds?: int<0,max>,
+ *      MaximumMessageSize?: int<0,max>,
+ *      MessageRetentionPeriod?: int<0,max>,
  *      Policy?: mixed,
- *      ReceiveMessageWaitTimeSeconds?: positive-int|0,
+ *      ReceiveMessageWaitTimeSeconds?: int<0,max>,
  *      RedrivePolicy?: array {
  *          deadLetterTargetArn?: mixed,
- *          maxReceiveCount: positive-int|0
+ *          maxReceiveCount: int<0,max>,
  *      },
- *      VisibilityTimeout?: positive-int|0,
+ *      VisibilityTimeout?: int<0,max>,
  *      KmsMasterKeyId?: string,
- *      KmsDataKeyReusePeriodSeconds?: positive-int|0,
+ *      KmsDataKeyReusePeriodSeconds?: int<0,max>,
  *      ContentBasedDeduplication?: mixed,
  *      DeduplicationScope?: mixed,
  *      FifoThroughputLimit?: mixed,
@@ -29,34 +29,11 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 final class SQSCreateInfo extends CreateInfo
 {
-    /**
-     * @var positive-int
-     */
     public const PREFETCH_DEFAULT_VALUE = 10;
-
-    /**
-     * @var positive-int|0
-     */
     public const VISIBILITY_TIMEOUT_DEFAULT_VALUE = 0;
-
-    /**
-     * @var positive-int|0
-     */
     public const WAIT_TIME_SECONDS_DEFAULT_VALUE = 0;
-
-    /**
-     * @var array
-     */
     public const ATTRIBUTES_DEFAULT_VALUE = [];
-
-    /**
-     * @var array
-     */
     public const TAGS_DEFAULT_VALUE = [];
-
-    /**
-     * @var non-empty-string
-     */
     public const QUEUE_DEFAULT_VALUE = 'default';
 
     /**

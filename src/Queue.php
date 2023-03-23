@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
+use RoadRunner\Jobs\DTO\V1\Pipelines;
+use RoadRunner\Jobs\DTO\V1\Stat;
+use RoadRunner\Jobs\DTO\V1\Stats;
 use Spiral\Goridge\RPC\Codec\ProtobufCodec;
-use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
-use Spiral\RoadRunner\Environment;
-use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
-use Spiral\RoadRunner\Jobs\DTO\V1\Stat;
-use Spiral\RoadRunner\Jobs\DTO\V1\Stats;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
@@ -29,22 +27,16 @@ final class Queue implements QueueInterface
      */
     public function __construct(
         public readonly string $name,
-        ?RPCInterface $rpc = null,
-        ?OptionsInterface $options = null
+        RPCInterface $rpc,
+        ?OptionsInterface $options = null,
     ) {
         \assert($name !== '', 'Precondition [name !== ""] failed');
 
-        $this->rpc = ($rpc ?? $this->createRPCConnection())
-            ->withCodec(new ProtobufCodec())
-        ;
-
+        $this->rpc = $rpc->withCodec(new ProtobufCodec());
         $this->pipeline = new Pipeline($this, $this->rpc);
         $this->options = $options ?? new Options();
     }
 
-    /**
-     * @return void
-     */
     public function __clone()
     {
         $this->options = clone $this->options;
@@ -103,7 +95,7 @@ final class Queue implements QueueInterface
     public function push(string $name, string $payload = '', OptionsInterface $options = null): QueuedTaskInterface
     {
         return $this->dispatch(
-            $this->create($name, $payload, $options)
+            $this->create($name, $payload, $options),
         );
     }
 
@@ -120,9 +112,12 @@ final class Queue implements QueueInterface
     public function pause(): void
     {
         try {
-            $this->rpc->call('jobs.Pause', new Pipelines([
-                'pipelines' => [$this->getName()],
-            ]));
+            $this->rpc->call(
+                'jobs.Pause',
+                new Pipelines([
+                    'pipelines' => [$this->getName()],
+                ]),
+            );
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -131,9 +126,12 @@ final class Queue implements QueueInterface
     public function resume(): void
     {
         try {
-            $this->rpc->call('jobs.Resume', new Pipelines([
-                'pipelines' => [$this->getName()],
-            ]));
+            $this->rpc->call(
+                'jobs.Resume',
+                new Pipelines([
+                    'pipelines' => [$this->getName()],
+                ]),
+            );
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -143,14 +141,7 @@ final class Queue implements QueueInterface
     {
         $stat = $this->getPipelineStat();
 
-        return $stat !== null && ! $stat->getReady();
-    }
-
-    private function createRPCConnection(): RPCInterface
-    {
-        $env = Environment::fromGlobals();
-
-        return RPC::create($env->getRPCAddress());
+        return $stat !== null && !$stat->getReady();
     }
 
     /**

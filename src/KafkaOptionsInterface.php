@@ -8,14 +8,7 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 
 interface KafkaOptionsInterface extends OptionsInterface
 {
-    /**
-     * @var string
-     */
     public const DEFAULT_METADATA = '';
-
-    /**
-     * @var positive-int|0
-     */
     public const DEFAULT_PARTITION = 0;
 
     /**
@@ -36,7 +29,7 @@ interface KafkaOptionsInterface extends OptionsInterface
 
     /**
      * @psalm-immutable
-     * @return positive-int|0
+     * @return int<0, max>
      */
     public function getPartition(): int;
 }

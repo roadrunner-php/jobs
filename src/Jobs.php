@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
+use RoadRunner\Jobs\DTO\V1\DeclareRequest;
+use RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\Goridge\RPC\Codec\ProtobufCodec;
-use Spiral\Goridge\RPC\RPC;
 use Spiral\Goridge\RPC\RPCInterface;
-use Spiral\RoadRunner\Environment;
-use Spiral\RoadRunner\Jobs\DTO\V1\DeclareRequest;
-use Spiral\RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
+use Traversable;
 
 /**
  * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
@@ -20,10 +19,9 @@ final class Jobs implements JobsInterface
 {
     private readonly RPCInterface $rpc;
 
-    public function __construct(RPCInterface $rpc = null)
+    public function __construct(RPCInterface $rpc)
     {
-        $this->rpc = ($rpc ?? $this->createRPCConnection())
-            ->withCodec(new ProtobufCodec());
+        $this->rpc = $rpc->withCodec(new ProtobufCodec());
     }
 
     public function create(CreateInfoInterface $info): QueueInterface
@@ -99,9 +97,10 @@ final class Jobs implements JobsInterface
     }
 
     /**
+     * @return Traversable<non-empty-string, QueueInterface>
      * @throws JobsException
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
         try {
             /** @var Pipelines $result */
@@ -117,18 +116,12 @@ final class Jobs implements JobsInterface
     }
 
     /**
+     * @return int<0, max>
      * @throws JobsException
      */
     public function count(): int
     {
         return \iterator_count($this->getIterator());
-    }
-
-    private function createRPCConnection(): RPCInterface
-    {
-        $env = Environment::fromGlobals();
-
-        return RPC::create($env->getRPCAddress());
     }
 
     /**

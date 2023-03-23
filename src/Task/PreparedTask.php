@@ -29,9 +29,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         parent::__construct($name, $payload, $headers);
     }
 
-    /**
-     * @return void
-     */
     public function __clone()
     {
         $this->options = clone $this->options;

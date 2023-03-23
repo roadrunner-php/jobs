@@ -51,6 +51,7 @@ final class Consumer implements ConsumerInterface
 
     /**
      * @throws ReceivedTaskException
+     * @throws SerializationException
      * @psalm-suppress ArgumentTypeCoercion
      */
     public function waitTask(): ?ReceivedTaskInterface

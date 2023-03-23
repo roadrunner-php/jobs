@@ -9,24 +9,9 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  */
 final class BeanstalkCreateInfo extends CreateInfo
 {
-    /**
-     * @var positive-int
-     */
     public const TUBE_PRIORITY_DEFAULT_VALUE = 10;
-
-    /**
-     * @var positive-int
-     */
     public const TUBE_PRIORITY_MAX_VALUE = 2 ** 32;
-
-    /**
-     * @var non-empty-string
-     */
     public const TUBE_DEFAULT_VALUE = 'default';
-
-    /**
-     * @var positive-int|0
-     */
     public const RESERVE_TIMEOUT_DEFAULT_VALUE = 5;
 
     /**

@@ -9,14 +9,7 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  */
 final class BoltdbCreateInfo extends CreateInfo
 {
-    /**
-     * @var positive-int
-     */
     public const PREFETCH_DEFAULT_VALUE = 10000;
-
-    /**
-     * @var non-empty-string
-     */
     public const FILE_DEFAULT_VALUE = 'rr.db';
 
     /**

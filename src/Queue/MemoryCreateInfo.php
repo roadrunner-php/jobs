@@ -9,9 +9,6 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  */
 final class MemoryCreateInfo extends CreateInfo
 {
-    /**
-     * @var positive-int
-     */
     public const PREFETCH_DEFAULT_VALUE = 10;
 
     /**

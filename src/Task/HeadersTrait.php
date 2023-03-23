@@ -17,7 +17,7 @@ trait HeadersTrait
     protected array $headers = [];
 
     /**
-     * @psalm-return array<non-empty-string, array<string>>
+     * @return array<non-empty-string, array<string>>
      */
     public function getHeaders(): array
     {
@@ -25,8 +25,7 @@ trait HeadersTrait
     }
 
     /**
-     * @psalm-param non-empty-string $name Header field name.
-     * @psalm-return bool
+     * @param non-empty-string $name Header field name.
      */
     public function hasHeader(string $name): bool
     {
@@ -34,8 +33,8 @@ trait HeadersTrait
     }
 
     /**
-     * @psalm-param non-empty-string $name
-     * @psalm-return array<string>
+     * @param non-empty-string $name
+     * @return array<string>
      */
     public function getHeader(string $name): array
     {
@@ -43,8 +42,7 @@ trait HeadersTrait
     }
 
     /**
-     * @psalm-param non-empty-string $name
-     * @psalm-return string
+     * @param non-empty-string $name
      */
     public function getHeaderLine(string $name): string
     {

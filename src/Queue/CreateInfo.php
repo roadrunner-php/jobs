@@ -19,7 +19,7 @@ class CreateInfo implements CreateInfoInterface
     public function __construct(
         public readonly Driver $driver,
         public readonly string $name,
-        public readonly int $priority = self::PRIORITY_DEFAULT_VALUE
+        public readonly int $priority = self::PRIORITY_DEFAULT_VALUE,
     ) {
         \assert($this->name !== '', 'Precondition [name !== ""] failed');
         \assert($this->priority >= 1, 'Precondition [priority >= 1] failed');

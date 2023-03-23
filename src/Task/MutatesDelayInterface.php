@@ -16,7 +16,7 @@ interface MutatesDelayInterface
      * See {@see getDelay()} to retrieve information about the current value.
      *
      * @psalm-mutation-free
-     * @param positive-int|0 $seconds
+     * @param int<0, max> $seconds
      * @return static
      */
     public function withDelay(int $seconds): self;
