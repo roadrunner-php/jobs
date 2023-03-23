@@ -81,6 +81,8 @@ final class AMQPCreateInfoTest extends TestCase
             'multiple_ack' => true,
             'requeue_on_fail' => true,
             'durable' => true,
+            'exchange_durable' => false,
+            'consume_all' => false,
         ];
 
         $this->assertEquals($expectedArray, $amqpCreateInfo->toArray());

@@ -47,12 +47,12 @@ class JobsTestCase extends TestCase
 
     public function testCreateWithOptions(): void
     {
-        $dto = new CreateInfo('bar', 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
+        $dto = new CreateInfo(Driver::SQS, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
             'jobs.Declare' => function (DeclareRequest $request) use($dto) {
                 $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
-                $this->assertSame($dto->getDriver(), $request->getPipeline()->offsetGet('driver'));
+                $this->assertSame($dto->getDriver()->value, $request->getPipeline()->offsetGet('driver'));
                 $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
             },
         ]);

@@ -21,7 +21,7 @@ final class ReceivedTaskFactoryTest extends TestCase
      */
     public function testCreate(Payload $payload, string $expectedTaskClass): void
     {
-        $factory = new ReceivedTaskFactory(new JsonSerializer(), $this->createMock(WorkerInterface::class));
+        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
 
         $task = $factory->create($payload);
 
@@ -30,7 +30,7 @@ final class ReceivedTaskFactoryTest extends TestCase
 
     public function testKafkaReceivedTaskShouldReceiveCorrectParams(): void
     {
-        $factory = new ReceivedTaskFactory(new JsonSerializer(), $this->createMock(WorkerInterface::class));
+        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
 
         $task = $factory->create(new Payload(json_encode(['foo' => 'bar']), \json_encode([
             'id' => 'job-id',
@@ -40,39 +40,12 @@ final class ReceivedTaskFactoryTest extends TestCase
             'partition' => 3,
             'offset' => 5,
             'headers' => ['foo' => 'bar'],
-            'driver' => Driver::KAFKA
+            'driver' => Driver::Kafka->value
         ])));
 
         $this->assertSame('job-topic', $task->getTopic());
         $this->assertSame(3, $task->getPartition());
         $this->assertSame(5, $task->getOffset());
-    }
-
-    public function testGetSerializer(): void
-    {
-        $serializer = new JsonSerializer();
-        $factory = new ReceivedTaskFactory($serializer, $this->createMock(WorkerInterface::class));
-
-        $this->assertSame($serializer, $factory->getSerializer());
-    }
-
-    public function withSerializer(): void
-    {
-        $serializer = new class implements SerializerInterface
-        {
-            public function serialize(array $payload): string
-            {
-            }
-
-            public function deserialize(string $payload): array
-            {
-            }
-        };
-
-        $factory = new ReceivedTaskFactory(new JsonSerializer(), $this->createMock(WorkerInterface::class));
-        $factory = $factory->withSerializer($serializer);
-
-        $this->assertSame($serializer, $factory->getSerializer());
     }
 
     public function payloadsDataProvider(): \Traversable
@@ -90,7 +63,7 @@ final class ReceivedTaskFactoryTest extends TestCase
             'pipeline' => 'job-pipeline',
             'job' => 'job-name',
             'headers' => ['foo' => 'bar'],
-            'driver' => Driver::MEMORY
+            'driver' => Driver::Memory->value
         ])), ReceivedTask::class];
 
         yield [new Payload(json_encode(['foo' => 'bar']), \json_encode([
@@ -101,7 +74,7 @@ final class ReceivedTaskFactoryTest extends TestCase
             'partition' => 3,
             'offset' => 5,
             'headers' => ['foo' => 'bar'],
-            'driver' => Driver::KAFKA
+            'driver' => Driver::Kafka->value
         ])), KafkaReceivedTask::class];
     }
 }
