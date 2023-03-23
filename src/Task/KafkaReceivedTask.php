@@ -8,7 +8,6 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
- * @psalm-import-type PartitionOffsetEnum from PartitionOffset
  * @psalm-suppress MutableDependency, MissingImmutableAnnotation
  */
 final class KafkaReceivedTask extends ReceivedTask
@@ -19,7 +18,7 @@ final class KafkaReceivedTask extends ReceivedTask
     /** @var positive-int|0 $partition */
     private int $partition;
 
-    /** @var PartitionOffsetEnum */
+    /** @var value-of<PartitionOffset> */
     private int $offset;
 
     /**
@@ -29,7 +28,7 @@ final class KafkaReceivedTask extends ReceivedTask
      * @param non-empty-string $job
      * @param non-empty-string $topic
      * @param int<0, max> $partition
-     * @param PartitionOffsetEnum $offset
+     * @param value-of<PartitionOffset> $offset
      * @param string $payload
      * @param array<non-empty-string, array<string>> $headers
      */
@@ -68,7 +67,7 @@ final class KafkaReceivedTask extends ReceivedTask
     }
 
     /**
-     * @return PartitionOffsetEnum
+     * @return value-of<PartitionOffset>
      */
     public function getOffset(): int
     {

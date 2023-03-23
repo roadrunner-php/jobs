@@ -15,7 +15,6 @@ use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
- * @psalm-import-type PartitionOffsetEnum from PartitionOffset
  * @psalm-type HeaderPayload = array {
  *    id:         non-empty-string,
  *    job:        non-empty-string,
@@ -25,7 +24,7 @@ use Spiral\RoadRunner\WorkerInterface;
  *    driver?:    non-empty-string,
  *    topic:      non-empty-string,
  *    partition:  positive-int,
- *    offset:     PartitionOffsetEnum
+ *    offset:     value-of<PartitionOffset>
  * }
  */
 final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
