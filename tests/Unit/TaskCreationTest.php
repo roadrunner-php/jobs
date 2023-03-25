@@ -17,8 +17,7 @@ class TaskCreationTestCase extends TestCase
     {
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
-        $task = $this->queue()
-            ->create($expected);
+        $task = $this->queue()->create($expected, 'foo=bar');
 
         $this->assertSame($expected, $task->getName());
     }
@@ -47,7 +46,7 @@ class TaskCreationTestCase extends TestCase
     {
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
-        $task = $this->queue()->create($expected);
+        $task = $this->queue()->create($expected, 'foo=bar');
 
         $this->assertSame($expected, $task->getName());
         $this->assertSame(0, $task->getDelay());
@@ -61,7 +60,7 @@ class TaskCreationTestCase extends TestCase
 
         $queue = $this->queue()->withDefaultOptions(new Options(10, 100, true));
 
-        $task = $queue->create($expected);
+        $task = $queue->create($expected, 'foo=bar');
 
         $this->assertSame($expected, $task->getName());
         $this->assertSame(10, $task->getDelay());

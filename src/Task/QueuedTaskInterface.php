@@ -24,5 +24,5 @@ interface QueuedTaskInterface extends TaskInterface
      * @psalm-mutation-free
      * @return non-empty-string
      */
-    public function getQueue(): string;
+    public function getPipeline(): string;
 }

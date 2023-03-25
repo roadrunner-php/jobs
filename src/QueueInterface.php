@@ -43,7 +43,7 @@ interface QueueInterface
      * @param non-empty-string $name
      * @param OptionsInterface|null $options
      */
-    public function create(string $name, string $payload = '', OptionsInterface $options = null): PreparedTaskInterface;
+    public function create(string $name, string|\Stringable $payload, OptionsInterface $options = null): PreparedTaskInterface;
 
     /**
      * Sends a task to the queue.

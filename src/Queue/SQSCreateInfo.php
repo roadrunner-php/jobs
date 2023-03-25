@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
 
-use JetBrains\PhpStorm\ArrayShape;
-
 /**
  * The DTO to create the SQS driver.
  *

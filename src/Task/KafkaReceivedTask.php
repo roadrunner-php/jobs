@@ -4,58 +4,37 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
 
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
+ * @psalm-import-type PartitionOffsetEnum from PartitionOffset
  * @psalm-suppress MutableDependency, MissingImmutableAnnotation
  */
 final class KafkaReceivedTask extends ReceivedTask
 {
-    /** @var non-empty-string */
-    private string $topic;
-
-    /** @var positive-int|0 $partition */
-    private int $partition;
-
-    /** @var value-of<PartitionOffset> */
-    private int $offset;
-
     /**
-     * @param WorkerInterface $worker
      * @param non-empty-string $id
-     * @param non-empty-string $queue
+     * @param non-empty-string $pipeline
      * @param non-empty-string $job
      * @param non-empty-string $topic
      * @param int<0, max> $partition
-     * @param value-of<PartitionOffset> $offset
-     * @param string $payload
+     * @param value-of<PartitionOffsetEnum> $offset
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
         WorkerInterface $worker,
         string $id,
-        string $queue,
+        string $pipeline,
         string $job,
         string $topic,
-        int $partition,
-        int $offset,
+        private readonly int $partition,
+        private readonly int $offset,
         string $payload = '',
-        array $headers = []
+        array $headers = [],
     ) {
-        $this->topic = $topic;
-        $this->partition = $partition;
-        $this->offset = $offset;
-
-        parent::__construct($worker, $id, $queue, $job, $payload, $headers);
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getTopic(): string
-    {
-        return $this->topic;
+        parent::__construct($worker, $id, Driver::Kafka, $pipeline, $job, $topic, $payload, $headers);
     }
 
     /**
@@ -67,7 +46,7 @@ final class KafkaReceivedTask extends ReceivedTask
     }
 
     /**
-     * @return value-of<PartitionOffset>
+     * @return value-of<PartitionOffsetEnum>
      */
     public function getOffset(): int
     {

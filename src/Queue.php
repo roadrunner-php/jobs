@@ -68,7 +68,7 @@ final class Queue implements QueueInterface
         return $self;
     }
 
-    public function create(string $name, string $payload = '', OptionsInterface $options = null): PreparedTaskInterface
+    public function create(string $name, string|\Stringable $payload, OptionsInterface $options = null): PreparedTaskInterface
     {
         if (\method_exists($this->options, 'mergeOptional')) {
             /** @var OptionsInterface $options */
@@ -92,7 +92,7 @@ final class Queue implements QueueInterface
      * @param OptionsInterface|null $options
      * @throws JobsException
      */
-    public function push(string $name, string $payload = '', OptionsInterface $options = null): QueuedTaskInterface
+    public function push(string $name, string|\Stringable $payload, OptionsInterface $options = null): QueuedTaskInterface
     {
         return $this->dispatch(
             $this->create($name, $payload, $options),

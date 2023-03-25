@@ -12,13 +12,13 @@ class QueuedTask extends Task implements QueuedTaskInterface
 {
     /**
      * @param non-empty-string $id
-     * @param non-empty-string $queue
+     * @param non-empty-string $pipeline
      * @param non-empty-string $name
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
-        protected string $id,
-        protected string $queue,
+        protected readonly string $id,
+        protected readonly string $pipeline,
         string $name,
         string $payload,
         array $headers = []
@@ -37,8 +37,8 @@ class QueuedTask extends Task implements QueuedTaskInterface
     /**
      * @return non-empty-string
      */
-    public function getQueue(): string
+    public function getPipeline(): string
     {
-        return $this->queue;
+        return $this->pipeline;
     }
 }

@@ -39,4 +39,9 @@ enum Driver: string
      * @internal NOT Available: Reserved for future use.
      */
     case NSQ = 'nsq';
+
+    /**
+     * @internal Used when the driver is not specified.
+     */
+    case Unknown = 'unknown';
 }

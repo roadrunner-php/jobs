@@ -6,6 +6,7 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
@@ -33,19 +34,32 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 
     /**
      * @param non-empty-string $id
-     * @param non-empty-string $queue
+     * @param non-empty-string $pipeline
      * @param non-empty-string $job
+     * @param non-empty-string $queue
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
         private readonly WorkerInterface $worker,
         string $id,
-        string $queue,
+        private readonly Driver $driver,
+        string $pipeline,
         string $job,
+        private readonly string $queue,
         string $payload,
-        array $headers = []
+        array $headers = [],
     ) {
-        parent::__construct($id, $queue, $job, $payload, $headers);
+        parent::__construct($id, $pipeline, $job, $payload, $headers);
+    }
+
+    public function getDriver(): Driver
+    {
+        return $this->driver;
+    }
+
+    public function getQueue(): string
+    {
+        return $this->queue;
     }
 
     public function complete(): void
@@ -53,38 +67,16 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         $this->respond(Type::SUCCESS);
     }
 
-    /**
-     * @param TypeEnum $type
-     * @param SuccessData|ErrorData $data
-     * @throws JobsException
-     */
-    private function respond(int $type, array $data = []): void
-    {
-        if ($this->completed === null) {
-            try {
-                $body = \json_encode(['type' => $type, 'data' => $data], \JSON_THROW_ON_ERROR);
-
-                $this->worker->respond(new Payload($body));
-            } catch (\JsonException $e) {
-                throw new SerializationException($e->getMessage(), $e->getCode(), $e);
-            } catch (\Throwable $e) {
-                throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
-            }
-
-            $this->completed = $type;
-        }
-    }
-
     public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void
     {
         \assert(
             \is_string($error) || $error instanceof \Stringable,
-            'Precondition [error is string|Stringable|Throwable] failed'
+            'Precondition [error is string|Stringable|Throwable] failed',
         );
 
         $data = [
-            'message'       => (string)$error,
-            'requeue'       => $requeue,
+            'message' => (string)$error,
+            'requeue' => $requeue,
             'delay_seconds' => $this->delay,
         ];
 
@@ -122,5 +114,27 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         $self->delay = $seconds;
 
         return $self;
+    }
+
+    /**
+     * @param TypeEnum $type
+     * @param SuccessData|ErrorData $data
+     * @throws JobsException
+     */
+    private function respond(int $type, array $data = []): void
+    {
+        if ($this->completed === null) {
+            try {
+                $body = \json_encode(['type' => $type, 'data' => $data], \JSON_THROW_ON_ERROR);
+
+                $this->worker->respond(new Payload($body));
+            } catch (\JsonException $e) {
+                throw new SerializationException($e->getMessage(), $e->getCode(), $e);
+            } catch (\Throwable $e) {
+                throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            }
+
+            $this->completed = $type;
+        }
     }
 }

@@ -43,7 +43,7 @@ class QueueTestCase extends TestCase
         }]);
 
         $queue->dispatch($queue->create(
-            $expect = $this->randomName()
+            $expect = $this->randomName(), 'foo=bar'
         ));
 
         $this->assertSame($expect, $actual);
@@ -57,7 +57,7 @@ class QueueTestCase extends TestCase
             $actual = $job->getJob();
         }]);
 
-        $queue->push($expect = $this->randomName());
+        $queue->push($expect = $this->randomName(), 'foo=bar');
 
         $this->assertSame($expect, $actual);
     }
@@ -73,9 +73,9 @@ class QueueTestCase extends TestCase
         }]);
 
         $queue->dispatchMany(
-            $queue->create($expect[] = $this->randomName()),
-            $queue->create($expect[] = $this->randomName()),
-            $queue->create($expect[] = $this->randomName()),
+            $queue->create($expect[] = $this->randomName(), 'foo=bar'),
+            $queue->create($expect[] = $this->randomName(), 'foo=bar'),
+            $queue->create($expect[] = $this->randomName(), 'foo=bar'),
         );
 
         $this->assertSame($expect, $actual);
@@ -144,6 +144,6 @@ class QueueTestCase extends TestCase
     {
         $queue = $this->queue();
 
-        $this->assertSame([], $queue->create('foo')->getHeaders());
+        $this->assertSame([], $queue->create('foo', 'foo=bar')->getHeaders());
     }
 }

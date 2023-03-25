@@ -17,8 +17,8 @@ abstract class Task implements TaskInterface
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
-        protected string $name,
-        protected string $payload,
+        protected readonly string $name,
+        protected readonly string|\Stringable $payload,
         array $headers = []
     ) {
         \assert($this->name !== '', 'Precondition [job !== ""] failed');
@@ -36,6 +36,6 @@ abstract class Task implements TaskInterface
 
     public function getPayload(): string
     {
-        return $this->payload;
+        return (string) $this->payload;
     }
 }

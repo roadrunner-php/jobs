@@ -22,7 +22,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
      * @param OptionsInterface|null $options
      * @param array<non-empty-string, array<string>> $headers
      */
-    public function __construct(string $name, string $payload, OptionsInterface $options = null, array $headers = [])
+    public function __construct(string $name, string|\Stringable $payload, OptionsInterface $options = null, array $headers = [])
     {
         $this->options = $options ?? new Options();
 

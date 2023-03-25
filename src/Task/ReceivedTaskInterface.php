@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 
 /**
  * @psalm-suppress MissingImmutableAnnotation The implementation of this task is mutable.
@@ -52,4 +53,20 @@ interface ReceivedTaskInterface extends
      * @psalm-mutation-free
      */
     public function isFails(): bool;
+
+    /**
+     * Returns the current broker queue name.
+     *
+     * @psalm-mutation-free
+     * @return non-empty-string
+     */
+    public function getQueue(): string;
+
+
+    /**
+     * Returns the queue driver name.
+     *
+     * @psalm-mutation-free
+     */
+    public function getDriver(): Driver;
 }
