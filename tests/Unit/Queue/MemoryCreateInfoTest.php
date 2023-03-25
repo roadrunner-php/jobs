@@ -14,7 +14,7 @@ final class MemoryCreateInfoTest extends TestCase
     {
         $memoryCreateInfo = new MemoryCreateInfo('test-name');
 
-        $this->assertEquals(Driver::MEMORY, $memoryCreateInfo->driver);
+        $this->assertEquals(Driver::Memory, $memoryCreateInfo->driver);
         $this->assertEquals('test-name', $memoryCreateInfo->name);
         $this->assertEquals(MemoryCreateInfo::PRIORITY_DEFAULT_VALUE, $memoryCreateInfo->priority);
         $this->assertEquals(MemoryCreateInfo::PREFETCH_DEFAULT_VALUE, $memoryCreateInfo->prefetch);
@@ -33,7 +33,7 @@ final class MemoryCreateInfoTest extends TestCase
         $memoryCreateInfo = new MemoryCreateInfo('test-name', 50, 20);
 
         $expectedArray = [
-            'driver' => Driver::MEMORY,
+            'driver' => Driver::Memory->value,
             'name' => 'test-name',
             'priority' => 50,
             'prefetch' => 20,

@@ -7,10 +7,11 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
 use Spiral\RoadRunner\Jobs\Consumer;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
-final class ConsumerTest extends TestCase
+final class ConsumerTest extends \PHPUnit\Framework\TestCase
 {
     private Consumer $consumer;
     /** @var WorkerInterface|MockObject|WorkerInterface&MockObject $woker */
@@ -32,17 +33,21 @@ final class ConsumerTest extends TestCase
                 $payload = 'foo',
                 \json_encode([
                     'id' => 'job-id',
+                    'queue' => 'job-queue',
+                    'driver' => 'memory',
                     'pipeline' => 'job-pipeline',
                     'job' => 'job-name',
                     'headers' => ['foo' => 'bar'],
                 ])
-            )
+            ),
         );
         $task = $this->consumer->waitTask();
 
         $this->assertSame($payload, $task->getPayload());
         $this->assertSame('job-id', $task->getId());
-        $this->assertSame('job-pipeline', $task->getQueue());
+        $this->assertSame('job-pipeline', $task->getPipeline());
+        $this->assertSame('job-queue', $task->getQueue());
+        $this->assertSame(Driver::Memory, $task->getDriver());
         $this->assertSame('job-name', $task->getName());
         $this->assertSame(['foo' => 'bar'], $task->getHeaders());
     }
@@ -54,11 +59,13 @@ final class ConsumerTest extends TestCase
                 null,
                 \json_encode([
                     'id' => 'job-id',
+                    'queue' => 'job-queue',
+                    'driver' => 'memory',
                     'pipeline' => 'job-pipeline',
                     'job' => 'job-name',
                     'headers' => ['foo' => 'bar'],
                 ])
-            )
+            ),
         );
         $task = $this->consumer->waitTask();
 
@@ -71,7 +78,7 @@ final class ConsumerTest extends TestCase
         $this->expectErrorMessage('Task payload does not have a valid header.');
 
         $this->woker->expects($this->once())->method('waitPayload')->willReturn(
-            new Payload(null)
+            new Payload(null),
         );
         $this->consumer->waitTask();
     }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
@@ -15,6 +8,7 @@ use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
 use Spiral\RoadRunner\Jobs\Queue;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
 class TaskCreationTestCase extends TestCase
@@ -23,8 +17,7 @@ class TaskCreationTestCase extends TestCase
     {
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
-        $task = $this->queue()
-            ->create($expected);
+        $task = $this->queue()->create($expected, 'foo=bar');
 
         $this->assertSame($expected, $task->getName());
     }
@@ -34,7 +27,7 @@ class TaskCreationTestCase extends TestCase
      * @param non-empty-string $name
      * @return QueueInterface
      */
-    protected function queue(array $mapping = [], string $name = 'queue', ?string $driver = null): QueueInterface
+    protected function queue(array $mapping = [], string $name = 'queue', ?Driver $driver = null): QueueInterface
     {
         return new Queue($name, $this->rpc($mapping), $driver !== null ? OptionsFactory::create($driver) : null);
     }
@@ -53,7 +46,7 @@ class TaskCreationTestCase extends TestCase
     {
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
-        $task = $this->queue()->create($expected);
+        $task = $this->queue()->create($expected, 'foo=bar');
 
         $this->assertSame($expected, $task->getName());
         $this->assertSame(0, $task->getDelay());
@@ -67,7 +60,7 @@ class TaskCreationTestCase extends TestCase
 
         $queue = $this->queue()->withDefaultOptions(new Options(10, 100, true));
 
-        $task = $queue->create($expected);
+        $task = $queue->create($expected, 'foo=bar');
 
         $this->assertSame($expected, $task->getName());
         $this->assertSame(10, $task->getDelay());
@@ -106,7 +99,7 @@ class TaskCreationTestCase extends TestCase
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
         $task = $this
-            ->queue([], 'queue', Queue\Driver::KAFKA)
+            ->queue([], 'queue', Queue\Driver::Kafka)
             ->create($expected,'bar', new KafkaOptions('kafka-topic', 15, 30, false));
         $options = $task->getOptions();
 

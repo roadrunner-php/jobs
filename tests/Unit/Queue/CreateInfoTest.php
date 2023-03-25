@@ -6,43 +6,44 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
 use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use PHPUnit\Framework\TestCase;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 
 final class CreateInfoTest extends TestCase
 {
     public function testConstructor(): void
     {
-        $createInfo = new CreateInfo('driver', 'name', 5);
+        $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
 
         $this->assertInstanceOf(CreateInfo::class, $createInfo);
     }
 
     public function testDefaultPriority(): void
     {
-        $createInfo = new CreateInfo('driver', 'name');
+        $createInfo = new CreateInfo(Driver::Memory, 'name');
 
         $this->assertEquals(CreateInfo::PRIORITY_DEFAULT_VALUE, $createInfo->priority);
     }
 
     public function testGetName(): void
     {
-        $createInfo = new CreateInfo('driver', 'name', 5);
+        $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
 
         $this->assertEquals('name', $createInfo->getName());
     }
 
     public function testGetDriver(): void
     {
-        $createInfo = new CreateInfo('driver', 'name', 5);
+        $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
 
-        $this->assertEquals('driver', $createInfo->getDriver());
+        $this->assertEquals(Driver::Memory, $createInfo->getDriver());
     }
 
     public function testToArray(): void
     {
-        $createInfo = new CreateInfo('driver', 'name', 5);
+        $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
         $expectedArray = [
             'name' => 'name',
-            'driver' => 'driver',
+            'driver' => Driver::Memory->value,
             'priority' => 5,
         ];
 

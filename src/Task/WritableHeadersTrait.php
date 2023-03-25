@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -21,17 +14,15 @@ trait WritableHeadersTrait
     use HeadersTrait;
 
     /**
-     * {@inheritDoc}
-     *
-     * @psalm-param non-empty-string $name
-     * @psalm-param non-empty-string|iterable<non-empty-string> $value
-     * @psalm-return static
+     * @param non-empty-string $name
+     * @param non-empty-string|iterable<non-empty-string> $value
+     * @return static
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function withHeader(string $name, $value): self
+    public function withHeader(string $name, string|iterable $value): self
     {
-        assert($name !== '', 'Precondition [name !== ""] failed');
+        \assert($name !== '', 'Precondition [name !== ""] failed');
 
         $value = \is_iterable($value) ? $value : [$value];
 
@@ -46,17 +37,15 @@ trait WritableHeadersTrait
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @psalm-param non-empty-string $name
-     * @psalm-param non-empty-string|iterable<non-empty-string> $value
-     * @psalm-return static
+     * @param non-empty-string $name
+     * @param non-empty-string|iterable<non-empty-string> $value
+     * @return static
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function withAddedHeader(string $name, $value): self
+    public function withAddedHeader(string $name, string|iterable $value): self
     {
-        assert($name !== '', 'Precondition [name !== ""] failed');
+        \assert($name !== '', 'Precondition [name !== ""] failed');
 
         /** @var iterable<non-empty-string> $value */
         $value = \is_iterable($value) ? $value : [$value];
@@ -72,16 +61,14 @@ trait WritableHeadersTrait
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @psalm-param non-empty-string $name
-     * @psalm-return static
+     * @param non-empty-string $name
+     * @return static
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
     public function withoutHeader(string $name): self
     {
-        assert($name !== '', 'Precondition [name !== ""] failed');
+        \assert($name !== '', 'Precondition [name !== ""] failed');
 
         if (!isset($this->headers[$name])) {
             return $this;

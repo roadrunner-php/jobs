@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
@@ -23,7 +16,7 @@ interface MutatesDelayInterface
      * See {@see getDelay()} to retrieve information about the current value.
      *
      * @psalm-mutation-free
-     * @param positive-int|0 $seconds
+     * @param int<0, max> $seconds
      * @return static
      */
     public function withDelay(int $seconds): self;

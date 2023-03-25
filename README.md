@@ -1,8 +1,13 @@
 # RoadRunner Jobs Plugin
 
-[![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner-jobs/version)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![Build Status](https://github.com/spiral/roadrunner-jobs/workflows/build/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
-[![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
+[![PHP Version Require](https://poser.pugx.org/spiral/roadrunner-jobs/require/php)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![Latest Stable Version](https://poser.pugx.org/spiral/spiral/roadrunner-jobs/v/stable)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![phpunit](https://github.com/spiral/roadrunner-jobs/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
+[![psalm](https://github.com/spiral/roadrunner-jobs/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
+[![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/3.x/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
+[![Total Downloads](https://poser.pugx.org/spiral/roadrunner-jobs/downloads)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![StyleCI](https://github.styleci.io/repos/447581540/shield)](https://github.styleci.io/repos/447581540)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
 
@@ -11,15 +16,15 @@ This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
 To install application server and Jobs codebase
 
 ```bash
-$ composer require spiral/roadrunner-jobs
+composer require spiral/roadrunner-jobs
 ```
 
 You can use the convenient installer to download the latest available compatible
 version of RoadRunner assembly:
 
 ```bash
-$ composer require spiral/roadrunner-cli --dev
-$ vendor/bin/rr get
+composer require spiral/roadrunner-cli --dev
+vendor/bin/rr get
 ```
 
 ## Usage
@@ -45,18 +50,21 @@ server:
 # In this section, the jobs themselves are configured
 #
 jobs:
-    consume: [ "test" ]   # List of RoadRunner queues that can be processed by 
-                          # the consumer specified in the "server" section.
+    consume: [ "local" ]        # List of RoadRunner queues that can be processed by 
+                                # the consumer specified in the "server" section.
     pipelines:
-        test:               # RoadRunner queue identifier
-            driver: memory  # - Queue driver name
-            queue: test       # - Internal (driver's) queue identifier
+        local:                  # RoadRunner queue identifier
+            driver: memory      # - Queue driver name
+            config:
+                priority: 10    # - Pipeline priority
+                prefetch: 10000 # - Number of job to prefetch from the driver until ACK/NACK.
 ```
 
+> **Note**
 > Read more about all available drivers on the
-> [documentation](https://roadrunner.dev/docs/beep-beep-jobs) page.
+> [documentation](https://roadrunner.dev/docs/plugins-jobs/2.x/en) page.
 
-After starting the server with this configuration, one driver named "`test`"
+After starting the server with this configuration, one driver named `local`
 will be available to you.
 
 The following code will allow writing and reading an arbitrary value from the
@@ -72,8 +80,8 @@ require __DIR__ . '/vendor/autoload.php';
 // Jobs service
 $jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 
-// Select "test" queue from jobs
-$queue = $jobs->connect('test');
+// Select "local" queue from jobs
+$queue = $jobs->connect('local');
 
 // Create task prototype with default headers
 $prototype = $queue->create('echo')
@@ -88,6 +96,10 @@ $task = $queue->dispatch(
 
 var_dump($task->getId() . ' has been queued');
 ```
+
+<a href="https://spiral.dev/">
+<img src="https://user-images.githubusercontent.com/773481/220979012-e67b74b5-3db1-41b7-bdb0-8a042587dedc.jpg" alt="try Spiral Framework" />
+</a>
 
 ## License
 

@@ -1,17 +1,11 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
+use Spiral\RoadRunner\Jobs\Queue\Driver;
 
 /**
  * @psalm-suppress MissingImmutableAnnotation The implementation of this task is mutable.
@@ -24,7 +18,6 @@ interface ReceivedTaskInterface extends
     /**
      * Marks the current task as completed.
      *
-     * @return void
      * @throws JobsException
      */
     public function complete(): void;
@@ -33,17 +26,15 @@ interface ReceivedTaskInterface extends
      * Marks the current task as failed.
      *
      * @param string|\Stringable|\Throwable $error
-     * @param bool $requeue
      * @throws JobsException
      */
-    public function fail($error, bool $requeue = false): void;
+    public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void;
 
     /**
      * Returns bool {@see true} if the task is completed and {@see false}
      * otherwise.
      *
      * @psalm-mutation-free
-     * @return bool
      */
     public function isCompleted(): bool;
 
@@ -52,7 +43,6 @@ interface ReceivedTaskInterface extends
      * and {@see false} otherwise.
      *
      * @psalm-mutation-free
-     * @return bool
      */
     public function isSuccessful(): bool;
 
@@ -61,7 +51,22 @@ interface ReceivedTaskInterface extends
      * otherwise.
      *
      * @psalm-mutation-free
-     * @return bool
      */
     public function isFails(): bool;
+
+    /**
+     * Returns the current broker queue name.
+     *
+     * @psalm-mutation-free
+     * @return non-empty-string
+     */
+    public function getQueue(): string;
+
+
+    /**
+     * Returns the queue driver name.
+     *
+     * @psalm-mutation-free
+     */
+    public function getDriver(): Driver;
 }

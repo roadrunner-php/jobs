@@ -28,6 +28,26 @@ final class PreparedTaskTest extends TestCase
         $this->assertSame('changed', $task->withOptions(new KafkaOptions('changed'))->getOptions()->getTopic());
     }
 
+    public function testDelay(): void
+    {
+        $task = new PreparedTask(name: 'foo', payload: 'bar');
+
+        $this->assertEquals(0, $task->getDelay());
+
+        $task = $task->withDelay(100);
+        $this->assertEquals(100, $task->getDelay());
+    }
+
+    public function testPriority(): void
+    {
+        $task = new PreparedTask(name: 'foo', payload: 'bar');
+
+        $this->assertEquals(0, $task->getPriority());
+
+        $task = $task->withPriority(100);
+        $this->assertEquals(100, $task->getPriority());
+    }
+
     public function testCreatingTaskWithHeaders(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar', options: null, headers: ['foo' => ['bar']]);
@@ -40,6 +60,15 @@ final class PreparedTaskTest extends TestCase
         $task = new PreparedTask(name: 'foo', payload: 'bar');
 
         $this->assertSame([], $task->getHeaders());
+    }
+
+    public function testAutoAck(): void
+    {
+        $task = new PreparedTask(name: 'foo', payload: 'bar');
+        $this->assertFalse($task->getAutoAck());
+
+        $task = $task->withAutoAck(true);
+        $this->assertTrue($task->getAutoAck());
     }
 
     public function optionsDataProvider(): \Traversable

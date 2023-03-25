@@ -8,13 +8,11 @@ use Spiral\RoadRunner\Jobs\Queue\Driver;
 
 final class OptionsFactory
 {
-    public static function create(string $driver): OptionsInterface
+    public static function create(Driver $driver): OptionsInterface
     {
-        switch ($driver) {
-            case Driver::KAFKA:
-                return new KafkaOptions('default');
-            default:
-                return new Options();
-        }
+        return match ($driver) {
+            Driver::Kafka => new KafkaOptions('default'),
+            default => new Options(),
+        };
     }
 }

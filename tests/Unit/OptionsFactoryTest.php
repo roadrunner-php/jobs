@@ -14,31 +14,29 @@ final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider defaultDriversDataProvider
      */
-    public function testCreateWithOptions(string $driver)
+    public function testCreateWithOptions(Driver $driver): void
     {
         $options = OptionsFactory::create($driver);
         $this->assertInstanceOf(Options::class, $options);
     }
 
-    public function testCreateWithKafkaOptions()
+    public function testCreateWithKafkaOptions(): void
     {
-        $options = OptionsFactory::create(Driver::KAFKA);
+        $options = OptionsFactory::create(Driver::Kafka);
 
         $this->assertInstanceOf(KafkaOptions::class, $options);
         $this->assertEquals('default', $options->getTopic());
     }
 
-    public function defaultDriversDataProvider()
+    public function defaultDriversDataProvider(): \Traversable
     {
-        return [
-            [Driver::SQS],
-            [Driver::AMQP],
-            [Driver::BEANSTALK],
-            [Driver::BOLTDB],
-            [Driver::MEMORY],
-            [Driver::NSQ],
-            [Driver::NATS],
-            [Driver::REDIS]
-        ];
+        yield [Driver::SQS];
+        yield [Driver::AMQP];
+        yield [Driver::Beanstalk];
+        yield [Driver::BoltDB];
+        yield [Driver::Memory];
+        yield [Driver::NSQ];
+        yield [Driver::NATS];
+        yield [Driver::Redis];
     }
 }

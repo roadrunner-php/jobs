@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
@@ -30,8 +23,6 @@ interface QueueInterface
     /**
      * Returns the default settings (options) for all tasks created
      * within this queue.
-     *
-     * @return OptionsInterface
      */
     public function getDefaultOptions(): OptionsInterface;
 
@@ -50,17 +41,13 @@ interface QueueInterface
      * Creates a new task to run on the specified queue.
      *
      * @param non-empty-string $name
-     * @param string $payload
      * @param OptionsInterface|null $options
-     * @return PreparedTaskInterface
      */
-    public function create(string $name, string $payload = '', OptionsInterface $options = null): PreparedTaskInterface;
+    public function create(string $name, string|\Stringable $payload, OptionsInterface $options = null): PreparedTaskInterface;
 
     /**
      * Sends a task to the queue.
      *
-     * @param PreparedTaskInterface $task
-     * @return QueuedTaskInterface
      * @throws JobsException
      */
     public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface;
@@ -68,7 +55,6 @@ interface QueueInterface
     /**
      * Sends multiple tasks to the queue
      *
-     * @param PreparedTaskInterface ...$tasks
      * @return iterable<QueuedTaskInterface>
      * @throws JobsException
      */
@@ -85,7 +71,6 @@ interface QueueInterface
     public function resume(): void;
 
     /**
-     * @return bool
      * @throws JobsException
      */
     public function isPaused(): bool;

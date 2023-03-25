@@ -20,7 +20,7 @@ final class QueuedTaskTest extends TestCase
         $task = new QueuedTask($id, $queue, $name, $payload, $headers);
 
         $this->assertEquals($id, $task->getId());
-        $this->assertEquals($queue, $task->getQueue());
+        $this->assertEquals($queue, $task->getPipeline());
         $this->assertEquals($name, $task->getName());
         $this->assertEquals($payload, $task->getPayload());
         $this->assertEquals($headers, $task->getHeaders());

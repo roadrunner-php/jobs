@@ -1,25 +1,17 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
 
 use Ramsey\Uuid\Uuid;
 use Spiral\Goridge\RPC\RPCInterface;
-use Spiral\RoadRunner\Jobs\DTO\V1\HeaderValue;
-use Spiral\RoadRunner\Jobs\DTO\V1\Job;
-use Spiral\RoadRunner\Jobs\DTO\V1\Options as OptionsMessage;
-use Spiral\RoadRunner\Jobs\DTO\V1\PushBatchRequest;
-use Spiral\RoadRunner\Jobs\DTO\V1\PushRequest;
+use RoadRunner\Jobs\DTO\V1\HeaderValue;
+use RoadRunner\Jobs\DTO\V1\Job;
+use RoadRunner\Jobs\DTO\V1\Options as OptionsMessage;
+use RoadRunner\Jobs\DTO\V1\PushBatchRequest;
+use RoadRunner\Jobs\DTO\V1\PushRequest;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
-use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\QueueInterface;
@@ -34,29 +26,13 @@ use Spiral\RoadRunner\Jobs\Task\TaskInterface;
  */
 final class Pipeline
 {
-    /**
-     * @var RPCInterface
-     */
-    private RPCInterface $rpc;
-
-    /**
-     * @var QueueInterface
-     */
-    private QueueInterface $queue;
-
-    /**
-     * @param QueueInterface $queue
-     * @param RPCInterface $rpc
-     */
-    public function __construct(QueueInterface $queue, RPCInterface $rpc)
-    {
-        $this->rpc = $rpc;
-        $this->queue = $queue;
+    public function __construct(
+        private readonly QueueInterface $queue,
+        private readonly RPCInterface $rpc
+    ) {
     }
 
     /**
-     * @param PreparedTaskInterface $task
-     * @return QueuedTaskInterface
      * @throws JobsException
      */
     public function send(PreparedTaskInterface $task): QueuedTaskInterface
@@ -108,11 +84,6 @@ final class Pipeline
         return (string)Uuid::uuid4();
     }
 
-    /**
-     * @param TaskInterface $task
-     * @param OptionsInterface $options
-     * @return Job
-     */
     private function taskToProto(TaskInterface $task, OptionsInterface $options): Job
     {
         return new Job([
@@ -125,7 +96,6 @@ final class Pipeline
     }
 
     /**
-     * @param TaskInterface $task
      * @return array<string, HeaderValue>
      */
     private function headersToProtoData(TaskInterface $task): array
@@ -145,10 +115,6 @@ final class Pipeline
         return $result;
     }
 
-    /**
-     * @param OptionsInterface $options
-     * @return OptionsMessage
-     */
     private function optionsToProto(OptionsInterface $options): OptionsMessage
     {
         if ($options instanceof OptionsAwareInterface) {
@@ -172,9 +138,6 @@ final class Pipeline
     }
 
     /**
-     * @param Job $job
-     * @param TaskInterface $task
-     * @return QueuedTask
      * @psalm-suppress ArgumentTypeCoercion Protobuf Job ID can not be empty
      */
     private function createQueuedTask(Job $job, TaskInterface $task): QueuedTask

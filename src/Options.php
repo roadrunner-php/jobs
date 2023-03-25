@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of RoadRunner package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
@@ -20,40 +13,18 @@ class Options implements OptionsInterface, WritableHeadersInterface
     use WritableHeadersTrait;
 
     /**
-     * @var positive-int|0
-     */
-    public int $delay = self::DEFAULT_DELAY;
-
-    /**
-     * @var positive-int|0
-     */
-    public int $priority = self::DEFAULT_PRIORITY;
-
-    /**
-     * @var bool
-     */
-    public bool $autoAck = self::DEFAULT_AUTO_ACK;
-
-    /**
      * @param positive-int|0 $delay
      * @param positive-int|0 $priority
      */
     public function __construct(
-        int $delay = self::DEFAULT_DELAY,
-        int $priority = self::DEFAULT_PRIORITY,
-        bool $autoAck = self::DEFAULT_AUTO_ACK
+        public int $delay = self::DEFAULT_DELAY,
+        public int $priority = self::DEFAULT_PRIORITY,
+        public bool $autoAck = self::DEFAULT_AUTO_ACK
     ) {
-        assert($delay >= 0, 'Precondition [delay >= 0] failed');
-        assert($priority >= 0, 'Precondition [priority >= 0] failed');
-
-        $this->delay = $delay;
-        $this->priority = $priority;
-        $this->autoAck = $autoAck;
+        \assert($this->delay >= 0, 'Precondition [delay >= 0] failed');
+        \assert($this->priority >= 0, 'Precondition [priority >= 0] failed');
     }
 
-    /**
-     * @param OptionsInterface $options
-     */
     public static function from(OptionsInterface $options): self
     {
         return new self(
@@ -69,7 +40,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
      */
     public function getDelay(): int
     {
-        assert($this->delay >= 0, 'Invariant [delay >= 0] failed');
+        \assert($this->delay >= 0, 'Invariant [delay >= 0] failed');
 
         return $this->delay;
     }
@@ -81,7 +52,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
      */
     public function withDelay(int $delay): self
     {
-        assert($delay >= 0, 'Precondition [delay >= 0] failed');
+        \assert($delay >= 0, 'Precondition [delay >= 0] failed');
 
         $self = clone $this;
         $self->delay = $delay;
@@ -95,7 +66,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
      */
     public function getPriority(): int
     {
-        assert($this->priority >= 0, 'Invariant [priority >= 0] failed');
+        \assert($this->priority >= 0, 'Invariant [priority >= 0] failed');
 
         return $this->priority;
     }
@@ -107,7 +78,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
      */
     public function withPriority(int $priority): self
     {
-        assert($priority >= 0, 'Precondition [priority >= 0] failed');
+        \assert($priority >= 0, 'Precondition [priority >= 0] failed');
 
         $self = clone $this;
         $self->priority = $priority;
@@ -117,7 +88,6 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
-     * @return bool
      */
     public function getAutoAck(): bool
     {
@@ -126,7 +96,6 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
-     * @param bool $autoAck
      * @return $this
      */
     public function withAutoAck(bool $autoAck): self
@@ -137,10 +106,6 @@ class Options implements OptionsInterface, WritableHeadersInterface
         return $self;
     }
 
-    /**
-     * @param OptionsInterface|null $options
-     * @return OptionsInterface
-     */
     public function mergeOptional(?OptionsInterface $options): OptionsInterface
     {
         if ($options === null) {
@@ -150,10 +115,6 @@ class Options implements OptionsInterface, WritableHeadersInterface
         return $this->merge($options);
     }
 
-    /**
-     * @param OptionsInterface $options
-     * @return OptionsInterface
-     */
     public function merge(OptionsInterface $options): OptionsInterface
     {
         $self = clone $this;
