@@ -35,7 +35,7 @@ final class KafkaCreateInfoTest extends TestCase
             'driver' => 'kafka',
             'priority' => 10,
             'brokers' => ['127.0.0.1:9092'],
-            'autoCreateTopics' => false,
+            'auto_create_topics' => false,
         ], $createInfo->toArray());
     }
 
@@ -65,7 +65,7 @@ final class KafkaCreateInfoTest extends TestCase
             'driver' => 'kafka',
             'priority' => 1,
             'brokers' => ['127.0.0.1:9092', 'localhost:9092'],
-            'autoCreateTopics' => true,
+            'auto_create_topics' => true,
             'sasl' => [
                 'mechanism' => 'plain',
                 'username' => 'user',

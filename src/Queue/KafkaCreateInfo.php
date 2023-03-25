@@ -46,7 +46,7 @@ final class KafkaCreateInfo extends CreateInfo
     {
         $info = [
             'brokers' => $this->brokers,
-            'autoCreateTopics' => $this->autoCreateTopics,
+            'auto_create_topics' => $this->autoCreateTopics,
         ];
 
         if ($this->sasl !== null) {
