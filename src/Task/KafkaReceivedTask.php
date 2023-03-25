@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Task;
 
 use Spiral\RoadRunner\Jobs\Queue\Driver;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
- * @psalm-import-type PartitionOffsetEnum from PartitionOffset
  * @psalm-suppress MutableDependency, MissingImmutableAnnotation
  */
 final class KafkaReceivedTask extends ReceivedTask
@@ -20,7 +18,7 @@ final class KafkaReceivedTask extends ReceivedTask
      * @param non-empty-string $job
      * @param non-empty-string $topic
      * @param int<0, max> $partition
-     * @param value-of<PartitionOffsetEnum> $offset
+     * @param int<0, max> $offset
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
@@ -46,7 +44,7 @@ final class KafkaReceivedTask extends ReceivedTask
     }
 
     /**
-     * @return value-of<PartitionOffsetEnum>
+     * @return int<0, max>
      */
     public function getOffset(): int
     {

@@ -22,9 +22,9 @@ use Spiral\RoadRunner\WorkerInterface;
  *    timeout:    positive-int,
  *    pipeline:   non-empty-string,
  *    driver?:    non-empty-string,
- *    topic:      non-empty-string,
- *    partition:  positive-int,
- *    offset:     value-of<PartitionOffset>
+ *    queue:      non-empty-string,
+ *    partition:  int<0, max>,
+ *    offset:     int<0, max>,
  * }
  */
 final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
@@ -43,7 +43,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
     {
         $header = $this->getHeader($payload);
 
-        $driver = Driver::from($header['driver'] ?? 'unknown') ?? Driver::Unknown;
+        $driver = Driver::tryFrom($header['driver'] ?? 'unknown') ?? Driver::Unknown;
 
         return match ($driver) {
             Driver::Kafka => new KafkaReceivedTask(
