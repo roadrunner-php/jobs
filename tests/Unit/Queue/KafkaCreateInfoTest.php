@@ -65,7 +65,7 @@ final class KafkaCreateInfoTest extends TestCase
             'driver' => 'kafka',
             'priority' => 1,
             'brokers' => ['127.0.0.1:9092', 'localhost:9092'],
-            'auto_create_topics' => true,
+            'auto_create_topics_enable' => true,
             'sasl' => [
                 'mechanism' => 'plain',
                 'username' => 'user',
