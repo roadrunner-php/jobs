@@ -35,7 +35,7 @@ final class KafkaCreateInfoTest extends TestCase
             'driver' => 'kafka',
             'priority' => 10,
             'brokers' => ['127.0.0.1:9092'],
-            'auto_create_topics' => false,
+            'auto_create_topics_enable' => false,
         ], $createInfo->toArray());
     }
 
