@@ -43,4 +43,9 @@ class CreateInfo implements CreateInfoInterface
             'priority' => $this->priority,
         ];
     }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
 }
