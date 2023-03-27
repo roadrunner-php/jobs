@@ -50,7 +50,7 @@ final class PipelineTest extends TestCase
             'auto_ack' => true,
             'topic' => 'some',
             'metadata' => 'other',
-            'offset' => -2,
+            'offset' => 1,
             'partition' => 7
         ])];
     }

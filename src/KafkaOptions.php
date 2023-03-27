@@ -8,13 +8,11 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 
 final class KafkaOptions extends Options implements KafkaOptionsInterface
 {
-    public PartitionOffset $offset;
-
     /**
      * @param non-empty-string $topic
      * @param int<0, max> $delay
      * @param int<0, max> $priority
-     * @param value-of<PartitionOffset>|PartitionOffset $offset
+     * @param int<0, max> $offset
      */
     public function __construct(
         public string $topic,
@@ -22,15 +20,14 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         int $priority = self::DEFAULT_PRIORITY,
         bool $autoAck = self::DEFAULT_AUTO_ACK,
         public string $metadata = self::DEFAULT_METADATA,
-        int|PartitionOffset $offset = PartitionOffset::Newest,
-        public int $partition = self::DEFAULT_PARTITION
+        public int $offset = self::DEFAULT_OFFSET,
+        public int $partition = self::DEFAULT_PARTITION,
     ) {
         parent::__construct($delay, $priority, $autoAck);
 
         \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
         \assert($this->partition >= 0, 'Precondition [partition >= 0] failed');
-
-        $this->offset = \is_int($offset) ? PartitionOffset::from($offset) : $offset;
+        \assert($this->offset >= 0, 'Precondition [offset >= 0] failed');
     }
 
     /**
@@ -64,7 +61,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
                 $self->metadata = $metadata;
             }
 
-            if (($offset = $options->getOffset()) !== PartitionOffset::Newest) {
+            if (($offset = $options->getOffset()) !== self::DEFAULT_OFFSET) {
                 $self->offset = $offset;
             }
 
@@ -120,18 +117,20 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
-     * @param value-of<PartitionOffset>|PartitionOffset $offset
+     * @param int<0, max> $offset
      * @return $this
      */
-    public function withOffset(int|PartitionOffset $offset): self
+    public function withOffset(int $offset): self
     {
+        assert($offset >= 0, 'Precondition [partition >= 0] failed');
+
         $self = clone $this;
-        $self->offset = \is_int($offset) ? PartitionOffset::from($offset) : $offset;
+        $self->offset = $offset;
 
         return $self;
     }
 
-    public function getOffset(): PartitionOffset
+    public function getOffset(): int
     {
         return $this->offset;
     }
@@ -153,8 +152,6 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     public function getPartition(): int
     {
-        assert($this->partition >= 0, 'Precondition [partition >= 0] failed');
-
         return $this->partition;
     }
 
@@ -163,7 +160,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return \array_merge(parent::toArray(), [
             'topic' => $this->topic,
             'metadata' => $this->metadata,
-            'offset' => $this->offset->value,
+            'offset' => $this->offset,
             'partition' => $this->partition,
         ]);
     }

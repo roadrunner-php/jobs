@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\GroupOptions;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
 
-final class GroupOptionsTest extends TestCase
+final class ConsumerGroupOptionsTest extends TestCase
 {
     public function testJsonSerialize(): void
     {
-        $options = new GroupOptions('my-group', true);
+        $options = new ConsumerGroupOptions('my-group', true);
 
         $expected = [
             'group_id' => 'my-group',
@@ -23,14 +23,14 @@ final class GroupOptionsTest extends TestCase
 
     public function testDefaultBlockRebalanceOnPoll(): void
     {
-        $options = new GroupOptions('my-group');
+        $options = new ConsumerGroupOptions('my-group');
 
         $this->assertFalse($options->blockRebalanceOnPoll);
     }
 
     public function testNullableGroupId(): void
     {
-        $options = new GroupOptions();
+        $options = new ConsumerGroupOptions();
 
         $this->assertNull($options->groupId);
     }

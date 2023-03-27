@@ -13,11 +13,11 @@ final class ConsumePartitionTest extends TestCase
 {
     public function testConstructor(): void
     {
-        $topic = 'my-topic';
-        $partition = 1;
-        $offset = new ConsumerOffset(OffsetType::AtStart, 123);
-
-        $consumePartition = new ConsumePartition($topic, $partition, $offset);
+        $consumePartition = new ConsumePartition(
+            $topic = 'my-topic',
+            $partition = 1,
+            $offset = new ConsumerOffset(OffsetType::AtStart, 123)
+        );
 
         $this->assertInstanceOf(ConsumePartition::class, $consumePartition);
         $this->assertSame($topic, $consumePartition->topic);
@@ -25,15 +25,15 @@ final class ConsumePartitionTest extends TestCase
         $this->assertSame($offset, $consumePartition->offset);
     }
 
-    public function testConstructorWithoutOffset(): void
+    public function testSerialization(): void
     {
-        $topic = 'my-topic';
-        $partition = 1;
-        $consumePartition = new ConsumePartition($topic, $partition);
+        $string = \json_encode(new ConsumePartition(
+            'my-topic', 1, new ConsumerOffset(OffsetType::AtStart, 123)
+        ));
 
-        $this->assertInstanceOf(ConsumePartition::class, $consumePartition);
-        $this->assertSame($topic, $consumePartition->topic);
-        $this->assertSame($partition, $consumePartition->partition);
-        $this->assertNull($consumePartition->offset);
+        $this->assertSame(
+            '{"topic":"my-topic","partition":1,"offset":{"type":"AtStart","value":123}}',
+            $string
+        );
     }
 }

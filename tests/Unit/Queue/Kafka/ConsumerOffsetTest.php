@@ -23,16 +23,9 @@ final class ConsumerOffsetTest extends TestCase
 
     public function testJsonSerialize(): void
     {
-        $type = OffsetType::AfterMilli;
-        $value = 456;
-
-        $consumerOffset = new ConsumerOffset($type, $value);
-
-        $expected = [
-            'type' => $type->value,
-            'value' => $value,
-        ];
-
-        $this->assertEquals($expected, $consumerOffset->jsonSerialize());
+        $this->assertEquals(
+            '{"type":"AfterMilli","value":456}',
+            \json_encode(new ConsumerOffset(OffsetType::AfterMilli, 456)),
+        );
     }
 }

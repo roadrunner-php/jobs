@@ -33,16 +33,26 @@ final class ConsumerOptions implements \JsonSerializable
      * while fetching, to restart consuming from.
      */
     public function __construct(
-        public readonly array $topics,
+        public readonly array $topics = [],
         public readonly bool $consumeRegexp = self::CONSUMER_REGEXP_DEFAULT_VALUE,
         public readonly int $maxFetchMessageSize = self::CONSUMER_MAX_FETCH_MESSAGE_SIZE_DEFAULT_VALUE,
         public readonly int $minFetchMessageSize = self::CONSUMER_MIN_FETCH_MESSAGE_SIZE_DEFAULT_VALUE,
         public readonly array $consumePartitions = [],
         public readonly ConsumerOffset $consumerOffset = new ConsumerOffset(OffsetType::AtStart, 1),
     ) {
+        // A developer must specify either topics or consumePartitions or both.
+        if ($this->topics === []) {
+            \assert($this->consumePartitions !== [], 'Precondition [consumePartitions !== []] failed');
+        } elseif ($this->consumePartitions === []) {
+            \assert($this->topics !== [], 'Precondition [topics !== []] failed');
+        }
+
+        \assert($this->maxFetchMessageSize > 0, 'Precondition [maxFetchMessageSize > 0] failed');
+        \assert($this->minFetchMessageSize > 0, 'Precondition [minFetchMessageSize > 0] failed');
     }
 
-    public function jsonSerialize(): array
+    public
+    function jsonSerialize(): array
     {
         $data = [
             'topics' => $this->topics,

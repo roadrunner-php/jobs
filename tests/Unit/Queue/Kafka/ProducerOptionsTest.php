@@ -19,9 +19,9 @@ final class ProducerOptionsTest extends TestCase
         $this->assertFalse($options->disableIdempotent);
         $this->assertSame(Acks::AllISRAck, $options->requiredAcks);
         $this->assertSame(1000012, $options->maxMessageBytes);
-        $this->assertEquals(new DateInterval('PT10S'), $options->requestTimeout);
-        $this->assertEquals(new DateInterval('PT100S'), $options->deliveryTimeout);
-        $this->assertEquals(new DateInterval('PT40S'), $options->transactionTimeout);
+        $this->assertNull($options->requestTimeout);
+        $this->assertNull($options->deliveryTimeout);
+        $this->assertNull($options->transactionTimeout);
         $this->assertNull($options->compressionCodec);
     }
 
@@ -58,16 +58,20 @@ final class ProducerOptionsTest extends TestCase
             CompressionCodec::Gzip
         );
 
-        $expected = [
-            'disable_idempotent' => true,
-            'required_acks' => 'AllISRAck',
-            'max_message_bytes' => 100,
-            'request_timeout' => '5s',
-            'delivery_timeout' => '50s',
-            'transaction_timeout' => '20s',
-            'compression_codec' => 'gzip',
-        ];
-
-        $this->assertSame($expected, $options->jsonSerialize());
+        $this->assertSame(
+            <<<'JSON'
+{
+    "disable_idempotent": true,
+    "max_message_bytes": 100,
+    "request_timeout": "5s",
+    "delivery_timeout": "50s",
+    "transaction_timeout": "20s",
+    "required_acks": "AllISRAck",
+    "compression_codec": "gzip"
+}
+JSON
+            ,
+            \json_encode($options, JSON_PRETTY_PRINT),
+        );
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Queue;
 
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\GroupOptions;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\SASL;
 
@@ -23,10 +23,10 @@ final class KafkaCreateInfo extends CreateInfo
      * @param non-empty-string[] $brokers Kafka brokers. If there is no port specified, 9092 will be used as default
      * @param positive-int $priority Queue default priority
      * @param bool $autoCreateTopics Auto create topic for the consumer/producer
-     * @param ProducerOptions|null $producerOptions Kafka producer options
+     * @param ProducerOptions|null $producerOptions Kafka producer options.
      * @param ConsumerOptions|null $consumerOptions Kafka Consumer options. Needed to consume messages from the Kafka
      * cluster.
-     * @param GroupOptions|null $groupOptions sets the consumer group for the client to join and consume in. This
+     * @param ConsumerGroupOptions|null $groupOptions sets the consumer group for the client to join and consume in. This
      * option is required if using any other group options.
      */
     public function __construct(
@@ -37,9 +37,11 @@ final class KafkaCreateInfo extends CreateInfo
         public readonly bool $autoCreateTopics = self::AUTO_CREATE_TOPICS_ENABLE_VALUE,
         public readonly ?ProducerOptions $producerOptions = null,
         public readonly ?ConsumerOptions $consumerOptions = null,
-        public readonly ?GroupOptions $groupOptions = null,
+        public readonly ?ConsumerGroupOptions $groupOptions = null,
     ) {
         parent::__construct(Driver::Kafka, $name, $priority);
+
+        \assert($this->brokers !== [], 'Precondition [brokers !== []] failed');
     }
 
     public function toArray(): array

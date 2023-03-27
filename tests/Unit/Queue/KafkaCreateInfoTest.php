@@ -9,7 +9,7 @@ use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\GroupOptions;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
@@ -47,7 +47,7 @@ final class KafkaCreateInfoTest extends TestCase
             new ConsumePartition('topic1', 100, new ConsumerOffset(OffsetType::AtEnd, 3)),
             new ConsumePartition('topic2', 200, new ConsumerOffset(OffsetType::Relative, 5)),
         ]);
-        $groupOptions = new GroupOptions('group');
+        $groupOptions = new ConsumerGroupOptions('group');
 
         $createInfo = new KafkaCreateInfo(
             'test',
@@ -60,56 +60,63 @@ final class KafkaCreateInfoTest extends TestCase
             $groupOptions
         );
 
-        $expected = [
-            'name' => 'test',
-            'driver' => 'kafka',
-            'priority' => 1,
-            'brokers' => ['127.0.0.1:9092', 'localhost:9092'],
-            'auto_create_topics_enable' => true,
-            'sasl' => [
-                'mechanism' => 'plain',
-                'username' => 'user',
-                'password' => 'password',
-            ],
-            'producer_options' => [
-                'disable_idempotent' => false,
-                'required_acks' => 'AllISRAck',
-                'max_message_bytes' => 1000012,
-                'request_timeout' => '10s',
-                'delivery_timeout' => '100s',
-                'transaction_timeout' => '40s',
-            ],
-            'consumer_options' => [
-                'topics' => ['topic1', 'topic2'],
-                'consume_regexp' => false,
-                'max_fetch_message_size' => 50000,
-                'min_fetch_message_size' => 1,
-                'consumer_offset' => [
-                    'type' => 'AtStart',
-                    'value' => 1,
-                ],
-                'consume_partitions' => [
-                    'topic1' => [
-                        100 => [
-                            'type' => 'AtEnd',
-                            'value' => 3,
-                        ],
-                    ],
-                    'topic2' => [
-                        200 => [
-                            'type' => 'Relative',
-                            'value' => 5,
-                        ],
-                    ],
-                ],
-            ],
-            'group_options' => [
-                'group_id' => 'group',
-                'block_rebalance_on_poll' => false,
-            ],
-        ];
-
-        $this->assertSame(\json_encode($expected), \json_encode($createInfo));
+        $this->assertSame(
+            <<<'JSON'
+{
+    "name": "test",
+    "driver": "kafka",
+    "priority": 1,
+    "brokers": [
+        "127.0.0.1:9092",
+        "localhost:9092"
+    ],
+    "auto_create_topics_enable": true,
+    "sasl": {
+        "mechanism": "plain",
+        "username": "user",
+        "password": "password"
+    },
+    "producer_options": {
+        "disable_idempotent": false,
+        "max_message_bytes": 1000012,
+        "required_acks": "AllISRAck"
+    },
+    "consumer_options": {
+        "topics": [
+            "topic1",
+            "topic2"
+        ],
+        "consume_regexp": false,
+        "max_fetch_message_size": 50000,
+        "min_fetch_message_size": 1,
+        "consumer_offset": {
+            "type": "AtStart",
+            "value": 1
+        },
+        "consume_partitions": {
+            "topic1": {
+                "100": {
+                    "type": "AtEnd",
+                    "value": 3
+                }
+            },
+            "topic2": {
+                "200": {
+                    "type": "Relative",
+                    "value": 5
+                }
+            }
+        }
+    },
+    "group_options": {
+        "group_id": "group",
+        "block_rebalance_on_poll": false
+    }
+}
+JSON
+            ,
+            \json_encode($createInfo, JSON_PRETTY_PRINT),
+        );
 
         var_dump(\json_encode($createInfo->toArray(), JSON_PRETTY_PRINT));
     }

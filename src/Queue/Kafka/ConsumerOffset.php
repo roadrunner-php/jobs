@@ -6,17 +6,25 @@ namespace Spiral\RoadRunner\Jobs\Queue\Kafka;
 
 class ConsumerOffset implements \JsonSerializable
 {
+    /**
+     * @param int<0,max>|null $value
+     */
     public function __construct(
         public readonly OffsetType $type,
-        public readonly int $value,
+        public readonly ?int $value = null,
     ) {
     }
 
     public function jsonSerialize(): array
     {
-        return [
+        $data = [
             'type' => $this->type->value,
-            'value' => $this->value,
         ];
+
+        if ($this->value !== null) {
+            $data['value'] = $this->value;
+        }
+
+        return $data;
     }
 }

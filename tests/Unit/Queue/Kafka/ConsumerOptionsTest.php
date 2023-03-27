@@ -86,37 +86,57 @@ final class ConsumerOptionsTest extends TestCase
             $consumerOffset
         );
 
-        $expected = [
-            'topics' => $topics,
-            'consume_regexp' => $consumeRegexp,
-            'max_fetch_message_size' => $maxFetchMessageSize,
-            'min_fetch_message_size' => $minFetchMessageSize,
-            'consumer_offset' => $consumerOffset,
-            'consume_partitions' => [
-                'my-topic' => [
-                    1 => $consumePartitions[0]->offset,
-                    2 => $consumePartitions[1]->offset,
-                ],
-            ],
-        ];
-
-        $this->assertEquals($expected, $consumerOptions->jsonSerialize());
+        $this->assertEquals(
+            <<<'JOSN'
+{
+    "topics": [
+        "my-topic"
+    ],
+    "consume_regexp": true,
+    "max_fetch_message_size": 100000,
+    "min_fetch_message_size": 10,
+    "consumer_offset": {
+        "type": "AtEnd",
+        "value": 1
+    },
+    "consume_partitions": {
+        "my-topic": {
+            "1": {
+                "type": "AtStart",
+                "value": 0
+            },
+            "2": {
+                "type": "AtEnd",
+                "value": 0
+            }
+        }
+    }
+}
+JOSN
+            ,
+            \json_encode($consumerOptions, JSON_PRETTY_PRINT),
+        );
     }
 
     public function testJsonSerializeWithoutConsumePartitions(): void
     {
-        $topics = ['my-topic'];
-
-        $consumerOptions = new ConsumerOptions($topics);
-
-        $expected = [
-            'topics' => $topics,
-            'consume_regexp' => ConsumerOptions::CONSUMER_REGEXP_DEFAULT_VALUE,
-            'max_fetch_message_size' => ConsumerOptions::CONSUMER_MAX_FETCH_MESSAGE_SIZE_DEFAULT_VALUE,
-            'min_fetch_message_size' => ConsumerOptions::CONSUMER_MIN_FETCH_MESSAGE_SIZE_DEFAULT_VALUE,
-            'consumer_offset' => $consumerOptions->consumerOffset,
-        ];
-
-        $this->assertEquals($expected, $consumerOptions->jsonSerialize());
+        $this->assertEquals(
+            <<<'JOSN'
+{
+    "topics": [
+        "my-topic"
+    ],
+    "consume_regexp": false,
+    "max_fetch_message_size": 50000,
+    "min_fetch_message_size": 1,
+    "consumer_offset": {
+        "type": "AtStart",
+        "value": 1
+    }
+}
+JOSN
+            ,
+            \json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT),
+        );
     }
 }
