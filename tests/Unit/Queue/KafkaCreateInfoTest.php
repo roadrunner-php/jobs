@@ -21,8 +21,6 @@ final class KafkaCreateInfoTest extends TestCase
     {
         $createInfo = new KafkaCreateInfo('test');
 
-        $this->assertSame(['127.0.0.1:9092'], $createInfo->brokers);
-        $this->assertNull($createInfo->sasl);
         $this->assertFalse($createInfo->autoCreateTopicsEnable);
         $this->assertNull($createInfo->producerOptions);
         $this->assertNull($createInfo->consumerOptions);
@@ -34,14 +32,12 @@ final class KafkaCreateInfoTest extends TestCase
             'name' => 'test',
             'driver' => 'kafka',
             'priority' => 10,
-            'brokers' => ['127.0.0.1:9092'],
             'auto_create_topics_enable' => false,
         ], $createInfo->toArray());
     }
 
     public function testCustomValues(): void
     {
-        $sasl = SASL::basic('user', 'password');
         $producerOptions = new ProducerOptions();
         $consumerOptions = new ConsumerOptions(['topic1', 'topic2'], consumePartitions: [
             new ConsumePartition('topic1', 100, new ConsumerOffset(OffsetType::AtEnd, 3)),
@@ -51,8 +47,6 @@ final class KafkaCreateInfoTest extends TestCase
 
         $createInfo = new KafkaCreateInfo(
             'test',
-            ['127.0.0.1:9092', 'localhost:9092'],
-            $sasl,
             1,
             true,
             $producerOptions,
@@ -66,16 +60,7 @@ final class KafkaCreateInfoTest extends TestCase
     "name": "test",
     "driver": "kafka",
     "priority": 1,
-    "brokers": [
-        "127.0.0.1:9092",
-        "localhost:9092"
-    ],
     "auto_create_topics_enable": true,
-    "sasl": {
-        "mechanism": "plain",
-        "username": "user",
-        "password": "password"
-    },
     "producer_options": {
         "disable_idempotent": false,
         "max_message_bytes": 1000012,
