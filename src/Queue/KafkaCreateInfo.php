@@ -14,7 +14,7 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\SASL;
  */
 final class KafkaCreateInfo extends CreateInfo
 {
-    public const AUTO_CREATE_TOPICS_ENABLE_VALUE = false;
+    public const AUTO_CREATE_TOPICS_ENABLE_DEFAULT_VALUE = false;
 
     /**
      * @param non-empty-string $name
@@ -22,7 +22,7 @@ final class KafkaCreateInfo extends CreateInfo
      * or aws_msk_plain sections might be removed.
      * @param non-empty-string[] $brokers Kafka brokers. If there is no port specified, 9092 will be used as default
      * @param positive-int $priority Queue default priority
-     * @param bool $autoCreateTopics Auto create topic for the consumer/producer
+     * @param bool $autoCreateTopicsEnable Auto create topic for the consumer/producer
      * @param ProducerOptions|null $producerOptions Kafka producer options.
      * @param ConsumerOptions|null $consumerOptions Kafka Consumer options. Needed to consume messages from the Kafka
      * cluster.
@@ -34,7 +34,7 @@ final class KafkaCreateInfo extends CreateInfo
         public readonly array $brokers = ['127.0.0.1:9092'],
         public readonly ?SASL $sasl = null,
         int $priority = self::PRIORITY_DEFAULT_VALUE,
-        public readonly bool $autoCreateTopics = self::AUTO_CREATE_TOPICS_ENABLE_VALUE,
+        public readonly bool $autoCreateTopicsEnable = self::AUTO_CREATE_TOPICS_ENABLE_DEFAULT_VALUE,
         public readonly ?ProducerOptions $producerOptions = null,
         public readonly ?ConsumerOptions $consumerOptions = null,
         public readonly ?ConsumerGroupOptions $groupOptions = null,
@@ -48,7 +48,7 @@ final class KafkaCreateInfo extends CreateInfo
     {
         $info = [
             'brokers' => $this->brokers,
-            'auto_create_topics_enable' => $this->autoCreateTopics,
+            'auto_create_topics_enable' => $this->autoCreateTopicsEnable,
         ];
 
         if ($this->sasl !== null) {

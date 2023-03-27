@@ -13,6 +13,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
      * @param int<0, max> $delay
      * @param int<0, max> $priority
      * @param int<0, max> $offset
+     * @param int<0, max> $partition
      */
     public function __construct(
         public string $topic,

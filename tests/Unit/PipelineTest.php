@@ -43,7 +43,7 @@ final class PipelineTest extends TestCase
             'metadata' => ''
         ])];
 
-        yield [new KafkaOptions('some', 10, 5, true, 'other', -2, 7), new DTOOptions([
+        yield [new KafkaOptions('some', 10, 5, true, 'other', 1, 7), new DTOOptions([
             'priority' => 5,
             'pipeline' => '',
             'delay' => 10,

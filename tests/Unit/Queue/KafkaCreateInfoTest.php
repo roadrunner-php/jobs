@@ -23,7 +23,7 @@ final class KafkaCreateInfoTest extends TestCase
 
         $this->assertSame(['127.0.0.1:9092'], $createInfo->brokers);
         $this->assertNull($createInfo->sasl);
-        $this->assertFalse($createInfo->autoCreateTopics);
+        $this->assertFalse($createInfo->autoCreateTopicsEnable);
         $this->assertNull($createInfo->producerOptions);
         $this->assertNull($createInfo->consumerOptions);
         $this->assertNull($createInfo->groupOptions);
