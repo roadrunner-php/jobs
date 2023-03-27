@@ -6,11 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Queue;
 
 use Spiral\RoadRunner\Jobs\Queue\AMQP\ExchangeType;
 
-/**
- * The DTO to create the AMQP driver.
- *
- * @see ExchangeType
- */
 final class AMQPCreateInfo extends CreateInfo
 {
     public const PREFETCH_DEFAULT_VALUE = 100;
