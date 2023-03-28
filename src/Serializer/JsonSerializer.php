@@ -23,7 +23,7 @@ final class JsonSerializer implements SerializerInterface
         try {
             return \json_encode($payload, \JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
-            throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new SerializationException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -33,9 +33,9 @@ final class JsonSerializer implements SerializerInterface
     public function deserialize(string $payload): array
     {
         try {
-            return (array)\json_decode($payload, true, 512, \JSON_THROW_ON_ERROR);
+            return (array) \json_decode($payload, true, 512, \JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
-            throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new SerializationException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }

@@ -25,8 +25,10 @@ interface SerializerInterface
      * Serializes payload.
      *
      * @param array $payload
-     * @return string
+     *
      * @throws SerializationException
+     *
+     * @return string
      */
     public function serialize(array $payload): string;
 
@@ -34,8 +36,10 @@ interface SerializerInterface
      * Deserializes payload.
      *
      * @param string $payload
-     * @return array
+     *
      * @throws SerializationException
+     *
+     * @return array
      */
     public function deserialize(string $payload): array;
 }

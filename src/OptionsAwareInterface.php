@@ -21,6 +21,7 @@ interface OptionsAwareInterface
      * new {@see OptionsInterface} implementation.
      *
      * @param OptionsInterface $options
+     *
      * @return $this
      */
     public function withOptions(OptionsInterface $options): self;

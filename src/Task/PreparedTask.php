@@ -28,9 +28,9 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
     private OptionsInterface $options;
 
     /**
-     * @param non-empty-string $name
-     * @param array $payload
-     * @param OptionsInterface|null $options
+     * @param non-empty-string                       $name
+     * @param array                                  $payload
+     * @param OptionsInterface|null                  $options
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(string $name, array $payload, OptionsInterface $options = null, array $headers = [])
@@ -58,6 +58,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * {@inheritDoc}
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -74,6 +75,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * {@inheritDoc}
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -97,6 +99,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * {@inheritDoc}
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -125,6 +128,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * {@inheritDoc}
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */

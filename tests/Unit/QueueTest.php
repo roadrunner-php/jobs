@@ -21,7 +21,8 @@ class QueueTestCase extends TestCase
 {
     /**
      * @param array<string, string|callable> $mapping
-     * @param non-empty-string $name
+     * @param non-empty-string               $name
+     *
      * @return Queue
      */
     protected function queue(array $mapping = [], string $name = 'queue'): Queue
@@ -31,7 +32,7 @@ class QueueTestCase extends TestCase
 
     private function randomName(): string
     {
-        return 'generated-' . \bin2hex(\random_bytes(32));
+        return 'generated-'.\bin2hex(\random_bytes(32));
     }
 
     public function testName(): void
@@ -44,7 +45,7 @@ class QueueTestCase extends TestCase
     public function testTaskDispatch(): void
     {
         $actual = null;
-        $queue = $this->queue(['jobs.Push' => function(PushRequest $req) use (&$actual) {
+        $queue = $this->queue(['jobs.Push' => function (PushRequest $req) use (&$actual) {
             $job = $req->getJob();
             $actual = $job->getJob();
         }]);
@@ -59,7 +60,7 @@ class QueueTestCase extends TestCase
     public function testTaskDispatchUsingPushMethod(): void
     {
         $actual = null;
-        $queue = $this->queue(['jobs.Push' => function(PushRequest $req) use (&$actual) {
+        $queue = $this->queue(['jobs.Push' => function (PushRequest $req) use (&$actual) {
             $job = $req->getJob();
             $actual = $job->getJob();
         }]);
@@ -73,7 +74,7 @@ class QueueTestCase extends TestCase
     {
         $expect = $actual = [];
 
-        $queue = $this->queue(['jobs.PushBatch' => function(PushBatchRequest $req) use (&$actual) {
+        $queue = $this->queue(['jobs.PushBatch' => function (PushBatchRequest $req) use (&$actual) {
             foreach ($req->getJobs() as $job) {
                 $actual[] = $job->getJob();
             }
@@ -96,8 +97,7 @@ class QueueTestCase extends TestCase
         }];
 
         $this->queue($handler)
-            ->pause()
-        ;
+            ->pause();
 
         $this->assertTrue($paused);
     }
@@ -118,8 +118,7 @@ class QueueTestCase extends TestCase
         }];
 
         $this->queue($handler)
-            ->resume()
-        ;
+            ->resume();
 
         $this->assertTrue($resumed);
     }

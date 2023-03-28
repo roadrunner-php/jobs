@@ -21,7 +21,7 @@ class TaskCreationTestCase extends TestCase
 {
     public function testTaskCreation(): void
     {
-        $expected = 'task-name-' . \bin2hex(\random_bytes(32));
+        $expected = 'task-name-'.\bin2hex(\random_bytes(32));
 
         $task = $this->queue()
             ->create($expected);
@@ -31,7 +31,8 @@ class TaskCreationTestCase extends TestCase
 
     /**
      * @param array<string, string|callable> $mapping
-     * @param non-empty-string $name
+     * @param non-empty-string               $name
+     *
      * @return QueueInterface
      */
     protected function queue(array $mapping = [], string $name = 'queue', ?string $driver = null): QueueInterface
@@ -51,7 +52,7 @@ class TaskCreationTestCase extends TestCase
 
     public function testTaskCreationWithDefaultOptions(): void
     {
-        $expected = 'task-name-' . \bin2hex(\random_bytes(32));
+        $expected = 'task-name-'.\bin2hex(\random_bytes(32));
 
         $task = $this->queue()->create($expected);
 
@@ -63,7 +64,7 @@ class TaskCreationTestCase extends TestCase
 
     public function testTaskCreationWithOverriddenDefaultOptions(): void
     {
-        $expected = 'task-name-' . \bin2hex(\random_bytes(32));
+        $expected = 'task-name-'.\bin2hex(\random_bytes(32));
 
         $queue = $this->queue()->withDefaultOptions(new Options(10, 100, true));
 
@@ -77,7 +78,7 @@ class TaskCreationTestCase extends TestCase
 
     public function testTaskCreationWithOptions(): void
     {
-        $expected = 'task-name-' . \bin2hex(\random_bytes(32));
+        $expected = 'task-name-'.\bin2hex(\random_bytes(32));
 
         $task = $this->queue()->create($expected, [], new Options(10, 100, true));
 
@@ -89,7 +90,7 @@ class TaskCreationTestCase extends TestCase
 
     public function testTaskCreationPassedOptionsHighPriority(): void
     {
-        $expected = 'task-name-' . \bin2hex(\random_bytes(32));
+        $expected = 'task-name-'.\bin2hex(\random_bytes(32));
 
         $queue = $this->queue()->withDefaultOptions(new Options(10, 100, true));
 
@@ -103,7 +104,7 @@ class TaskCreationTestCase extends TestCase
 
     public function testTaskCreationOtherRealizationOptions(): void
     {
-        $expected = 'task-name-' . \bin2hex(\random_bytes(32));
+        $expected = 'task-name-'.\bin2hex(\random_bytes(32));
 
         $task = $this
             ->queue([], 'queue', Queue\Driver::KAFKA)

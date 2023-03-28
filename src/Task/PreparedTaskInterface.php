@@ -29,8 +29,10 @@ interface PreparedTaskInterface extends
      * See {@see getPayload()} to retrieve information about the current value.
      *
      * @psalm-mutation-free
-     * @param mixed $value Passed payload data
-     * @param array-key|null $name Optional payload data's name (key)
+     *
+     * @param mixed          $value Passed payload data
+     * @param array-key|null $name  Optional payload data's name (key)
+     *
      * @return static
      */
     public function withValue($value, $name = null): self;
@@ -45,7 +47,9 @@ interface PreparedTaskInterface extends
      * See {@see getPayload()} to retrieve information about the current value.
      *
      * @psalm-mutation-free
+     *
      * @param array-key $name
+     *
      * @return static
      */
     public function withoutValue($name): self;

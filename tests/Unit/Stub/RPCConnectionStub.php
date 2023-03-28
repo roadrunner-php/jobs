@@ -39,13 +39,14 @@ final class RPCConnectionStub implements RPCInterface
 
     public function withServicePrefix(string $service): RPCInterface
     {
-        throw new \LogicException(__METHOD__ . ' not implemented yet');
+        throw new \LogicException(__METHOD__.' not implemented yet');
     }
 
     public function withCodec(CodecInterface $codec): RPCInterface
     {
         $self = clone $this;
         $self->codec = $codec;
+
         return $self;
     }
 
@@ -70,6 +71,6 @@ final class RPCConnectionStub implements RPCInterface
             $result = $result->serializeToString();
         }
 
-        return $this->codec->decode((string)$result, $options);
+        return $this->codec->decode((string) $result, $options);
     }
 }

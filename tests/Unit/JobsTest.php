@@ -24,6 +24,7 @@ class JobsTestCase extends TestCase
 {
     /**
      * @param array<string, string|callable> $mapping
+     *
      * @return JobsInterface
      */
     protected function jobs(array $mapping = []): JobsInterface
@@ -47,7 +48,7 @@ class JobsTestCase extends TestCase
         $dto = new CreateInfo('bar', 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use($dto) {
+            'jobs.Declare' => function (DeclareRequest $request) use ($dto) {
                 $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
                 $this->assertSame($dto->getDriver(), $request->getPipeline()->offsetGet('driver'));
                 $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
@@ -64,7 +65,7 @@ class JobsTestCase extends TestCase
         $dto = new CreateInfo('bar', 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use($dto) {
+            'jobs.Declare' => function (DeclareRequest $request) use ($dto) {
                 $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
                 $this->assertSame($dto->getDriver(), $request->getPipeline()->offsetGet('driver'));
                 $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
@@ -84,13 +85,13 @@ class JobsTestCase extends TestCase
     {
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
-        $jobs = $this->jobs(['jobs.List' => function() use ($expected) {
+        $jobs = $this->jobs(['jobs.List' => function () use ($expected) {
             return new Pipelines(['pipelines' => $expected]);
         }]);
 
         // Execute "$jobs->getIterator()"
         $this->assertSame($expected, \array_map(
-            static fn(QueueInterface $queue) => $queue->getName(),
+            static fn (QueueInterface $queue) => $queue->getName(),
             \array_values(\iterator_to_array($jobs))
         ));
     }
@@ -112,7 +113,7 @@ class JobsTestCase extends TestCase
     {
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
-        $jobs = $this->jobs(['jobs.List' => function() use ($expected) {
+        $jobs = $this->jobs(['jobs.List' => function () use ($expected) {
             return new Pipelines(['pipelines' => $expected]);
         }]);
 
@@ -136,8 +137,10 @@ class JobsTestCase extends TestCase
     {
         $actual = [];
 
-        $jobs = $this->jobs(['jobs.Resume' => function(Pipelines $req) use (&$actual) {
-            foreach ($req->getPipelines() as $pipeline) $actual[] = $pipeline;
+        $jobs = $this->jobs(['jobs.Resume' => function (Pipelines $req) use (&$actual) {
+            foreach ($req->getPipelines() as $pipeline) {
+                $actual[] = $pipeline;
+            }
         }]);
 
         $jobs->resume(
@@ -170,8 +173,10 @@ class JobsTestCase extends TestCase
     {
         $actual = [];
 
-        $jobs = $this->jobs(['jobs.Pause' => function(Pipelines $req) use (&$actual) {
-            foreach ($req->getPipelines() as $pipeline) $actual[] = $pipeline;
+        $jobs = $this->jobs(['jobs.Pause' => function (Pipelines $req) use (&$actual) {
+            foreach ($req->getPipelines() as $pipeline) {
+                $actual[] = $pipeline;
+            }
         }]);
 
         $jobs->pause(
@@ -196,7 +201,6 @@ class JobsTestCase extends TestCase
             $jobs->connect('queue-2')
         );
     }
-
 
     public function testQueueConnection(): void
     {

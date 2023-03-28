@@ -13,6 +13,7 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 /**
  * @psalm-immutable
+ *
  * @psalm-allow-private-mutation
  */
 class QueuedTask extends Task implements QueuedTaskInterface
@@ -28,10 +29,10 @@ class QueuedTask extends Task implements QueuedTaskInterface
     protected string $queue;
 
     /**
-     * @param non-empty-string $id
-     * @param non-empty-string $queue
-     * @param non-empty-string $name
-     * @param array $payload
+     * @param non-empty-string                       $id
+     * @param non-empty-string                       $queue
+     * @param non-empty-string                       $name
+     * @param array                                  $payload
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(string $id, string $queue, string $name, array $payload = [], array $headers = [])

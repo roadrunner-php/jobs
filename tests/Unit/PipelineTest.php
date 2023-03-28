@@ -40,21 +40,21 @@ final class PipelineTest extends TestCase
         yield [new Options(5, 10), new DTOOptions([
             'priority' => 10,
             'pipeline' => '',
-            'delay' => 5,
+            'delay'    => 5,
             'auto_ack' => false,
-            'topic' => '',
-            'metadata' => ''
+            'topic'    => '',
+            'metadata' => '',
         ])];
 
         yield [new KafkaOptions('some', 10, 5, true, 'other', 5, 7), new DTOOptions([
-            'priority' => 5,
-            'pipeline' => '',
-            'delay' => 10,
-            'auto_ack' => true,
-            'topic' => 'some',
-            'metadata' => 'other',
-            'offset' => 5,
-            'partition' => 7
+            'priority'  => 5,
+            'pipeline'  => '',
+            'delay'     => 10,
+            'auto_ack'  => true,
+            'topic'     => 'some',
+            'metadata'  => 'other',
+            'offset'    => 5,
+            'partition' => 7,
         ])];
     }
 }

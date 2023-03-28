@@ -15,7 +15,7 @@ use Spiral\RoadRunner\WorkerInterface;
 final class ConsumerTest extends TestCase
 {
     private Consumer $consumer;
-    /** @var WorkerInterface|MockObject|WorkerInterface&MockObject $woker */
+    /** @var WorkerInterface|MockObject|WorkerInterface&MockObject */
     private WorkerInterface $woker;
 
     protected function setUp(): void
@@ -34,10 +34,10 @@ final class ConsumerTest extends TestCase
             new Payload(
                 \json_encode($payload = ['baz' => 'bar']),
                 \json_encode([
-                    'id' => 'job-id',
+                    'id'       => 'job-id',
                     'pipeline' => 'job-pipeline',
-                    'job' => 'job-name',
-                    'headers' => ['foo' => 'bar'],
+                    'job'      => 'job-name',
+                    'headers'  => ['foo' => 'bar'],
                 ])
             )
         );
@@ -56,10 +56,10 @@ final class ConsumerTest extends TestCase
             new Payload(
                 null,
                 \json_encode([
-                    'id' => 'job-id',
+                    'id'       => 'job-id',
                     'pipeline' => 'job-pipeline',
-                    'job' => 'job-name',
-                    'headers' => ['foo' => 'bar'],
+                    'job'      => 'job-name',
+                    'headers'  => ['foo' => 'bar'],
                 ])
             )
         );
@@ -87,10 +87,10 @@ final class ConsumerTest extends TestCase
             new Payload(
                 'foo=bar',
                 \json_encode([
-                    'id' => 'job-id',
+                    'id'       => 'job-id',
                     'pipeline' => 'job-pipeline',
-                    'job' => 'job-name',
-                    'headers' => ['foo' => 'bar'],
+                    'job'      => 'job-name',
+                    'headers'  => ['foo' => 'bar'],
                 ])
             )
         );

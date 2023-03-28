@@ -19,6 +19,7 @@ abstract class TestCase extends BaseTestCase
 {
     /**
      * @param array<string, string|callable> $mapping
+     *
      * @return RPCInterface
      */
     protected function rpc(array $mapping = []): RPCInterface

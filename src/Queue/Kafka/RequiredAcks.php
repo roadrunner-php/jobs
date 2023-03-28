@@ -15,6 +15,7 @@ interface RequiredAcks
      * Doesn't send any response.
      *
      * @var int
+     *
      * @psalm-var RequiredAcksEnum
      */
     public const TYPE_NO_RESPONSE = 0;
@@ -23,6 +24,7 @@ interface RequiredAcks
      * Waits for only the local commit to succeed before responding.
      *
      * @var int
+     *
      * @psalm-var RequiredAcksEnum
      */
     public const TYPE_WAIT_FOR_LOCAL = 1;
@@ -31,6 +33,7 @@ interface RequiredAcks
      * Waits for all in-sync replicas to commit before responding.
      *
      * @var int
+     *
      * @psalm-var RequiredAcksEnum
      */
     public const TYPE_WAIT_FOR_ALL = -1;

@@ -9,6 +9,7 @@ use Spiral\RoadRunner\WorkerInterface;
 
 /**
  * @psalm-import-type PartitionOffsetEnum from PartitionOffset
+ *
  * @psalm-suppress MutableDependency, MissingImmutableAnnotation
  */
 final class KafkaReceivedTask extends ReceivedTask
@@ -16,21 +17,21 @@ final class KafkaReceivedTask extends ReceivedTask
     /** @var non-empty-string */
     private string $topic;
 
-    /** @var positive-int|0 $partition */
+    /** @var positive-int|0 */
     private int $partition;
 
     /** @var PartitionOffsetEnum */
     private int $offset;
 
     /**
-     * @param WorkerInterface $worker
-     * @param non-empty-string $id
-     * @param non-empty-string $queue
-     * @param non-empty-string $job
-     * @param non-empty-string $topic
-     * @param positive-int|0 $partition
-     * @param PartitionOffsetEnum $offset
-     * @param array $payload
+     * @param WorkerInterface                        $worker
+     * @param non-empty-string                       $id
+     * @param non-empty-string                       $queue
+     * @param non-empty-string                       $job
+     * @param non-empty-string                       $topic
+     * @param positive-int|0                         $partition
+     * @param PartitionOffsetEnum                    $offset
+     * @param array                                  $payload
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(

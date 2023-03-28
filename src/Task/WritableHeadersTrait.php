@@ -13,7 +13,9 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 /**
  * @mixin WritableHeadersInterface
+ *
  * @psalm-require-implements WritableHeadersInterface
+ *
  * @psalm-immutable
  */
 trait WritableHeadersTrait
@@ -25,7 +27,9 @@ trait WritableHeadersTrait
      *
      * @psalm-param non-empty-string $name
      * @psalm-param non-empty-string|iterable<non-empty-string> $value
+     *
      * @psalm-return static
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -39,7 +43,7 @@ trait WritableHeadersTrait
         $self->headers[$name] = [];
 
         foreach ($value as $item) {
-            $self->headers[$name][] = (string)$item;
+            $self->headers[$name][] = (string) $item;
         }
 
         return $self;
@@ -50,7 +54,9 @@ trait WritableHeadersTrait
      *
      * @psalm-param non-empty-string $name
      * @psalm-param non-empty-string|iterable<non-empty-string> $value
+     *
      * @psalm-return static
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -75,7 +81,9 @@ trait WritableHeadersTrait
      * {@inheritDoc}
      *
      * @psalm-param non-empty-string $name
+     *
      * @psalm-return static
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -89,6 +97,7 @@ trait WritableHeadersTrait
 
         $self = clone $this;
         unset($self->headers[$name]);
+
         return $self;
     }
 }

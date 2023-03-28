@@ -32,6 +32,7 @@ use Spiral\RoadRunner\Jobs\Task\TaskInterface;
 
 /**
  * @internal Executor is an internal library class, please do not use it in your code.
+ *
  * @psalm-internal Spiral\RoadRunner\Jobs
  */
 final class Pipeline implements SerializerAwareInterface
@@ -52,8 +53,8 @@ final class Pipeline implements SerializerAwareInterface
     private QueueInterface $queue;
 
     /**
-     * @param QueueInterface $queue
-     * @param RPCInterface $rpc
+     * @param QueueInterface      $queue
+     * @param RPCInterface        $rpc
      * @param SerializerInterface $serializer
      */
     public function __construct(QueueInterface $queue, RPCInterface $rpc, SerializerInterface $serializer)
@@ -78,13 +79,16 @@ final class Pipeline implements SerializerAwareInterface
     {
         $self = clone $this;
         $self->serializer = $serializer;
+
         return $self;
     }
 
     /**
      * @param PreparedTaskInterface $task
-     * @return QueuedTaskInterface
+     *
      * @throws JobsException
+     *
+     * @return QueuedTaskInterface
      */
     public function send(PreparedTaskInterface $task): QueuedTaskInterface
     {
@@ -94,7 +98,7 @@ final class Pipeline implements SerializerAwareInterface
         } catch (JobsException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $this->createQueuedTask($job, $task);
@@ -102,8 +106,10 @@ final class Pipeline implements SerializerAwareInterface
 
     /**
      * @param array<PreparedTaskInterface> $tasks
-     * @return array<QueuedTaskInterface>
+     *
      * @throws JobsException
+     *
+     * @return array<QueuedTaskInterface>
      */
     public function sendMany(array $tasks): array
     {
@@ -116,12 +122,12 @@ final class Pipeline implements SerializerAwareInterface
             }
 
             $this->rpc->call('jobs.PushBatch', new PushBatchRequest([
-                'jobs' => $jobs
+                'jobs' => $jobs,
             ]));
         } catch (JobsException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -132,20 +138,22 @@ final class Pipeline implements SerializerAwareInterface
      */
     private function createTaskId(): string
     {
-        return (string)Uuid::uuid4();
+        return (string) Uuid::uuid4();
     }
 
     /**
-     * @param TaskInterface $task
+     * @param TaskInterface    $task
      * @param OptionsInterface $options
-     * @return Job
+     *
      * @throws SerializationException
+     *
+     * @return Job
      */
     private function taskToProto(TaskInterface $task, OptionsInterface $options): Job
     {
         return new Job([
-            'job' => $task->getName(),
-            'id' => $this->createTaskId(),
+            'job'     => $task->getName(),
+            'id'      => $this->createTaskId(),
             'payload' => $this->payloadToProtoData($task),
             'headers' => $this->headersToProtoData($task),
             'options' => $this->optionsToProto($options),
@@ -154,8 +162,10 @@ final class Pipeline implements SerializerAwareInterface
 
     /**
      * @param TaskInterface $task
-     * @return string
+     *
      * @throws SerializationException
+     *
+     * @return string
      */
     private function payloadToProtoData(TaskInterface $task): string
     {
@@ -164,6 +174,7 @@ final class Pipeline implements SerializerAwareInterface
 
     /**
      * @param TaskInterface $task
+     *
      * @return array<string, HeaderValue>
      */
     private function headersToProtoData(TaskInterface $task): array
@@ -185,6 +196,7 @@ final class Pipeline implements SerializerAwareInterface
 
     /**
      * @param OptionsInterface $options
+     *
      * @return OptionsMessage
      */
     private function optionsToProto(OptionsInterface $options): OptionsMessage
@@ -199,7 +211,7 @@ final class Pipeline implements SerializerAwareInterface
         } else {
             $data = [
                 'priority' => $options->getPriority(),
-                'delay' => $options->getDelay(),
+                'delay'    => $options->getDelay(),
                 'auto_ack' => $options->getAutoAck(),
             ];
         }
@@ -210,9 +222,11 @@ final class Pipeline implements SerializerAwareInterface
     }
 
     /**
-     * @param Job $job
+     * @param Job           $job
      * @param TaskInterface $task
+     *
      * @return QueuedTask
+     *
      * @psalm-suppress ArgumentTypeCoercion Protobuf Job ID can not be empty
      */
     private function createQueuedTask(Job $job, TaskInterface $task): QueuedTask

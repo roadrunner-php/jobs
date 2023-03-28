@@ -33,11 +33,15 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @param non-empty-string $topic
+     *
      * @psalm-param 0|positive-int $delay
      * @psalm-param 0|positive-int $priority
-     * @param bool $autoAck
+     *
+     * @param bool   $autoAck
      * @param string $metadata
+     *
      * @psalm-param PartitionOffsetEnum $offset
+     *
      * @param int $partition
      */
     public function __construct(
@@ -105,7 +109,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
+     *
      * @param non-empty-string $topic
+     *
      * @return $this
      */
     public function withTopic(string $topic): self
@@ -127,7 +133,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
+     *
      * @param string $metadata
+     *
      * @return $this
      */
     public function withMetadata(string $metadata): self
@@ -145,7 +153,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
+     *
      * @param PartitionOffsetEnum $offset
+     *
      * @return $this
      */
     public function withOffset(int $offset): self
@@ -163,7 +173,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
 
     /**
      * @psalm-immutable
+     *
      * @param positive-int|0 $offset
+     *
      * @return $this
      */
     public function withPartition(int $partition): self
@@ -186,9 +198,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'topic' => $this->topic,
-            'metadata' => $this->metadata,
-            'offset' => $this->offset,
+            'topic'     => $this->topic,
+            'metadata'  => $this->metadata,
+            'offset'    => $this->offset,
             'partition' => $this->partition,
         ]);
     }

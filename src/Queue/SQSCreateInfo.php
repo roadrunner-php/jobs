@@ -11,12 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
 
-use JetBrains\PhpStorm\ArrayShape;
-
 /**
  * The DTO to create the SQS driver.
  *
  * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
+ *
  * @psalm-type SQSAttributesMap = array {
  *      DelaySeconds?: positive-int|0,
  *      MaximumMessageSize?: positive-int|0,
@@ -98,13 +97,13 @@ final class SQSCreateInfo extends CreateInfo
     public array $tags = self::TAGS_DEFAULT_VALUE;
 
     /**
-     * @param non-empty-string $name
-     * @param positive-int $priority
-     * @param positive-int $prefetch
-     * @param positive-int|0 $visibilityTimeout
-     * @param positive-int|0 $waitTimeSeconds
-     * @param non-empty-string $queue
-     * @param array|SQSAttributesMap $attributes
+     * @param non-empty-string                          $name
+     * @param positive-int                              $priority
+     * @param positive-int                              $prefetch
+     * @param positive-int|0                            $visibilityTimeout
+     * @param positive-int|0                            $waitTimeSeconds
+     * @param non-empty-string                          $queue
+     * @param array|SQSAttributesMap                    $attributes
      * @param array<non-empty-string, non-empty-string> $tags
      */
     public function __construct(

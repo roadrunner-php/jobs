@@ -16,6 +16,7 @@ interface PartitionOffset
      * that will be produced to the partition.
      *
      * @var int
+     *
      * @psalm-var PartitionOffsetEnum
      */
     public const OFFSET_NEWEST = -1;
@@ -24,6 +25,7 @@ interface PartitionOffset
      * Stands for the oldest offset available on the broker for a partition.
      *
      * @var int
+     *
      * @psalm-var PartitionOffsetEnum
      */
     public const OFFSET_OLDEST = -2;

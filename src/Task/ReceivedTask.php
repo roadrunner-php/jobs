@@ -44,11 +44,11 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     private int $delay = 0;
 
     /**
-     * @param WorkerInterface $worker
-     * @param non-empty-string $id
-     * @param non-empty-string $queue
-     * @param non-empty-string $job
-     * @param array $payload
+     * @param WorkerInterface                        $worker
+     * @param non-empty-string                       $id
+     * @param non-empty-string                       $queue
+     * @param non-empty-string                       $job
+     * @param array                                  $payload
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
@@ -73,10 +73,12 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     }
 
     /**
-     * @param TypeEnum $type
+     * @param TypeEnum              $type
      * @param SuccessData|ErrorData $data
-     * @return void
+     *
      * @throws JobsException
+     *
+     * @return void
      */
     private function respond(int $type, array $data = []): void
     {
@@ -86,9 +88,9 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 
                 $this->worker->respond(new Payload($body));
             } catch (\JsonException $e) {
-                throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
+                throw new SerializationException($e->getMessage(), (int) $e->getCode(), $e);
             } catch (\Throwable $e) {
-                throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+                throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             $this->completed = $type;
@@ -110,7 +112,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         );
 
         $data = [
-            'message'       => (string)$error,
+            'message'       => (string) $error,
             'requeue'       => $requeue,
             'delay_seconds' => $this->delay,
         ];
@@ -148,6 +150,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 
     /**
      * {@inheritDoc}
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */

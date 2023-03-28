@@ -18,6 +18,7 @@ use Spiral\RoadRunner\WorkerInterface;
 
 /**
  * @psalm-import-type PartitionOffsetEnum from PartitionOffset
+ *
  * @psalm-type HeaderPayload = array {
  *    id:         non-empty-string,
  *    job:        non-empty-string,
@@ -44,6 +45,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
     /**
      * @throws SerializationException
      * @throws ReceivedTaskException
+     *
      * @psalm-suppress ArgumentTypeCoercion
      */
     public function create(Payload $payload): ReceivedTaskInterface
@@ -58,10 +60,10 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
                     $header['pipeline'],
                     $header['job'],
                     $header['topic'],
-                    (int)$header['partition'],
-                    (int)$header['offset'],
+                    (int) $header['partition'],
+                    (int) $header['offset'],
                     $this->getPayload($payload),
-                    (array)$header['headers']
+                    (array) $header['headers']
                 );
             default:
                 return new ReceivedTask(
@@ -70,15 +72,17 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
                     $header['pipeline'],
                     $header['job'],
                     $this->getPayload($payload),
-                    (array)$header['headers']
+                    (array) $header['headers']
                 );
         }
     }
 
     /**
      * @param Payload $payload
-     * @return array
+     *
      * @throws SerializationException
+     *
+     * @return array
      */
     private function getPayload(Payload $payload): array
     {
@@ -93,9 +97,11 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
      * @psalm-suppress MixedReturnTypeCoercion
      *
      * @param Payload $payload
-     * @return HeaderPayload
+     *
      * @throws SerializationException
      * @throws ReceivedTaskException
+     *
+     * @return HeaderPayload
      */
     private function getHeader(Payload $payload): array
     {
@@ -104,7 +110,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface, Seriali
         }
 
         try {
-            return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
+            return (array) \json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             throw new SerializationException($e->getMessage(), $e->getCode(), $e);
         }

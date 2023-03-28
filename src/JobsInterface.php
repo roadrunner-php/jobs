@@ -26,6 +26,7 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      * need to pass the name of a specific queue.
      *
      * @param non-empty-string $queue
+     *
      * @return QueueInterface
      */
     public function connect(string $queue): QueueInterface;
@@ -35,8 +36,10 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      * information about the queue being created.
      *
      * @param CreateInfoInterface $info
-     * @return QueueInterface
+     *
      * @throws JobsException
+     *
+     * @return QueueInterface
      */
     public function create(CreateInfoInterface $info): QueueInterface;
 
@@ -46,6 +49,7 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      *
      * @param QueueInterface|non-empty-string $queue
      * @param QueueInterface|non-empty-string ...$queues
+     *
      * @throws JobsException
      */
     public function pause($queue, ...$queues): void;
@@ -56,6 +60,7 @@ interface JobsInterface extends \IteratorAggregate, \Countable
      *
      * @param QueueInterface|non-empty-string $queue
      * @param QueueInterface|non-empty-string ...$queues
+     *
      * @throws JobsException
      */
     public function resume($queue, ...$queues): void;

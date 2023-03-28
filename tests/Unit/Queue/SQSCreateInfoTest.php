@@ -23,14 +23,14 @@ final class SQSCreateInfoTest extends TestCase
         );
 
         $this->assertSame([
-            'name' => 'foo',
-            'driver' => 'sqs',
-            'priority' => 10,
-            'prefetch' => 10,
+            'name'               => 'foo',
+            'driver'             => 'sqs',
+            'priority'           => 10,
+            'prefetch'           => 10,
             'visibility_timeout' => 0,
-            'wait_time_seconds' => 0,
-            'queue' => 'default',
-            'tags' => ['foo' => 'bar']
+            'wait_time_seconds'  => 0,
+            'queue'              => 'default',
+            'tags'               => ['foo' => 'bar'],
         ], $info->toArray());
     }
 
@@ -47,14 +47,14 @@ final class SQSCreateInfoTest extends TestCase
         );
 
         $this->assertSame([
-            'name' => 'foo',
-            'driver' => 'sqs',
-            'priority' => 10,
-            'prefetch' => 10,
+            'name'               => 'foo',
+            'driver'             => 'sqs',
+            'priority'           => 10,
+            'prefetch'           => 10,
             'visibility_timeout' => 0,
-            'wait_time_seconds' => 0,
-            'queue' => 'default',
-            'attributes' => ['foo' => 'bar']
+            'wait_time_seconds'  => 0,
+            'queue'              => 'default',
+            'attributes'         => ['foo' => 'bar'],
         ], $info->toArray());
     }
 
@@ -72,15 +72,15 @@ final class SQSCreateInfoTest extends TestCase
         );
 
         $this->assertSame([
-            'name' => 'foo',
-            'driver' => 'sqs',
-            'priority' => 10,
-            'prefetch' => 10,
+            'name'               => 'foo',
+            'driver'             => 'sqs',
+            'priority'           => 10,
+            'prefetch'           => 10,
             'visibility_timeout' => 0,
-            'wait_time_seconds' => 0,
-            'queue' => 'default',
-            'attributes' => ['foo' => 'bar'],
-            'tags' => ['baz' => 'some']
+            'wait_time_seconds'  => 0,
+            'queue'              => 'default',
+            'attributes'         => ['foo' => 'bar'],
+            'tags'               => ['baz' => 'some'],
         ], $info->toArray());
     }
 
@@ -89,13 +89,13 @@ final class SQSCreateInfoTest extends TestCase
         $info = new SQSCreateInfo('foo');
 
         $this->assertSame([
-            'name' => 'foo',
-            'driver' => 'sqs',
-            'priority' => 10,
-            'prefetch' => 10,
+            'name'               => 'foo',
+            'driver'             => 'sqs',
+            'priority'           => 10,
+            'prefetch'           => 10,
             'visibility_timeout' => 0,
-            'wait_time_seconds' => 0,
-            'queue' => 'default'
+            'wait_time_seconds'  => 0,
+            'queue'              => 'default',
         ], $info->toArray());
     }
 }

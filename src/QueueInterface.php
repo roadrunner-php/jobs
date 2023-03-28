@@ -42,6 +42,7 @@ interface QueueInterface
      * be changed.
      *
      * @param OptionsInterface|null $options
+     *
      * @return $this
      */
     public function withDefaultOptions(?OptionsInterface $options): self;
@@ -49,9 +50,10 @@ interface QueueInterface
     /**
      * Creates a new task to run on the specified queue.
      *
-     * @param non-empty-string $name
-     * @param array $payload
+     * @param non-empty-string      $name
+     * @param array                 $payload
      * @param OptionsInterface|null $options
+     *
      * @return PreparedTaskInterface
      */
     public function create(string $name, array $payload = [], OptionsInterface $options = null): PreparedTaskInterface;
@@ -60,17 +62,21 @@ interface QueueInterface
      * Sends a task to the queue.
      *
      * @param PreparedTaskInterface $task
-     * @return QueuedTaskInterface
+     *
      * @throws JobsException
+     *
+     * @return QueuedTaskInterface
      */
     public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface;
 
     /**
-     * Sends multiple tasks to the queue
+     * Sends multiple tasks to the queue.
      *
      * @param PreparedTaskInterface ...$tasks
-     * @return iterable<QueuedTaskInterface>
+     *
      * @throws JobsException
+     *
+     * @return iterable<QueuedTaskInterface>
      */
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable;
 
@@ -85,8 +91,9 @@ interface QueueInterface
     public function resume(): void;
 
     /**
-     * @return bool
      * @throws JobsException
+     *
+     * @return bool
      */
     public function isPaused(): bool;
 }

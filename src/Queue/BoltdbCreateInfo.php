@@ -40,8 +40,8 @@ final class BoltdbCreateInfo extends CreateInfo
 
     /**
      * @param non-empty-string $name
-     * @param positive-int $priority
-     * @param positive-int $prefetch
+     * @param positive-int     $priority
+     * @param positive-int     $prefetch
      */
     public function __construct(
         string $name,
@@ -65,7 +65,7 @@ final class BoltdbCreateInfo extends CreateInfo
     {
         return \array_merge(parent::toArray(), [
             'prefetch' => $this->prefetch,
-            'file' => $this->file,
+            'file'     => $this->file,
         ]);
     }
 }

@@ -20,6 +20,7 @@ interface Driver
      * In-memory builtin RoadRunner driver.
      *
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const MEMORY = 'memory';
@@ -32,24 +33,28 @@ interface Driver
      * @link http://qpid.apache.org/
      *
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const AMQP = 'amqp';
 
     /**
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const BEANSTALK = 'beanstalk';
 
     /**
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const BOLTDB = 'boltdb';
 
     /**
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const SQS = 'sqs';
@@ -58,18 +63,21 @@ interface Driver
      * @internal NOT Available: Reserved for future use.
      *
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const REDIS = 'redis';
 
     /**
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const NATS = 'nats';
 
     /**
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const KAFKA = 'kafka';
@@ -78,6 +86,7 @@ interface Driver
      * @internal NOT Available: Reserved for future use.
      *
      * @psalm-var DriverType
+     *
      * @var string
      */
     public const NSQ = 'nsq';

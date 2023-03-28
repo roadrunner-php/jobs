@@ -45,7 +45,7 @@ final class PreparedTaskTest extends TestCase
     public function optionsDataProvider(): \Traversable
     {
         yield [new Options(), null];
-        yield [(new Options())->withDelay(5),(new Options())->withDelay(5)];
+        yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];
         yield [new KafkaOptions('default'), new KafkaOptions('default')];
         yield [(new KafkaOptions('default'))->withDelay(10), (new KafkaOptions('default'))->withDelay(10)];
     }

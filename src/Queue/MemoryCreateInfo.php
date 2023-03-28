@@ -30,8 +30,8 @@ final class MemoryCreateInfo extends CreateInfo
 
     /**
      * @param non-empty-string $name
-     * @param positive-int $priority
-     * @param positive-int $prefetch
+     * @param positive-int     $priority
+     * @param positive-int     $prefetch
      */
     public function __construct(
         string $name,

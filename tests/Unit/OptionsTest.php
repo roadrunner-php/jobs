@@ -229,7 +229,7 @@ class OptionsTestCase extends TestCase
 
         $actual = $source->mergeOptional(
             $modified = new Options(
-            0xDEAD_BEEF * 2
+                0xDEAD_BEEF * 2
             )
         );
 

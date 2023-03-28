@@ -25,6 +25,7 @@ interface ExchangeType
      * key.
      *
      * @var string
+     *
      * @psalm-var ExchangeTypeEnum
      */
     public const TYPE_DIRECT = 'direct';
@@ -35,6 +36,7 @@ interface ExchangeType
      * using a template, like "user.*.messages".
      *
      * @var string
+     *
      * @psalm-var ExchangeTypeEnum
      */
     public const TYPE_TOPICS = 'topics';
@@ -45,6 +47,7 @@ interface ExchangeType
      * the message.
      *
      * @var string
+     *
      * @psalm-var ExchangeTypeEnum
      */
     public const TYPE_HEADERS = 'headers';
@@ -54,6 +57,7 @@ interface ExchangeType
      * in the task.
      *
      * @var string
+     *
      * @psalm-var ExchangeTypeEnum
      */
     public const TYPE_FANOUT = 'fanout';

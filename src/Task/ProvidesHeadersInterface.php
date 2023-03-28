@@ -41,6 +41,7 @@ interface ProvidesHeadersInterface
      * </code>
      *
      * @psalm-mutation-free
+     *
      * @return array<non-empty-string, array<string>>
      */
     public function getHeaders(): array;
@@ -49,7 +50,9 @@ interface ProvidesHeadersInterface
      * Checks if a header exists by the given name.
      *
      * @psalm-mutation-free
+     *
      * @param non-empty-string $name Header field name.
+     *
      * @return bool Returns {@see true} if any header names match the given
      *              header name by string comparison. Returns {@see false} if
      *              no matching header name is found in the message.
@@ -66,7 +69,9 @@ interface ProvidesHeadersInterface
      * empty array.
      *
      * @psalm-mutation-free
+     *
      * @param non-empty-string $name
+     *
      * @return array<string>
      */
     public function getHeader(string $name): array;
@@ -85,7 +90,9 @@ interface ProvidesHeadersInterface
      * an empty string.
      *
      * @psalm-mutation-free
+     *
      * @param non-empty-string $name
+     *
      * @return string
      */
     public function getHeaderLine(string $name): string;

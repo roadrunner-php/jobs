@@ -85,6 +85,7 @@ final class KafkaCreateInfo extends CreateInfo
 
     /**
      * @see https://kafka.apache.org/intro#intro_concepts_and_terms
+     *
      * @var non-empty-string
      */
     public string $topic;
@@ -98,6 +99,7 @@ final class KafkaCreateInfo extends CreateInfo
 
     /**
      * @see https://kafka.apache.org/28/documentation.html#producerconfigs_max.in.flight.requests.per.connection
+     *
      * @var positive-int
      */
     public int $maxOpenRequests = self::MAX_OPEN_REQUESTS_DEFAULT_VALUE;
@@ -114,18 +116,21 @@ final class KafkaCreateInfo extends CreateInfo
 
     /**
      * @see https://kafka.apache.org/documentation/#replication
+     *
      * @var positive-int
      */
     public int $replicationFactor = self::REPLICATION_FACTOR_DEFAULT_VALUE;
 
     /**
      * @see https://kafka.apache.org/documentation/#basic_ops_cluster_expansion
+     *
      * @var array<positive-int, array<positive-int>>|null
      */
     public ?array $replicaAssignment;
 
     /**
      * @see https://kafka.apache.org/documentation/#configuration
+     *
      * @var array<non-empty-string, mixed>|null
      */
     public ?array $configEntries;
@@ -171,23 +176,27 @@ final class KafkaCreateInfo extends CreateInfo
     public int $sessionTimeout = self::SESSION_TIMEOUT_DEFAULT_VALUE;
 
     /**
-     * @param non-empty-string $name
-     * @param non-empty-string $topic
-     * @param positive-int $priority
-     * @param string $groupId
+     * @param non-empty-string                                           $name
+     * @param non-empty-string                                           $topic
+     * @param positive-int                                               $priority
+     * @param string                                                     $groupId
      * @param array<positive-int, positive-int|PartitionOffsetEnum>|null $partitionsOffsets
-     * @param positive-int $maxOpenRequests
-     * @param non-empty-string $clientId
-     * @param non-empty-string $kafkaVersion
-     * @param positive-int $replicationFactor
-     * @param array<positive-int, array<positive-int>>|null $replicaAssignment
-     * @param array<non-empty-string, mixed>|null $configEntries
-     * @param positive-int $maxMessageBytes
+     * @param positive-int                                               $maxOpenRequests
+     * @param non-empty-string                                           $clientId
+     * @param non-empty-string                                           $kafkaVersion
+     * @param positive-int                                               $replicationFactor
+     * @param array<positive-int, array<positive-int>>|null              $replicaAssignment
+     * @param array<non-empty-string, mixed>|null                        $configEntries
+     * @param positive-int                                               $maxMessageBytes
+     *
      * @psalm-param RequiredAcksEnum $requiredAcks
+     *
      * @param positive-int $timeout
+     *
      * @psalm-param CompressionCodecEnum $compressionCodec
+     *
      * @param positive-int $compressionLevel
-     * @param bool $idempotent
+     * @param bool         $idempotent
      * @param positive-int $heartbeatInterval
      * @param positive-int $sessionTimeout
      */
@@ -250,20 +259,20 @@ final class KafkaCreateInfo extends CreateInfo
     public function toArray(): array
     {
         $info = [
-            'topic' => $this->topic,
-            'group_id' => $this->groupId,
-            'max_open_requests' => $this->maxOpenRequests,
-            'client_id' => $this->clientId,
-            'version' => $this->kafkaVersion,
+            'topic'              => $this->topic,
+            'group_id'           => $this->groupId,
+            'max_open_requests'  => $this->maxOpenRequests,
+            'client_id'          => $this->clientId,
+            'version'            => $this->kafkaVersion,
             'replication_factor' => $this->replicationFactor,
-            'max_message_bytes' => $this->maxMessageBytes,
-            'required_acks' => $this->requiredAcks,
-            'timeout' => $this->timeout,
-            'compression_codec' => $this->compressionCodec,
-            'compression_level' => $this->compressionLevel,
-            'idempotent' => $this->idempotent,
+            'max_message_bytes'  => $this->maxMessageBytes,
+            'required_acks'      => $this->requiredAcks,
+            'timeout'            => $this->timeout,
+            'compression_codec'  => $this->compressionCodec,
+            'compression_level'  => $this->compressionLevel,
+            'idempotent'         => $this->idempotent,
             'heartbeat_interval' => $this->heartbeatInterval,
-            'session_timeout' => $this->sessionTimeout,
+            'session_timeout'    => $this->sessionTimeout,
         ];
 
         if ($this->partitionsOffsets !== null) {

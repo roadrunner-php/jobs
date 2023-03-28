@@ -41,9 +41,9 @@ class CreateInfo implements CreateInfoInterface
     public int $priority = self::PRIORITY_DEFAULT_VALUE;
 
     /**
-     * @param DriverType $driver
+     * @param DriverType       $driver
      * @param non-empty-string $name
-     * @param positive-int $priority
+     * @param positive-int     $priority
      */
     public function __construct(string $driver, string $name, int $priority = self::PRIORITY_DEFAULT_VALUE)
     {
@@ -78,8 +78,8 @@ class CreateInfo implements CreateInfoInterface
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
-            'driver' => $this->driver,
+            'name'     => $this->name,
+            'driver'   => $this->driver,
             'priority' => $this->priority,
         ];
     }

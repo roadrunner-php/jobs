@@ -28,6 +28,7 @@ interface SerializerAwareInterface
      * new {@see SerializerInterface} implementation.
      *
      * @param SerializerInterface $serializer
+     *
      * @return $this
      */
     public function withSerializer(SerializerInterface $serializer): self;

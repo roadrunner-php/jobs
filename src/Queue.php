@@ -48,8 +48,8 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     private RPCInterface $rpc;
 
     /**
-     * @param non-empty-string $name
-     * @param RPCInterface|null $rpc
+     * @param non-empty-string         $name
+     * @param RPCInterface|null        $rpc
      * @param SerializerInterface|null $serializer
      */
     public function __construct(
@@ -61,8 +61,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
         assert($name !== '', 'Precondition [name !== ""] failed');
 
         $this->rpc = ($rpc ?? $this->createRPCConnection())
-            ->withCodec(new ProtobufCodec())
-        ;
+            ->withCodec(new ProtobufCodec());
 
         $this->pipeline = new Pipeline($this, $this->rpc, $serializer ?? new DefaultSerializer());
 
@@ -115,6 +114,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
 
     /**
      * {@inheritDoc}
+     *
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
@@ -150,11 +150,13 @@ final class Queue implements QueueInterface, SerializerAwareInterface
      *
      * This method exists for compatibility with version RoadRunner 1.x.
      *
-     * @param non-empty-string $name
-     * @param array $payload
+     * @param non-empty-string      $name
+     * @param array                 $payload
      * @param OptionsInterface|null $options
-     * @return QueuedTaskInterface
+     *
      * @throws JobsException
+     *
+     * @return QueuedTaskInterface
      */
     public function push(string $name, array $payload = [], OptionsInterface $options = null): QueuedTaskInterface
     {
@@ -189,7 +191,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
                 'pipelines' => [$this->getName()],
             ]));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -203,7 +205,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
                 'pipelines' => [$this->getName()],
             ]));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -214,7 +216,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
     {
         $stat = $this->getPipelineStat();
 
-        return $stat !== null && ! $stat->getReady();
+        return $stat !== null && !$stat->getReady();
     }
 
     private function createRPCConnection(): RPCInterface
@@ -230,7 +232,7 @@ final class Queue implements QueueInterface, SerializerAwareInterface
             /** @var Stats $stats */
             $stats = $this->rpc->call('jobs.Stat', '', Stats::class);
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         /** @var Stat $stat */

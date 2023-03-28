@@ -13,6 +13,7 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 /**
  * @psalm-immutable
+ *
  * @psalm-allow-private-mutation
  */
 abstract class Task implements TaskInterface
@@ -30,8 +31,8 @@ abstract class Task implements TaskInterface
     protected array $payload = [];
 
     /**
-     * @param non-empty-string $name
-     * @param array $payload
+     * @param non-empty-string                       $name
+     * @param array                                  $payload
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(string $name, array $payload = [], array $headers = [])

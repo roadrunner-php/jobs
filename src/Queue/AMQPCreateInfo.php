@@ -135,18 +135,18 @@ final class AMQPCreateInfo extends CreateInfo
 
     /**
      * @param non-empty-string $name
-     * @param positive-int $priority
-     * @param positive-int $prefetch
-     * @param non-empty-string $queue Queue name. Required for consumer.
+     * @param positive-int     $priority
+     * @param positive-int     $prefetch
+     * @param non-empty-string $queue           Queue name. Required for consumer.
      * @param non-empty-string $exchange
      * @param ExchangeTypeEnum $exchangeType
-     * @param string $routingKey Routing key. Required for publisher.
-     * @param bool $exclusive
-     * @param bool $multipleAck
-     * @param bool $requeueOnFail
-     * @param bool $durable
-     * @param bool $exchangeDurable
-     * @param bool $consumeAll
+     * @param string           $routingKey      Routing key. Required for publisher.
+     * @param bool             $exclusive
+     * @param bool             $multipleAck
+     * @param bool             $requeueOnFail
+     * @param bool             $durable
+     * @param bool             $exchangeDurable
+     * @param bool             $consumeAll
      */
     public function __construct(
         string $name,

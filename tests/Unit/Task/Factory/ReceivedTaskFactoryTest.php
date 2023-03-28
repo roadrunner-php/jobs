@@ -33,14 +33,14 @@ final class ReceivedTaskFactoryTest extends TestCase
         $factory = new ReceivedTaskFactory(new JsonSerializer(), $this->createMock(WorkerInterface::class));
 
         $task = $factory->create(new Payload(json_encode(['foo' => 'bar']), \json_encode([
-            'id' => 'job-id',
-            'pipeline' => 'job-pipeline',
-            'job' => 'job-name',
-            'topic' => 'job-topic',
+            'id'        => 'job-id',
+            'pipeline'  => 'job-pipeline',
+            'job'       => 'job-name',
+            'topic'     => 'job-topic',
             'partition' => 3,
-            'offset' => 5,
-            'headers' => ['foo' => 'bar'],
-            'driver' => Driver::KAFKA
+            'offset'    => 5,
+            'headers'   => ['foo' => 'bar'],
+            'driver'    => Driver::KAFKA,
         ])));
 
         $this->assertSame('job-topic', $task->getTopic());
@@ -58,8 +58,7 @@ final class ReceivedTaskFactoryTest extends TestCase
 
     public function withSerializer(): void
     {
-        $serializer = new class implements SerializerInterface
-        {
+        $serializer = new class() implements SerializerInterface {
             public function serialize(array $payload): string
             {
             }
@@ -79,29 +78,29 @@ final class ReceivedTaskFactoryTest extends TestCase
     {
         // without driver, for backward compatibility
         yield [new Payload(json_encode(['foo' => 'bar']), \json_encode([
-            'id' => 'job-id',
+            'id'       => 'job-id',
             'pipeline' => 'job-pipeline',
-            'job' => 'job-name',
-            'headers' => ['foo' => 'bar'],
+            'job'      => 'job-name',
+            'headers'  => ['foo' => 'bar'],
         ])), ReceivedTask::class];
 
         yield [new Payload(json_encode(['foo' => 'bar']), \json_encode([
-            'id' => 'job-id',
+            'id'       => 'job-id',
             'pipeline' => 'job-pipeline',
-            'job' => 'job-name',
-            'headers' => ['foo' => 'bar'],
-            'driver' => Driver::MEMORY
+            'job'      => 'job-name',
+            'headers'  => ['foo' => 'bar'],
+            'driver'   => Driver::MEMORY,
         ])), ReceivedTask::class];
 
         yield [new Payload(json_encode(['foo' => 'bar']), \json_encode([
-            'id' => 'job-id',
-            'pipeline' => 'job-pipeline',
-            'job' => 'job-name',
-            'topic' => 'foo',
+            'id'        => 'job-id',
+            'pipeline'  => 'job-pipeline',
+            'job'       => 'job-name',
+            'topic'     => 'foo',
             'partition' => 3,
-            'offset' => 5,
-            'headers' => ['foo' => 'bar'],
-            'driver' => Driver::KAFKA
+            'offset'    => 5,
+            'headers'   => ['foo' => 'bar'],
+            'driver'    => Driver::KAFKA,
         ])), KafkaReceivedTask::class];
     }
 }

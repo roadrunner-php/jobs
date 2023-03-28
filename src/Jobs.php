@@ -36,7 +36,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
     private SerializerInterface $serializer;
 
     /**
-     * @param RPCInterface|null $rpc
+     * @param RPCInterface|null        $rpc
      * @param SerializerInterface|null $serializer
      */
     public function __construct(RPCInterface $rpc = null, SerializerInterface $serializer = null)
@@ -59,14 +59,17 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
 
             return $this->connect($info->getName(), $options ?? OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
     /**
      * @param array<string, mixed> $map
-     * @return array<string, string>
+     *
      * @throws \Throwable
+     *
+     * @return array<string, string>
+     *
      * @psalm-suppress MixedAssignment
      */
     private function toStringOfStringMap(array $map): array
@@ -78,9 +81,9 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 case \is_int($value):
                 case \is_string($value):
                 case $value instanceof \Stringable:
-                // PHP 7.4 additional assertion
+                    // PHP 7.4 additional assertion
                 case \is_object($value) && \method_exists($value, '__toString'):
-                    $marshalled[$key] = (string)$value;
+                    $marshalled[$key] = (string) $value;
                     break;
 
                 case \is_bool($value):
@@ -88,7 +91,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                     break;
 
                 case \is_array($value):
-                    $marshalled[$key] = (string)\json_encode($value, \JSON_THROW_ON_ERROR);
+                    $marshalled[$key] = (string) \json_encode($value, \JSON_THROW_ON_ERROR);
                     break;
 
                 default:
@@ -140,7 +143,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 'pipelines' => $this->names($queue, ...$queues),
             ]));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -154,12 +157,13 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 'pipelines' => $this->names($queue, ...$queues),
             ]));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
     /**
      * {@inheritDoc}
+     *
      * @throws JobsException
      */
     public function getIterator(): \Traversable
@@ -173,12 +177,13 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
                 yield $queue => $this->connect($queue);
             }
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
     /**
      * {@inheritDoc}
+     *
      * @throws JobsException
      */
     public function count(): int
@@ -198,6 +203,7 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
 
     /**
      * @param QueueInterface|non-empty-string ...$queues
+     *
      * @return array<non-empty-string>
      */
     private function names(...$queues): array
@@ -207,8 +213,8 @@ final class Jobs implements JobsInterface, SerializerAwareInterface
         foreach ($queues as $queue) {
             assert(
                 $queue instanceof QueueInterface || \is_string($queue),
-                'Queue should be an instance of ' . QueueInterface::class .
-                ' or type of string, but ' . \get_debug_type($queue) . ' passed'
+                'Queue should be an instance of '.QueueInterface::class.
+                ' or type of string, but '.\get_debug_type($queue).' passed'
             );
 
             if ($queue instanceof QueueInterface) {

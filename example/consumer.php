@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Spiral\RoadRunner\Jobs\Consumer;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 $consumer = new Consumer();
 
@@ -21,13 +21,11 @@ while ($task = $consumer->waitTask()) {
     }
 
     // Failed task (with example attempts header).
-    $attempts = (int)$task->getHeaderLine('attempts');
-    $delay = (int)$task->getHeaderLine('retry-delay');
+    $attempts = (int) $task->getHeaderLine('attempts');
+    $delay = (int) $task->getHeaderLine('retry-delay');
 
     $task
         ->withDelay($delay * 2)
         ->withHeader('attempts', max(0, $attempts - 1))
-        ->fail('Something went wrong', $attempts > 0)
-    ;
+        ->fail('Something went wrong', $attempts > 0);
 }
-

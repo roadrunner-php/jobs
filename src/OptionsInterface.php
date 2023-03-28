@@ -30,18 +30,21 @@ interface OptionsInterface
 
     /**
      * @psalm-immutable
+     *
      * @return positive-int|0
      */
     public function getDelay(): int;
 
     /**
      * @psalm-immutable
+     *
      * @return positive-int|0
      */
     public function getPriority(): int;
 
     /**
      * @psalm-immutable
+     *
      * @return bool
      */
     public function getAutoAck(): bool;

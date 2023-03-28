@@ -65,6 +65,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     *
      * @return positive-int|0
      */
     public function getDelay(): int
@@ -76,7 +77,9 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     *
      * @param positive-int|0 $delay
+     *
      * @return $this
      */
     public function withDelay(int $delay): self
@@ -91,6 +94,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     *
      * @return positive-int|0
      */
     public function getPriority(): int
@@ -102,7 +106,9 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     *
      * @param positive-int|0 $priority
+     *
      * @return $this
      */
     public function withPriority(int $priority): self
@@ -117,6 +123,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     *
      * @return bool
      */
     public function getAutoAck(): bool
@@ -126,7 +133,9 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     *
      * @param bool $autoAck
+     *
      * @return $this
      */
     public function withAutoAck(bool $autoAck): self
@@ -139,6 +148,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @param OptionsInterface|null $options
+     *
      * @return OptionsInterface
      */
     public function mergeOptional(?OptionsInterface $options): OptionsInterface
@@ -152,6 +162,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @param OptionsInterface $options
+     *
      * @return OptionsInterface
      */
     public function merge(OptionsInterface $options): OptionsInterface
@@ -181,7 +192,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
     {
         return [
             'priority' => $this->getPriority(),
-            'delay' => $this->getDelay(),
+            'delay'    => $this->getDelay(),
             'auto_ack' => $this->getAutoAck(),
         ];
     }

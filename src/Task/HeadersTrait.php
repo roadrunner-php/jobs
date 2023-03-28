@@ -13,7 +13,9 @@ namespace Spiral\RoadRunner\Jobs\Task;
 
 /**
  * @mixin ProvidesHeadersInterface
+ *
  * @psalm-require-implements ProvidesHeadersInterface
+ *
  * @psalm-immutable
  */
 trait HeadersTrait
@@ -37,6 +39,7 @@ trait HeadersTrait
      * {@inheritDoc}
      *
      * @psalm-param non-empty-string $name Header field name.
+     *
      * @psalm-return bool
      */
     public function hasHeader(string $name): bool
@@ -48,6 +51,7 @@ trait HeadersTrait
      * {@inheritDoc}
      *
      * @psalm-param non-empty-string $name
+     *
      * @psalm-return array<string>
      */
     public function getHeader(string $name): array
@@ -59,6 +63,7 @@ trait HeadersTrait
      * {@inheritDoc}
      *
      * @psalm-param non-empty-string $name
+     *
      * @psalm-return string
      */
     public function getHeaderLine(string $name): string

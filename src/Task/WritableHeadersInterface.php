@@ -31,8 +31,10 @@ interface WritableHeadersInterface extends ProvidesHeadersInterface
      * to retrieve information about the current value.
      *
      * @psalm-mutation-free
-     * @param non-empty-string $name Header field name.
+     *
+     * @param non-empty-string                            $name  Header field name.
      * @param non-empty-string|iterable<non-empty-string> $value Header value(s).
+     *
      * @return static
      */
     public function withHeader(string $name, $value): self;
@@ -52,8 +54,10 @@ interface WritableHeadersInterface extends ProvidesHeadersInterface
      * to retrieve information about the current value.
      *
      * @psalm-mutation-free
-     * @param non-empty-string $name Header field name to add.
+     *
+     * @param non-empty-string                            $name  Header field name to add.
      * @param non-empty-string|iterable<non-empty-string> $value Header value(s).
+     *
      * @return static
      */
     public function withAddedHeader(string $name, $value): self;
@@ -69,7 +73,9 @@ interface WritableHeadersInterface extends ProvidesHeadersInterface
      * to retrieve information about the current value.
      *
      * @psalm-mutation-free
+     *
      * @param non-empty-string $name Header field name to remove.
+     *
      * @return static
      */
     public function withoutHeader(string $name): self;

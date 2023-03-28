@@ -13,30 +13,35 @@ interface CompressionCodec
 {
     /**
      * @var string
+     *
      * @psalm-var CompressionCodecEnum
      */
     public const CODEC_NONE = 'none';
 
     /**
      * @var string
+     *
      * @psalm-var CompressionCodecEnum
      */
     public const CODEC_GZIP = 'gzip';
 
     /**
      * @var string
+     *
      * @psalm-var CompressionCodecEnum
      */
     public const CODEC_SNAPPY = 'snappy';
 
     /**
      * @var string
+     *
      * @psalm-var CompressionCodecEnum
      */
     public const CODEC_LZ4 = 'lz4';
 
     /**
      * @var string
+     *
      * @psalm-var CompressionCodecEnum
      */
     public const CODEC_ZSTD = 'zstd';

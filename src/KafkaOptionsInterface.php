@@ -28,24 +28,28 @@ interface KafkaOptionsInterface extends OptionsInterface
 
     /**
      * @psalm-immutable
+     *
      * @return non-empty-string
      */
     public function getTopic(): string;
 
     /**
      * @psalm-immutable
+     *
      * @return string
      */
     public function getMetadata(): string;
 
     /**
      * @psalm-immutable
+     *
      * @return PartitionOffsetEnum
      */
     public function getOffset(): int;
 
     /**
      * @psalm-immutable
+     *
      * @return positive-int|0
      */
     public function getPartition(): int;

@@ -24,8 +24,9 @@ interface ReceivedTaskInterface extends
     /**
      * Marks the current task as completed.
      *
-     * @return void
      * @throws JobsException
+     *
+     * @return void
      */
     public function complete(): void;
 
@@ -33,7 +34,8 @@ interface ReceivedTaskInterface extends
      * Marks the current task as failed.
      *
      * @param string|\Stringable|\Throwable $error
-     * @param bool $requeue
+     * @param bool                          $requeue
+     *
      * @throws JobsException
      */
     public function fail($error, bool $requeue = false): void;
@@ -43,6 +45,7 @@ interface ReceivedTaskInterface extends
      * otherwise.
      *
      * @psalm-mutation-free
+     *
      * @return bool
      */
     public function isCompleted(): bool;
@@ -52,6 +55,7 @@ interface ReceivedTaskInterface extends
      * and {@see false} otherwise.
      *
      * @psalm-mutation-free
+     *
      * @return bool
      */
     public function isSuccessful(): bool;
@@ -61,6 +65,7 @@ interface ReceivedTaskInterface extends
      * otherwise.
      *
      * @psalm-mutation-free
+     *
      * @return bool
      */
     public function isFails(): bool;

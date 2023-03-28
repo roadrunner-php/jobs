@@ -55,10 +55,10 @@ final class BeanstalkCreateInfo extends CreateInfo
 
     /**
      * @param non-empty-string $name
-     * @param positive-int $priority
-     * @param positive-int $tubePriority
+     * @param positive-int     $priority
+     * @param positive-int     $tubePriority
      * @param non-empty-string $tube
-     * @param positive-int|0 $reserveTimeout
+     * @param positive-int|0   $reserveTimeout
      */
     public function __construct(
         string $name,

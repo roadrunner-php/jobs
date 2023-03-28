@@ -82,9 +82,10 @@ final class Consumer implements ConsumerInterface, SerializerAwareInterface
     }
 
     /**
-     * @return ReceivedTaskInterface|null
      * @throws SerializationException
      * @throws ReceivedTaskException
+     *
+     * @return ReceivedTaskInterface|null
      */
     public function waitTask(): ?ReceivedTaskInterface
     {

@@ -92,12 +92,12 @@ final class NatsCreateInfo extends CreateInfo
      * @param non-empty-string $name
      * @param non-empty-string $subject
      * @param non-empty-string $stream
-     * @param positive-int $priority
-     * @param positive-int $prefetch
-     * @param bool $deliverNew
-     * @param positive-int $rateLimit
-     * @param bool $deleteStreamOnStop
-     * @param bool $deleteAfterAck
+     * @param positive-int     $priority
+     * @param positive-int     $prefetch
+     * @param bool             $deliverNew
+     * @param positive-int     $rateLimit
+     * @param bool             $deleteStreamOnStop
+     * @param bool             $deleteAfterAck
      */
     public function __construct(
         string $name,
