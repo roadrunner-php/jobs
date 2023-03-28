@@ -10,7 +10,6 @@ use Spiral\Goridge\RPC\Codec\ProtobufCodec;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
-use Traversable;
 
 /**
  * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
@@ -35,33 +34,6 @@ final class Jobs implements JobsInterface
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
-    }
-
-    /**
-     * @param CreateInfoArrayType $map
-     * @return non-empty-array<array-key, string>
-     * @throws \Throwable
-     * @psalm-suppress MixedAssignment
-     */
-    private function toStringOfStringMap(array $map): array
-    {
-        $marshalled = [];
-
-        foreach ($map as $key => $value) {
-            $marshalled[$key] = match (true) {
-                \is_int($value),
-                \is_string($value),
-                    $value instanceof \Stringable,
-                    \is_object($value) && \method_exists($value, '__toString') => (string) $value,
-                \is_bool($value) => $value ? 'true' : 'false',
-                \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
-                default => throw new \InvalidArgumentException(
-                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
-                ),
-            };
-        }
-
-        return $marshalled;
     }
 
     /**
@@ -97,10 +69,19 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * @return Traversable<non-empty-string, QueueInterface>
+     * @return int<0, max>
      * @throws JobsException
      */
-    public function getIterator(): Traversable
+    public function count(): int
+    {
+        return \iterator_count($this->getIterator());
+    }
+
+    /**
+     * @return \Traversable<non-empty-string, QueueInterface>
+     * @throws JobsException
+     */
+    public function getIterator(): \Traversable
     {
         try {
             /** @var Pipelines $result */
@@ -116,12 +97,30 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * @return int<0, max>
-     * @throws JobsException
+     * @param CreateInfoArrayType $map
+     * @return non-empty-array<array-key, string>
+     * @throws \Throwable
+     * @psalm-suppress MixedAssignment
      */
-    public function count(): int
+    private function toStringOfStringMap(array $map): array
     {
-        return \iterator_count($this->getIterator());
+        $marshalled = [];
+
+        foreach ($map as $key => $value) {
+            $marshalled[$key] = match (true) {
+                \is_int($value),
+                \is_string($value),
+                $value instanceof \Stringable,
+                \is_object($value) && \method_exists($value, '__toString') => (string)$value,
+                \is_bool($value) => $value ? 'true' : 'false',
+                \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
+                default => throw new \InvalidArgumentException(
+                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
+                ),
+            };
+        }
+
+        return $marshalled;
     }
 
     /**
@@ -133,12 +132,6 @@ final class Jobs implements JobsInterface
         $names = [];
 
         foreach ($queues as $queue) {
-            \assert(
-                $queue instanceof QueueInterface || \is_string($queue),
-                'Queue should be an instance of ' . QueueInterface::class .
-                ' or type of string, but ' . \get_debug_type($queue) . ' passed'
-            );
-
             if ($queue instanceof QueueInterface) {
                 $queue = $queue->getName();
             }

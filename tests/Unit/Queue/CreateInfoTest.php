@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use PHPUnit\Framework\TestCase;
+use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 
 final class CreateInfoTest extends TestCase

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
-
 interface KafkaOptionsInterface extends OptionsInterface
 {
     public const DEFAULT_METADATA = '';
     public const DEFAULT_PARTITION = 0;
+    public const DEFAULT_OFFSET = 0;
 
     /**
      * @psalm-immutable
@@ -24,8 +23,9 @@ interface KafkaOptionsInterface extends OptionsInterface
 
     /**
      * @psalm-immutable
+     * @return int<0, max>
      */
-    public function getOffset(): PartitionOffset;
+    public function getOffset(): int;
 
     /**
      * @psalm-immutable

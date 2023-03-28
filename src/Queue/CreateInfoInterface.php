@@ -15,7 +15,7 @@ namespace Spiral\RoadRunner\Jobs\Queue;
  *  ...
  * }
  */
-interface CreateInfoInterface
+interface CreateInfoInterface extends \JsonSerializable
 {
     /**
      * @return non-empty-string

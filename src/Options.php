@@ -8,7 +8,7 @@ use Spiral\RoadRunner\Jobs\Task\ProvidesHeadersInterface;
 use Spiral\RoadRunner\Jobs\Task\WritableHeadersInterface;
 use Spiral\RoadRunner\Jobs\Task\WritableHeadersTrait;
 
-class Options implements OptionsInterface, WritableHeadersInterface
+class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerializable
 {
     use WritableHeadersTrait;
 
@@ -19,7 +19,7 @@ class Options implements OptionsInterface, WritableHeadersInterface
     public function __construct(
         public int $delay = self::DEFAULT_DELAY,
         public int $priority = self::DEFAULT_PRIORITY,
-        public bool $autoAck = self::DEFAULT_AUTO_ACK
+        public bool $autoAck = self::DEFAULT_AUTO_ACK,
     ) {
         \assert($this->delay >= 0, 'Precondition [delay >= 0] failed');
         \assert($this->priority >= 0, 'Precondition [priority >= 0] failed');
@@ -47,6 +47,25 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
+     * @return positive-int|0
+     */
+    public function getPriority(): int
+    {
+        \assert($this->priority >= 0, 'Invariant [priority >= 0] failed');
+
+        return $this->priority;
+    }
+
+    /**
+     * @psalm-immutable
+     */
+    public function getAutoAck(): bool
+    {
+        return $this->autoAck;
+    }
+
+    /**
+     * @psalm-immutable
      * @param positive-int|0 $delay
      * @return $this
      */
@@ -62,17 +81,6 @@ class Options implements OptionsInterface, WritableHeadersInterface
 
     /**
      * @psalm-immutable
-     * @return positive-int|0
-     */
-    public function getPriority(): int
-    {
-        \assert($this->priority >= 0, 'Invariant [priority >= 0] failed');
-
-        return $this->priority;
-    }
-
-    /**
-     * @psalm-immutable
      * @param positive-int|0 $priority
      * @return $this
      */
@@ -84,14 +92,6 @@ class Options implements OptionsInterface, WritableHeadersInterface
         $self->priority = $priority;
 
         return $self;
-    }
-
-    /**
-     * @psalm-immutable
-     */
-    public function getAutoAck(): bool
-    {
-        return $this->autoAck;
     }
 
     /**
@@ -136,6 +136,11 @@ class Options implements OptionsInterface, WritableHeadersInterface
         }
 
         return $self;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 
     public function toArray(): array

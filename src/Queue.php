@@ -33,21 +33,13 @@ final class Queue implements QueueInterface
         \assert($name !== '', 'Precondition [name !== ""] failed');
 
         $this->rpc = $rpc->withCodec(new ProtobufCodec());
-        $this->pipeline = new Pipeline($this, $this->rpc);
+        $this->pipeline = new Pipeline($this->getName(), $this->rpc);
         $this->options = $options ?? new Options();
     }
 
     public function __clone()
     {
         $this->options = clone $this->options;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     public function getDefaultOptions(): OptionsInterface
@@ -68,8 +60,35 @@ final class Queue implements QueueInterface
         return $self;
     }
 
-    public function create(string $name, string|\Stringable $payload, OptionsInterface $options = null): PreparedTaskInterface
+    /**
+     * Creates a new task and push it into specified queue.
+     *
+     * This method exists for compatibility with version RoadRunner 1.x.
+     *
+     * @param non-empty-string $name
+     * @param OptionsInterface|null $options
+     * @throws JobsException
+     */
+    public function push(
+        string $name,
+        string|\Stringable $payload,
+        OptionsInterface $options = null,
+    ): QueuedTaskInterface {
+        return $this->dispatch(
+            $this->create($name, $payload, $options),
+        );
+    }
+
+    public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface
     {
+        return $this->pipeline->send($task);
+    }
+
+    public function create(
+        string $name,
+        string|\Stringable $payload,
+        OptionsInterface $options = null,
+    ): PreparedTaskInterface {
         if (\method_exists($this->options, 'mergeOptional')) {
             /** @var OptionsInterface $options */
             $options = $this->options->mergeOptional($options);
@@ -81,27 +100,6 @@ final class Queue implements QueueInterface
             $options,
             $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : []
         );
-    }
-
-    /**
-     * Creates a new task and push it into specified queue.
-     *
-     * This method exists for compatibility with version RoadRunner 1.x.
-     *
-     * @param non-empty-string $name
-     * @param OptionsInterface|null $options
-     * @throws JobsException
-     */
-    public function push(string $name, string|\Stringable $payload, OptionsInterface $options = null): QueuedTaskInterface
-    {
-        return $this->dispatch(
-            $this->create($name, $payload, $options),
-        );
-    }
-
-    public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface
-    {
-        return $this->pipeline->send($task);
     }
 
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable
@@ -121,6 +119,14 @@ final class Queue implements QueueInterface
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function resume(): void

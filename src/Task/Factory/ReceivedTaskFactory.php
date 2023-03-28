@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task\Factory;
 
+use JsonException;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
@@ -86,7 +86,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
 
         try {
             return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             throw new SerializationException($e->getMessage(), $e->getCode(), $e);
         }
     }

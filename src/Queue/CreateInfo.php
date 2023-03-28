@@ -35,6 +35,11 @@ class CreateInfo implements CreateInfoInterface
         return $this->driver;
     }
 
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
+
     public function toArray(): array
     {
         return [

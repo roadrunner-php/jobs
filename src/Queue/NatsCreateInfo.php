@@ -33,7 +33,7 @@ final class NatsCreateInfo extends CreateInfo
         public readonly bool $deliverNew = self::DELIVER_NEW_DEFAULT_VALUE,
         public readonly int $rateLimit = self::RATE_LIMIT_DEFAULT_VALUE,
         public readonly bool $deleteStreamOnStop = self::DELETE_STREAM_ON_STOP_DEFAULT_VALUE,
-        public readonly bool $deleteAfterAck = self::DELETE_AFTER_ACK_DEFAULT_VALUE
+        public readonly bool $deleteAfterAck = self::DELETE_AFTER_ACK_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::NATS, $name, $priority);
 
@@ -46,13 +46,13 @@ final class NatsCreateInfo extends CreateInfo
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'prefetch'              => $this->prefetch,
-            'subject'               => $this->subject,
-            'deliver_new'           => $this->deliverNew,
-            'rate_limit'            => $this->rateLimit,
-            'stream'                => $this->stream,
+            'prefetch' => $this->prefetch,
+            'subject' => $this->subject,
+            'deliver_new' => $this->deliverNew,
+            'rate_limit' => $this->rateLimit,
+            'stream' => $this->stream,
             'delete_stream_on_stop' => $this->deleteStreamOnStop,
-            'delete_after_ack'      => $this->deleteAfterAck,
+            'delete_after_ack' => $this->deleteAfterAck,
         ]);
     }
 }

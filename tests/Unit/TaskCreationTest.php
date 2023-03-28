@@ -100,7 +100,7 @@ class TaskCreationTestCase extends TestCase
 
         $task = $this
             ->queue([], 'queue', Queue\Driver::Kafka)
-            ->create($expected,'bar', new KafkaOptions('kafka-topic', 15, 30, false));
+            ->create($expected, 'bar', new KafkaOptions('kafka-topic', 15, 30, false));
         $options = $task->getOptions();
 
         $this->assertInstanceOf(KafkaOptions::class, $options);

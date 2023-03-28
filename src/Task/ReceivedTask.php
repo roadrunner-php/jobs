@@ -69,11 +69,6 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
 
     public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void
     {
-        \assert(
-            \is_string($error) || $error instanceof \Stringable,
-            'Precondition [error is string|Stringable|Throwable] failed',
-        );
-
         $data = [
             'message' => (string)$error,
             'requeue' => $requeue,
@@ -125,7 +120,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     {
         if ($this->completed === null) {
             try {
-                $body = \json_encode(['type' => $type, 'data' => $data], \JSON_THROW_ON_ERROR);
+                $body = \json_encode(['type' => $type, 'data' => $data], JSON_THROW_ON_ERROR);
 
                 $this->worker->respond(new Payload($body));
             } catch (\JsonException $e) {

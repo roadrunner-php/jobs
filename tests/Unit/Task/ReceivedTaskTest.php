@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
+use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
@@ -17,18 +18,27 @@ final class ReceivedTaskTest extends TestCase
 {
     private MockObject|WorkerInterface $worker;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->worker = $this->createMock(WorkerInterface::class);
-    }
-
     public function testGetsPipeline(): void
     {
         $task = $this->createTask(pipeline: 'custom');
         $this->assertSame('custom', $task->getPipeline());
     }
+
+    public function createTask(
+        Driver $driver = Driver::Kafka,
+        string $id = '12345',
+        string $pipeline = 'default',
+        string $queue = 'default',
+        string $name = 'TestTask',
+        string $payload = 'foo=bar',
+        array $headers = [],
+    ): ReceivedTaskInterface {
+        return new ReceivedTask(
+            $this->worker, $id, $driver, $pipeline, $name, $queue, $payload, $headers
+        );
+    }
+
+
 
     public function testGetsQueue(): void
     {
@@ -72,7 +82,7 @@ final class ReceivedTaskTest extends TestCase
     }
 
 
-    public function provideFailData(): \Generator
+    public function provideFailData(): Generator
     {
         yield 'default' => ['Some error message', false, null, []];
         yield 'requeue' => ['Some error message', true, null, []];
@@ -133,17 +143,10 @@ final class ReceivedTaskTest extends TestCase
         $this->assertTrue($task->isCompleted());
     }
 
-    public function createTask(
-        Driver $driver = Driver::Kafka,
-        string $id = '12345',
-        string $pipeline = 'default',
-        string $queue = 'default',
-        string $name = 'TestTask',
-        string $payload = 'foo=bar',
-        array $headers = [],
-    ): ReceivedTaskInterface {
-        return new ReceivedTask(
-            $this->worker, $id, $driver, $pipeline, $name, $queue, $payload, $headers
-        );
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->worker = $this->createMock(WorkerInterface::class);
     }
 }

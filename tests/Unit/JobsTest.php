@@ -14,17 +14,15 @@ use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
+use function array_map;
+use function array_values;
+use function bin2hex;
+use function count;
+use function iterator_to_array;
+use function random_bytes;
+
 class JobsTestCase extends TestCase
 {
-    /**
-     * @param array<string, string|callable> $mapping
-     * @return JobsInterface
-     */
-    protected function jobs(array $mapping = []): JobsInterface
-    {
-        return new Jobs($this->rpc($mapping));
-    }
-
     /**
      * @testdox Checking creating a new queue with given info.
      */
@@ -33,7 +31,7 @@ class JobsTestCase extends TestCase
         $dto = new CreateInfo(Driver::Memory, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use($dto) {
+            'jobs.Declare' => function (DeclareRequest $request) use ($dto) {
                 $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
                 $this->assertSame($dto->getDriver()->value, $request->getPipeline()->offsetGet('driver'));
                 $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
@@ -45,12 +43,21 @@ class JobsTestCase extends TestCase
         $this->assertSame('foo', $queue->getName());
     }
 
+    /**
+     * @param array<string, string|callable> $mapping
+     * @return JobsInterface
+     */
+    protected function jobs(array $mapping = []): JobsInterface
+    {
+        return new Jobs($this->rpc($mapping));
+    }
+
     public function testCreateWithOptions(): void
     {
         $dto = new CreateInfo(Driver::SQS, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use($dto) {
+            'jobs.Declare' => function (DeclareRequest $request) use ($dto) {
                 $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
                 $this->assertSame($dto->getDriver()->value, $request->getPipeline()->offsetGet('driver'));
                 $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
@@ -70,15 +77,20 @@ class JobsTestCase extends TestCase
     {
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
-        $jobs = $this->jobs(['jobs.List' => function() use ($expected) {
-            return new Pipelines(['pipelines' => $expected]);
-        }]);
+        $jobs = $this->jobs([
+            'jobs.List' => function () use ($expected) {
+                return new Pipelines(['pipelines' => $expected]);
+            },
+        ]);
 
         // Execute "$jobs->getIterator()"
-        $this->assertSame($expected, \array_map(
-            static fn(QueueInterface $queue) => $queue->getName(),
-            \array_values(\iterator_to_array($jobs))
-        ));
+        $this->assertSame(
+            $expected,
+            array_map(
+                static fn (QueueInterface $queue) => $queue->getName(),
+                array_values(iterator_to_array($jobs)),
+            ),
+        );
     }
 
     /**
@@ -88,7 +100,7 @@ class JobsTestCase extends TestCase
     {
         $this->expectException(JobsException::class);
 
-        \iterator_to_array($this->jobs());
+        iterator_to_array($this->jobs());
     }
 
     /**
@@ -98,9 +110,11 @@ class JobsTestCase extends TestCase
     {
         $expected = ['expected-queue-1', 'expected-queue-2'];
 
-        $jobs = $this->jobs(['jobs.List' => function() use ($expected) {
-            return new Pipelines(['pipelines' => $expected]);
-        }]);
+        $jobs = $this->jobs([
+            'jobs.List' => function () use ($expected) {
+                return new Pipelines(['pipelines' => $expected]);
+            },
+        ]);
 
         $this->assertCount(2, $jobs);
     }
@@ -112,7 +126,7 @@ class JobsTestCase extends TestCase
     {
         $this->expectException(JobsException::class);
 
-        \count($this->jobs());
+        count($this->jobs());
     }
 
     /**
@@ -122,13 +136,17 @@ class JobsTestCase extends TestCase
     {
         $actual = [];
 
-        $jobs = $this->jobs(['jobs.Resume' => function(Pipelines $req) use (&$actual) {
-            foreach ($req->getPipelines() as $pipeline) $actual[] = $pipeline;
-        }]);
+        $jobs = $this->jobs([
+            'jobs.Resume' => function (Pipelines $req) use (&$actual) {
+                foreach ($req->getPipelines() as $pipeline) {
+                    $actual[] = $pipeline;
+                }
+            },
+        ]);
 
         $jobs->resume(
             $jobs->connect('queue-1'),
-            $jobs->connect('queue-2')
+            $jobs->connect('queue-2'),
         );
 
         $this->assertSame(['queue-1', 'queue-2'], $actual);
@@ -145,7 +163,7 @@ class JobsTestCase extends TestCase
 
         $jobs->resume(
             $jobs->connect('queue-1'),
-            $jobs->connect('queue-2')
+            $jobs->connect('queue-2'),
         );
     }
 
@@ -156,13 +174,17 @@ class JobsTestCase extends TestCase
     {
         $actual = [];
 
-        $jobs = $this->jobs(['jobs.Pause' => function(Pipelines $req) use (&$actual) {
-            foreach ($req->getPipelines() as $pipeline) $actual[] = $pipeline;
-        }]);
+        $jobs = $this->jobs([
+            'jobs.Pause' => function (Pipelines $req) use (&$actual) {
+                foreach ($req->getPipelines() as $pipeline) {
+                    $actual[] = $pipeline;
+                }
+            },
+        ]);
 
         $jobs->pause(
             $jobs->connect('queue-1'),
-            $jobs->connect('queue-2')
+            $jobs->connect('queue-2'),
         );
 
         $this->assertSame(['queue-1', 'queue-2'], $actual);
@@ -179,7 +201,7 @@ class JobsTestCase extends TestCase
 
         $jobs->pause(
             $jobs->connect('queue-1'),
-            $jobs->connect('queue-2')
+            $jobs->connect('queue-2'),
         );
     }
 
@@ -189,7 +211,7 @@ class JobsTestCase extends TestCase
         $jobs = $this->jobs();
 
         $actual = $jobs->connect(
-            $expected = \bin2hex(\random_bytes(32))
+            $expected = bin2hex(random_bytes(32)),
         );
 
         $this->assertSame($expected, $actual->getName());

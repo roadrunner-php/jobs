@@ -6,7 +6,7 @@
 [![psalm](https://github.com/spiral/roadrunner-jobs/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
 [![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/3.x/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
 [![Total Downloads](https://poser.pugx.org/spiral/roadrunner-jobs/downloads)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![StyleCI](https://github.styleci.io/repos/447581540/shield)](https://github.styleci.io/repos/447581540)
+[![StyleCI](https://github.styleci.io/repos/388772135/shield?branch=master)](https://github.styleci.io/repos/388772135?branch=master)
 <a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
@@ -19,82 +19,101 @@ To install application server and Jobs codebase
 composer require spiral/roadrunner-jobs
 ```
 
-You can use the convenient installer to download the latest available compatible
-version of RoadRunner assembly:
+You can use the convenient installer to download the latest available compatible version of RoadRunner assembly:
 
 ```bash
 composer require spiral/roadrunner-cli --dev
 vendor/bin/rr get
 ```
 
-## Usage
+## Configuration
 
-First you need to add at least one jobs adapter to your RoadRunner configuration.
-For example, such a configuration would be quite feasible to run:
+First you need to add at least one jobs adapter to your RoadRunner configuration. For example, such a configuration 
+would be quite feasible to run:
 
 ```yaml
-#
-# RPC is required for tasks dispatching (client)
-#
 rpc:
-    listen: tcp://127.0.0.1:6001
+  listen: tcp://127.0.0.1:6001
 
-#
-# This section configures the task consumer (server)
-#
 server:
-    command: php consumer.php
-    relay: pipes
+  command: php consumer.php
+  relay: pipes
 
-#
-# In this section, the jobs themselves are configured
-#
 jobs:
-    consume: [ "local" ]        # List of RoadRunner queues that can be processed by 
-                                # the consumer specified in the "server" section.
-    pipelines:
-        local:                  # RoadRunner queue identifier
-            driver: memory      # - Queue driver name
-            config:
-                priority: 10    # - Pipeline priority
-                prefetch: 10000 # - Number of job to prefetch from the driver until ACK/NACK.
+  consume: [ "local" ]
+  pipelines:
+    local:
+      driver: memory
+      config:
+        priority: 10
+        prefetch: 10000
 ```
 
 > **Note**
-> Read more about all available drivers on the
-> [documentation](https://roadrunner.dev/docs/plugins-jobs/2.x/en) page.
+> Read more about all available drivers on the [documentation](https://roadrunner.dev/docs/plugins-jobs/2.x/en) page.
 
-After starting the server with this configuration, one driver named `local`
-will be available to you.
+After starting the server with this configuration, one driver named `local` will be available to you.
 
-The following code will allow writing and reading an arbitrary value from the
-RoadRunner server.
+## Usage
+
+### Producer
+
+The following code will allow writing and reading an arbitrary value from the RoadRunner server.
 
 ```php
 <?php
 
 use Spiral\RoadRunner\Jobs\Jobs;
+use Spiral\Goridge\RPC\RPC;
 
 require __DIR__ . '/vendor/autoload.php';
 
 // Jobs service
 $jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 
-// Select "local" queue from jobs
+// Select "local" pipeline from jobs
 $queue = $jobs->connect('local');
 
 // Create task prototype with default headers
-$prototype = $queue->create('echo')
-    ->withHeader('attempts', 4)
-    ->withHeader('retry-delay', 10)
-;
+$task = $queue->create('ping', '{"site": "https://example.com"}') // Create task with "echo" name
+    ->withHeader('attempts', 4) // Number of attempts to execute the task
+    ->withHeader('retry-delay', 10); // Delay between attempts
 
-// Execute "echo" task with Closure as payload
-$task = $queue->dispatch(
-    $prototype->withValue(static fn($arg) => print $arg)
-);
+// Push "echo" task to the queue
+$task = $queue->dispatch($task);
 
 var_dump($task->getId() . ' has been queued');
+```
+
+### Consumer
+
+The following code will allow you to read and process the task from the RoadRunner server.
+
+```php
+<?php
+
+use Spiral\RoadRunner\Jobs\Consumer;
+use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$consumer = new Spiral\RoadRunner\Jobs\Consumer();
+
+/** @var Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface $task */
+while ($task = $consumer->waitTask()) {
+    try {
+        $name = $task->getName(); // "ping"
+        $queue = $task->getQueue(); // "local"
+        $driver = $queue->getDriver(); // "memory"
+        $payload = $task->getPayload(); // {"site": "https://example.com"}
+    
+        // Process task
+
+        $task->complete();
+    } catch (\Throwable $e) {
+        $task->fail($e, requeue: true);
+    }
+}
 ```
 
 <a href="https://spiral.dev/">
