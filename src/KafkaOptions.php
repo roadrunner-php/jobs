@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs;
 
-use Spiral\RoadRunner\Jobs\Queue\Kafka\PartitionOffset;
-
 final class KafkaOptions extends Options implements KafkaOptionsInterface
 {
     /**
@@ -50,26 +48,44 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return $self;
     }
 
-    public function merge(OptionsInterface $options): OptionsInterface
+    /**
+     * @psalm-immutable
+     * @param int<0, max> $partition
+     * @return $this
+     */
+    public function withPartition(int $partition): self
     {
-        /** @var KafkaOptions $self */
-        $self = parent::merge($options);
+        \assert($partition >= 0, 'Precondition [partition >= 0] failed');
 
-        if ($options instanceof KafkaOptionsInterface) {
-            $self->topic = $options->getTopic();
+        $self = clone $this;
+        $self->partition = $partition;
 
-            if (($metadata = $options->getMetadata()) !== self::DEFAULT_METADATA) {
-                $self->metadata = $metadata;
-            }
+        return $self;
+    }
 
-            if (($offset = $options->getOffset()) !== self::DEFAULT_OFFSET) {
-                $self->offset = $offset;
-            }
+    /**
+     * @psalm-immutable
+     * @param int<0, max> $offset
+     * @return $this
+     */
+    public function withOffset(int $offset): self
+    {
+        \assert($offset >= 0, 'Precondition [partition >= 0] failed');
 
-            if (($partition = $options->getPartition()) !== self::DEFAULT_PARTITION) {
-                $self->partition = $partition;
-            }
-        }
+        $self = clone $this;
+        $self->offset = $offset;
+
+        return $self;
+    }
+
+    /**
+     * @psalm-immutable
+     * @return $this
+     */
+    public function withMetadata(string $metadata): self
+    {
+        $self = clone $this;
+        $self->metadata = $metadata;
 
         return $self;
     }
@@ -99,36 +115,9 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return $this->topic;
     }
 
-    /**
-     * @psalm-immutable
-     * @return $this
-     */
-    public function withMetadata(string $metadata): self
-    {
-        $self = clone $this;
-        $self->metadata = $metadata;
-
-        return $self;
-    }
-
     public function getMetadata(): string
     {
         return $this->metadata;
-    }
-
-    /**
-     * @psalm-immutable
-     * @param int<0, max> $offset
-     * @return $this
-     */
-    public function withOffset(int $offset): self
-    {
-        assert($offset >= 0, 'Precondition [partition >= 0] failed');
-
-        $self = clone $this;
-        $self->offset = $offset;
-
-        return $self;
     }
 
     public function getOffset(): int
@@ -136,24 +125,33 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return $this->offset;
     }
 
-    /**
-     * @psalm-immutable
-     * @param int<0, max> $partition
-     * @return $this
-     */
-    public function withPartition(int $partition): self
-    {
-        assert($partition >= 0, 'Precondition [partition >= 0] failed');
-
-        $self = clone $this;
-        $self->partition = $partition;
-
-        return $self;
-    }
-
     public function getPartition(): int
     {
         return $this->partition;
+    }
+
+    public function merge(OptionsInterface $options): OptionsInterface
+    {
+        /** @var KafkaOptions $self */
+        $self = parent::merge($options);
+
+        if ($options instanceof KafkaOptionsInterface) {
+            $self->topic = $options->getTopic();
+
+            if (($metadata = $options->getMetadata()) !== self::DEFAULT_METADATA) {
+                $self->metadata = $metadata;
+            }
+
+            if (($offset = $options->getOffset()) !== self::DEFAULT_OFFSET) {
+                $self->offset = $offset;
+            }
+
+            if (($partition = $options->getPartition()) !== self::DEFAULT_PARTITION) {
+                $self->partition = $partition;
+            }
+        }
+
+        return $self;
     }
 
     public function toArray(): array

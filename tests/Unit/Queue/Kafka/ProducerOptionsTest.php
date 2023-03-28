@@ -10,6 +10,8 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\Acks;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\CompressionCodec;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 
+use function json_encode;
+
 final class ProducerOptionsTest extends TestCase
 {
     public function testDefaultValues(): void
@@ -71,7 +73,7 @@ final class ProducerOptionsTest extends TestCase
 }
 JSON
             ,
-            \json_encode($options, JSON_PRETTY_PRINT),
+            json_encode($options, JSON_PRETTY_PRINT),
         );
     }
 }

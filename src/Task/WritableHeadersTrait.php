@@ -20,29 +20,6 @@ trait WritableHeadersTrait
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function withHeader(string $name, string|iterable $value): self
-    {
-        \assert($name !== '', 'Precondition [name !== ""] failed');
-
-        $value = \is_iterable($value) ? $value : [$value];
-
-        $self = clone $this;
-        $self->headers[$name] = [];
-
-        foreach ($value as $item) {
-            $self->headers[$name][] = (string)$item;
-        }
-
-        return $self;
-    }
-
-    /**
-     * @param non-empty-string $name
-     * @param non-empty-string|iterable<non-empty-string> $value
-     * @return static
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     public function withAddedHeader(string $name, string|iterable $value): self
     {
         \assert($name !== '', 'Precondition [name !== ""] failed');
@@ -58,6 +35,29 @@ trait WritableHeadersTrait
         }
 
         return $this->withHeader($name, $headers);
+    }
+
+    /**
+     * @param non-empty-string $name
+     * @param non-empty-string|iterable<non-empty-string> $value
+     * @return static
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
+     */
+    public function withHeader(string $name, string|iterable $value): self
+    {
+        \assert($name !== '', 'Precondition [name !== ""] failed');
+
+        $value = \is_iterable($value) ? $value : [$value];
+
+        $self = clone $this;
+        $self->headers[$name] = [];
+
+        foreach ($value as $item) {
+            $self->headers[$name][] = (string)$item;
+        }
+
+        return $self;
     }
 
     /**

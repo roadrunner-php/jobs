@@ -67,13 +67,30 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         $this->respond(Type::SUCCESS);
     }
 
+    /**
+     * @param TypeEnum $type
+     * @param SuccessData|ErrorData $data
+     * @throws JobsException
+     */
+    private function respond(int $type, array $data = []): void
+    {
+        if ($this->completed === null) {
+            try {
+                $body = \json_encode(['type' => $type, 'data' => $data], JSON_THROW_ON_ERROR);
+
+                $this->worker->respond(new Payload($body));
+            } catch (\JsonException $e) {
+                throw new SerializationException($e->getMessage(), $e->getCode(), $e);
+            } catch (\Throwable $e) {
+                throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            }
+
+            $this->completed = $type;
+        }
+    }
+
     public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void
     {
-        \assert(
-            \is_string($error) || $error instanceof \Stringable,
-            'Precondition [error is string|Stringable|Throwable] failed',
-        );
-
         $data = [
             'message' => (string)$error,
             'requeue' => $requeue,
@@ -114,27 +131,5 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         $self->delay = $seconds;
 
         return $self;
-    }
-
-    /**
-     * @param TypeEnum $type
-     * @param SuccessData|ErrorData $data
-     * @throws JobsException
-     */
-    private function respond(int $type, array $data = []): void
-    {
-        if ($this->completed === null) {
-            try {
-                $body = \json_encode(['type' => $type, 'data' => $data], \JSON_THROW_ON_ERROR);
-
-                $this->worker->respond(new Payload($body));
-            } catch (\JsonException $e) {
-                throw new SerializationException($e->getMessage(), $e->getCode(), $e);
-            } catch (\Throwable $e) {
-                throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
-            }
-
-            $this->completed = $type;
-        }
     }
 }

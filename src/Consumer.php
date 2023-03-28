@@ -6,9 +6,9 @@ namespace Spiral\RoadRunner\Jobs;
 
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
-use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactory;
 use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactoryInterface;
+use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
 use Spiral\RoadRunner\Worker;
 use Spiral\RoadRunner\WorkerInterface;
 
@@ -39,7 +39,7 @@ final class Consumer implements ConsumerInterface
 
     public function __construct(
         WorkerInterface $worker = null,
-        ReceivedTaskFactoryInterface $receivedTaskFactory = null
+        ReceivedTaskFactoryInterface $receivedTaskFactory = null,
     ) {
         $this->worker = $worker ?? Worker::create();
         $this->receivedTaskFactory = $receivedTaskFactory ?? new ReceivedTaskFactory($this->worker);

@@ -34,18 +34,18 @@ trait HeadersTrait
 
     /**
      * @param non-empty-string $name
+     */
+    public function getHeaderLine(string $name): string
+    {
+        return \implode(',', $this->getHeader($name));
+    }
+
+    /**
+     * @param non-empty-string $name
      * @return array<string>
      */
     public function getHeader(string $name): array
     {
         return $this->headers[$name] ?? [];
-    }
-
-    /**
-     * @param non-empty-string $name
-     */
-    public function getHeaderLine(string $name): string
-    {
-        return \implode(',', $this->getHeader($name));
     }
 }

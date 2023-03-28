@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
 
-use Ramsey\Uuid\Uuid;
-use Spiral\Goridge\RPC\RPCInterface;
+use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\UuidFactoryInterface;
 use RoadRunner\Jobs\DTO\V1\HeaderValue;
 use RoadRunner\Jobs\DTO\V1\Job;
 use RoadRunner\Jobs\DTO\V1\Options as OptionsMessage;
 use RoadRunner\Jobs\DTO\V1\PushBatchRequest;
 use RoadRunner\Jobs\DTO\V1\PushRequest;
+use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\OptionsAwareInterface;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
-use Spiral\RoadRunner\Jobs\QueueInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\QueuedTask;
 use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
@@ -27,8 +27,9 @@ use Spiral\RoadRunner\Jobs\Task\TaskInterface;
 final class Pipeline
 {
     public function __construct(
-        private readonly QueueInterface $queue,
-        private readonly RPCInterface $rpc
+        private readonly string $name,
+        private readonly RPCInterface $rpc,
+        private readonly UuidFactoryInterface $uuid = new UuidFactory(),
     ) {
     }
 
@@ -50,8 +51,8 @@ final class Pipeline
     }
 
     /**
-     * @param array<PreparedTaskInterface> $tasks
-     * @return array<QueuedTaskInterface>
+     * @param PreparedTaskInterface[] $tasks
+     * @return QueuedTaskInterface[]
      * @throws JobsException
      */
     public function sendMany(array $tasks): array
@@ -64,9 +65,12 @@ final class Pipeline
                 $result[] = $this->createQueuedTask($job, $task);
             }
 
-            $this->rpc->call('jobs.PushBatch', new PushBatchRequest([
-                'jobs' => $jobs
-            ]));
+            $this->rpc->call(
+                'jobs.PushBatch',
+                new PushBatchRequest([
+                    'jobs' => $jobs,
+                ]),
+            );
         } catch (JobsException $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -74,14 +78,6 @@ final class Pipeline
         }
 
         return $result;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    private function createTaskId(): string
-    {
-        return (string)Uuid::uuid4();
     }
 
     private function taskToProto(TaskInterface $task, OptionsInterface $options): Job
@@ -93,6 +89,14 @@ final class Pipeline
             'headers' => $this->headersToProtoData($task),
             'options' => $this->optionsToProto($options),
         ]);
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    private function createTaskId(): string
+    {
+        return (string)$this->uuid->uuid4();
     }
 
     /**
@@ -132,8 +136,9 @@ final class Pipeline
             ];
         }
 
+
         return new OptionsMessage(
-            \array_merge($data, ['pipeline' => $this->queue->getName()])
+            \array_merge($data, ['pipeline' => $this->name])
         );
     }
 
@@ -144,7 +149,7 @@ final class Pipeline
     {
         return new QueuedTask(
             $job->getId(),
-            $this->queue->getName(),
+            $this->name,
             $task->getName(),
             $task->getPayload(),
             $task->getHeaders()

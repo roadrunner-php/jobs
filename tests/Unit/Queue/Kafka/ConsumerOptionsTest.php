@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
+use PHPUnit\Framework\TestCase;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
-use PHPUnit\Framework\TestCase;
+
+use function json_encode;
 
 final class ConsumerOptionsTest extends TestCase
 {
@@ -114,7 +116,7 @@ final class ConsumerOptionsTest extends TestCase
 }
 JOSN
             ,
-            \json_encode($consumerOptions, JSON_PRETTY_PRINT),
+            json_encode($consumerOptions, JSON_PRETTY_PRINT),
         );
     }
 
@@ -136,7 +138,7 @@ JOSN
 }
 JOSN
             ,
-            \json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT),
+            json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT),
         );
     }
 }

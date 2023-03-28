@@ -19,7 +19,7 @@ final class MemoryCreateInfo extends CreateInfo
     public function __construct(
         string $name,
         int $priority = self::PRIORITY_DEFAULT_VALUE,
-        public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE
+        public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::Memory, $name, $priority);
 

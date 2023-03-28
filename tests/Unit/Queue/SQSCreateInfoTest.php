@@ -119,13 +119,13 @@ final class SQSCreateInfoTest extends TestCase
 
         $result = $sqsCreateInfo->toArray();
         $expected = [
-            'driver'             => Driver::SQS->value,
-            'name'               => 'testName',
-            'priority'           => SQSCreateInfo::PRIORITY_DEFAULT_VALUE,
-            'prefetch'           => SQSCreateInfo::PREFETCH_DEFAULT_VALUE,
+            'driver' => Driver::SQS->value,
+            'name' => 'testName',
+            'priority' => SQSCreateInfo::PRIORITY_DEFAULT_VALUE,
+            'prefetch' => SQSCreateInfo::PREFETCH_DEFAULT_VALUE,
             'visibility_timeout' => SQSCreateInfo::VISIBILITY_TIMEOUT_DEFAULT_VALUE,
-            'wait_time_seconds'  => SQSCreateInfo::WAIT_TIME_SECONDS_DEFAULT_VALUE,
-            'queue'              => SQSCreateInfo::QUEUE_DEFAULT_VALUE,
+            'wait_time_seconds' => SQSCreateInfo::WAIT_TIME_SECONDS_DEFAULT_VALUE,
+            'queue' => SQSCreateInfo::QUEUE_DEFAULT_VALUE,
         ];
 
         $this->assertEquals($expected, $result);

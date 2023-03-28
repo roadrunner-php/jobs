@@ -21,7 +21,7 @@ class QueuedTask extends Task implements QueuedTaskInterface
         protected readonly string $pipeline,
         string $name,
         string $payload,
-        array $headers = []
+        array $headers = [],
     ) {
         parent::__construct($name, $payload, $headers);
     }

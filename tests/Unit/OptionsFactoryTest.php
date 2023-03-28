@@ -8,6 +8,7 @@ use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
+use Traversable;
 
 final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -28,7 +29,7 @@ final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('default', $options->getTopic());
     }
 
-    public function defaultDriversDataProvider(): \Traversable
+    public function defaultDriversDataProvider(): Traversable
     {
         yield [Driver::SQS];
         yield [Driver::AMQP];

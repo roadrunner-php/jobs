@@ -35,8 +35,8 @@ class OptionsTestCase extends TestCase
     {
         $copy = Options::from(
             $original = new Options(
-                $delay = \random_int(0, \PHP_INT_MAX)
-            )
+                $delay = \random_int(0, PHP_INT_MAX)
+            ),
         );
 
         $this->assertNotSame($original, $copy);
@@ -48,7 +48,7 @@ class OptionsTestCase extends TestCase
     public function testDelayMergingWithDefaults(): void
     {
         $original = new Options(
-            $delay = \random_int(0, \PHP_INT_MAX)
+            $delay = \random_int(0, PHP_INT_MAX)
         );
 
         $this->assertSame($delay, $original->merge(new Options())->getDelay());
@@ -102,7 +102,7 @@ class OptionsTestCase extends TestCase
                 Options::DEFAULT_DELAY,
                 Options::DEFAULT_PRIORITY,
                 $autoAck = true
-            )
+            ),
         );
 
         $this->assertNotSame($original, $copy);
@@ -170,8 +170,8 @@ class OptionsTestCase extends TestCase
         $copy = Options::from(
             $original = new Options(
                 Options::DEFAULT_DELAY,
-                $priority = \random_int(0, \PHP_INT_MAX)
-            )
+                $priority = \random_int(0, PHP_INT_MAX)
+            ),
         );
 
         $this->assertNotSame($original, $copy);
@@ -184,7 +184,7 @@ class OptionsTestCase extends TestCase
     {
         $original = new Options(
             Options::DEFAULT_DELAY,
-            $priority = \random_int(0, \PHP_INT_MAX)
+            $priority = \random_int(0, PHP_INT_MAX)
         );
 
         $this->assertSame($priority, $original->merge(new Options())->getPriority());
@@ -222,8 +222,8 @@ class OptionsTestCase extends TestCase
 
         $actual = $source->mergeOptional(
             $modified = new Options(
-            0xDEAD_BEEF * 2
-            )
+                0xDEAD_BEEF * 2
+            ),
         );
 
         // An "$actual" is new object

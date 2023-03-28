@@ -52,7 +52,7 @@ final class SQSCreateInfo extends CreateInfo
         public readonly int $waitTimeSeconds = self::WAIT_TIME_SECONDS_DEFAULT_VALUE,
         public readonly string $queue = self::QUEUE_DEFAULT_VALUE,
         public readonly array $attributes = self::ATTRIBUTES_DEFAULT_VALUE,
-        public readonly array $tags = self::TAGS_DEFAULT_VALUE
+        public readonly array $tags = self::TAGS_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::SQS, $name, $priority);
 
@@ -65,10 +65,10 @@ final class SQSCreateInfo extends CreateInfo
     public function toArray(): array
     {
         $result = \array_merge(parent::toArray(), [
-            'prefetch'           => $this->prefetch,
+            'prefetch' => $this->prefetch,
             'visibility_timeout' => $this->visibilityTimeout,
-            'wait_time_seconds'  => $this->waitTimeSeconds,
-            'queue'              => $this->queue,
+            'wait_time_seconds' => $this->waitTimeSeconds,
+            'queue' => $this->queue,
         ]);
         if ($this->attributes !== []) {
             $result['attributes'] = $this->attributes;

@@ -51,17 +51,17 @@ final class AMQPCreateInfo extends CreateInfo
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'prefetch'        => $this->prefetch,
-            'queue'           => $this->queue,
-            'exchange'        => $this->exchange,
+            'prefetch' => $this->prefetch,
+            'queue' => $this->queue,
+            'exchange' => $this->exchange,
             'exchange_durable' => $this->exchangeDurable,
-            'exchange_type'   => $this->exchangeType->value,
-            'routing_key'     => $this->routingKey,
-            'exclusive'       => $this->exclusive,
-            'multiple_ack'    => $this->multipleAck,
+            'exchange_type' => $this->exchangeType->value,
+            'routing_key' => $this->routingKey,
+            'exclusive' => $this->exclusive,
+            'multiple_ack' => $this->multipleAck,
             'requeue_on_fail' => $this->requeueOnFail,
-            'durable'         => $this->durable,
-            'consume_all'      => $this->consumeAll,
+            'durable' => $this->durable,
+            'consume_all' => $this->consumeAll,
         ]);
     }
 }

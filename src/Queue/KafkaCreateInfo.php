@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue;
 
-use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 
 /**

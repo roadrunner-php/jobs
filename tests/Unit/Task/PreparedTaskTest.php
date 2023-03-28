@@ -9,6 +9,7 @@ use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
+use Traversable;
 
 final class PreparedTaskTest extends TestCase
 {
@@ -71,10 +72,10 @@ final class PreparedTaskTest extends TestCase
         $this->assertTrue($task->getAutoAck());
     }
 
-    public function optionsDataProvider(): \Traversable
+    public function optionsDataProvider(): Traversable
     {
         yield [new Options(), null];
-        yield [(new Options())->withDelay(5),(new Options())->withDelay(5)];
+        yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];
         yield [new KafkaOptions('default'), new KafkaOptions('default')];
         yield [(new KafkaOptions('default'))->withDelay(10), (new KafkaOptions('default'))->withDelay(10)];
     }

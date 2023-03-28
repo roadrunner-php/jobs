@@ -22,7 +22,7 @@ final class BoltdbCreateInfo extends CreateInfo
         string $name,
         public readonly string $file = self::FILE_DEFAULT_VALUE,
         int $priority = self::PRIORITY_DEFAULT_VALUE,
-        public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE
+        public readonly int $prefetch = self::PREFETCH_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::BoltDB, $name, $priority);
 

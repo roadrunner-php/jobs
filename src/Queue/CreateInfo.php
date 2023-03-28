@@ -35,6 +35,11 @@ class CreateInfo implements CreateInfoInterface
         return $this->driver;
     }
 
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
+
     public function toArray(): array
     {
         return [
@@ -42,10 +47,5 @@ class CreateInfo implements CreateInfoInterface
             'driver' => $this->driver->value,
             'priority' => $this->priority,
         ];
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
     }
 }

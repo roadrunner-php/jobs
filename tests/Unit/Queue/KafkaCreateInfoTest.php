@@ -7,13 +7,15 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
-use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\SASL;
+use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
+
+use function json_encode;
 
 final class KafkaCreateInfoTest extends TestCase
 {
@@ -100,9 +102,9 @@ final class KafkaCreateInfoTest extends TestCase
 }
 JSON
             ,
-            \json_encode($createInfo, JSON_PRETTY_PRINT),
+            json_encode($createInfo, JSON_PRETTY_PRINT),
         );
 
-        var_dump(\json_encode($createInfo->toArray(), JSON_PRETTY_PRINT));
+        var_dump(json_encode($createInfo->toArray(), JSON_PRETTY_PRINT));
     }
 }

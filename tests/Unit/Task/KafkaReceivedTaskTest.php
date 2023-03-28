@@ -11,17 +11,25 @@ use Spiral\RoadRunner\WorkerInterface;
 
 final class KafkaReceivedTaskTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->worker = $this->createMock(WorkerInterface::class);
-    }
-
     public function testGetsDriver(): void
     {
         $task = $this->createTask();
         $this->assertEquals(Driver::Kafka, $task->getDriver());
+    }
+
+    public function createTask(
+        string $id = '12345',
+        string $pipeline = 'default',
+        string $queue = 'default',
+        string $name = 'TestTask',
+        int $partition = 0,
+        int $offset = 0,
+        string $payload = 'foo=bar',
+        array $headers = [],
+    ): KafkaReceivedTask {
+        return new KafkaReceivedTask(
+            $this->worker, $id, $pipeline, $name, $queue, $partition, $offset, $payload, $headers
+        );
     }
 
     public function testGetsQueue(): void
@@ -56,18 +64,10 @@ final class KafkaReceivedTaskTest extends TestCase
         $this->assertSame('custom', $task->getPipeline());
     }
 
-    public function createTask(
-        string $id = '12345',
-        string $pipeline = 'default',
-        string $queue = 'default',
-        string $name = 'TestTask',
-        int $partition = 0,
-        int $offset = 0,
-        string $payload = 'foo=bar',
-        array $headers = [],
-    ): KafkaReceivedTask {
-        return new KafkaReceivedTask(
-            $this->worker, $id, $pipeline, $name, $queue, $partition, $offset, $payload, $headers
-        );
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->worker = $this->createMock(WorkerInterface::class);
     }
 }

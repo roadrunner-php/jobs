@@ -10,7 +10,6 @@ use Spiral\Goridge\RPC\Codec\ProtobufCodec;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
-use Traversable;
 
 /**
  * @psalm-import-type CreateInfoArrayType from CreateInfoInterface
@@ -52,7 +51,7 @@ final class Jobs implements JobsInterface
                 \is_int($value),
                 \is_string($value),
                     $value instanceof \Stringable,
-                    \is_object($value) && \method_exists($value, '__toString') => (string) $value,
+                    \is_object($value) && \method_exists($value, '__toString') => (string)$value,
                 \is_bool($value) => $value ? 'true' : 'false',
                 \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
                 default => throw new \InvalidArgumentException(
@@ -85,31 +84,31 @@ final class Jobs implements JobsInterface
         }
     }
 
+    /**
+     * @param QueueInterface|non-empty-string ...$queues
+     * @return array<non-empty-string>
+     */
+    private function names(QueueInterface|string ...$queues): array
+    {
+        $names = [];
+
+        foreach ($queues as $queue) {
+            if ($queue instanceof QueueInterface) {
+                $queue = $queue->getName();
+            }
+
+            $names[] = $queue;
+        }
+
+        return $names;
+    }
+
     public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void
     {
         try {
             $this->rpc->call('jobs.Resume', new Pipelines([
                 'pipelines' => $this->names($queue, ...$queues),
             ]));
-        } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-
-    /**
-     * @return Traversable<non-empty-string, QueueInterface>
-     * @throws JobsException
-     */
-    public function getIterator(): Traversable
-    {
-        try {
-            /** @var Pipelines $result */
-            $result = $this->rpc->call('jobs.List', '', Pipelines::class);
-
-            /** @psalm-var non-empty-string $queue */
-            foreach ($result->getPipelines() as $queue) {
-                yield $queue => $this->connect($queue);
-            }
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -125,27 +124,21 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * @param QueueInterface|non-empty-string ...$queues
-     * @return array<non-empty-string>
+     * @return \Traversable<non-empty-string, QueueInterface>
+     * @throws JobsException
      */
-    private function names(QueueInterface|string ...$queues): array
+    public function getIterator(): \Traversable
     {
-        $names = [];
+        try {
+            /** @var Pipelines $result */
+            $result = $this->rpc->call('jobs.List', '', Pipelines::class);
 
-        foreach ($queues as $queue) {
-            \assert(
-                $queue instanceof QueueInterface || \is_string($queue),
-                'Queue should be an instance of ' . QueueInterface::class .
-                ' or type of string, but ' . \get_debug_type($queue) . ' passed'
-            );
-
-            if ($queue instanceof QueueInterface) {
-                $queue = $queue->getName();
+            /** @psalm-var non-empty-string $queue */
+            foreach ($result->getPipelines() as $queue) {
+                yield $queue => $this->connect($queue);
             }
-
-            $names[] = $queue;
+        } catch (\Throwable $e) {
+            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
-
-        return $names;
     }
 }

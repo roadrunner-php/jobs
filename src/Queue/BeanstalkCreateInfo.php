@@ -26,7 +26,7 @@ final class BeanstalkCreateInfo extends CreateInfo
         int $priority = self::PRIORITY_DEFAULT_VALUE,
         public readonly int $tubePriority = self::TUBE_PRIORITY_DEFAULT_VALUE,
         public readonly string $tube = self::TUBE_DEFAULT_VALUE,
-        public readonly int $reserveTimeout = self::RESERVE_TIMEOUT_DEFAULT_VALUE
+        public readonly int $reserveTimeout = self::RESERVE_TIMEOUT_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::Beanstalk, $name, $priority);
 
@@ -38,8 +38,8 @@ final class BeanstalkCreateInfo extends CreateInfo
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'tube_priority'   => $this->tubePriority,
-            'tube'            => $this->tube,
+            'tube_priority' => $this->tubePriority,
+            'tube' => $this->tube,
             'reserve_timeout' => $this->reserveTimeout,
         ]);
     }

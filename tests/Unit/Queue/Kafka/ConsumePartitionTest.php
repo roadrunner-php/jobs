@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
+use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
+
+use function json_encode;
 
 final class ConsumePartitionTest extends TestCase
 {
@@ -27,13 +29,15 @@ final class ConsumePartitionTest extends TestCase
 
     public function testSerialization(): void
     {
-        $string = \json_encode(new ConsumePartition(
-            'my-topic', 1, new ConsumerOffset(OffsetType::AtStart, 123)
-        ));
+        $string = json_encode(
+            new ConsumePartition(
+                'my-topic', 1, new ConsumerOffset(OffsetType::AtStart, 123)
+            ),
+        );
 
         $this->assertSame(
             '{"topic":"my-topic","partition":1,"offset":{"type":"AtStart","value":123}}',
-            $string
+            $string,
         );
     }
 }
