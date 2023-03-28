@@ -37,33 +37,6 @@ final class Jobs implements JobsInterface
     }
 
     /**
-     * @param CreateInfoArrayType $map
-     * @return non-empty-array<array-key, string>
-     * @throws \Throwable
-     * @psalm-suppress MixedAssignment
-     */
-    private function toStringOfStringMap(array $map): array
-    {
-        $marshalled = [];
-
-        foreach ($map as $key => $value) {
-            $marshalled[$key] = match (true) {
-                \is_int($value),
-                \is_string($value),
-                    $value instanceof \Stringable,
-                    \is_object($value) && \method_exists($value, '__toString') => (string)$value,
-                \is_bool($value) => $value ? 'true' : 'false',
-                \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
-                default => throw new \InvalidArgumentException(
-                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
-                ),
-            };
-        }
-
-        return $marshalled;
-    }
-
-    /**
      * @param non-empty-string $queue
      */
     public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
@@ -82,25 +55,6 @@ final class Jobs implements JobsInterface
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
-    }
-
-    /**
-     * @param QueueInterface|non-empty-string ...$queues
-     * @return array<non-empty-string>
-     */
-    private function names(QueueInterface|string ...$queues): array
-    {
-        $names = [];
-
-        foreach ($queues as $queue) {
-            if ($queue instanceof QueueInterface) {
-                $queue = $queue->getName();
-            }
-
-            $names[] = $queue;
-        }
-
-        return $names;
     }
 
     public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void
@@ -140,5 +94,51 @@ final class Jobs implements JobsInterface
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
+    }
+
+    /**
+     * @param CreateInfoArrayType $map
+     * @return non-empty-array<array-key, string>
+     * @throws \Throwable
+     * @psalm-suppress MixedAssignment
+     */
+    private function toStringOfStringMap(array $map): array
+    {
+        $marshalled = [];
+
+        foreach ($map as $key => $value) {
+            $marshalled[$key] = match (true) {
+                \is_int($value),
+                \is_string($value),
+                $value instanceof \Stringable,
+                \is_object($value) && \method_exists($value, '__toString') => (string)$value,
+                \is_bool($value) => $value ? 'true' : 'false',
+                \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
+                default => throw new \InvalidArgumentException(
+                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
+                ),
+            };
+        }
+
+        return $marshalled;
+    }
+
+    /**
+     * @param QueueInterface|non-empty-string ...$queues
+     * @return array<non-empty-string>
+     */
+    private function names(QueueInterface|string ...$queues): array
+    {
+        $names = [];
+
+        foreach ($queues as $queue) {
+            if ($queue instanceof QueueInterface) {
+                $queue = $queue->getName();
+            }
+
+            $names[] = $queue;
+        }
+
+        return $names;
     }
 }
