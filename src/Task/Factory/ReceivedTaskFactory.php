@@ -44,16 +44,18 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
         $header = $this->getHeader($payload);
 
         $driver = Driver::tryFrom($header['driver'] ?? 'unknown') ?? Driver::Unknown;
+        $queue = $header['queue'] ?? 'unknown';
+        $pipeline = $header['pipeline'] ?? 'unknown';
 
         return match ($driver) {
             Driver::Kafka => new KafkaReceivedTask(
                 $this->worker,
                 $header['id'],
-                $header['pipeline'],
+                $pipeline,
                 $header['job'],
-                $header['queue'], // Kafka topic name
-                (int)$header['partition'],
-                (int)$header['offset'],
+                $queue, // Kafka topic name
+                (int)$header['partition'] ?? 0,
+                (int)$header['offset'] ?? 0,
                 $payload->body,
                 (array)$header['headers']
             ),
@@ -61,9 +63,9 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
                 $this->worker,
                 $header['id'],
                 $driver,
-                $header['pipeline'],
+                $pipeline,
                 $header['job'],
-                $header['queue'], // Queue broker queue name
+                $queue, // Queue broker queue name
                 $payload->body,
                 (array)$header['headers']
             ),
