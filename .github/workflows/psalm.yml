@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - 3.x
+      - '*.*'
 
 name: static analysis
 
@@ -14,4 +14,4 @@ jobs:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['8.2']
+        ['8.1']
