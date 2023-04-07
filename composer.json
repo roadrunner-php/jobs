@@ -40,7 +40,7 @@
         "ext-json": "*",
         "google/protobuf": "^v3.17",
         "ramsey/uuid": "^3 || ^4",
-        "roadrunner-php/roadrunner-api-dto": "dev-main",
+        "roadrunner-php/roadrunner-api-dto": "^1.0",
         "spiral/goridge": "^3.1",
         "spiral/roadrunner": "^2.0",
         "spiral/roadrunner-worker": "^2.0.2"
