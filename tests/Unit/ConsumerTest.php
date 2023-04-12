@@ -6,7 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Spiral\RoadRunner\Jobs\Consumer;
-use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactoryInterface;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
 use Spiral\RoadRunner\Payload;

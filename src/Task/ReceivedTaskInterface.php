@@ -25,7 +25,6 @@ interface ReceivedTaskInterface extends
     /**
      * Marks the current task as failed.
      *
-     * @param string|\Stringable|\Throwable $error
      * @throws JobsException
      */
     public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void;

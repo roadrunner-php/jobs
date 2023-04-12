@@ -25,7 +25,7 @@ final class ReceivedTaskFactoryTest extends TestCase
     public function testEmptyHeader(): void
     {
         $this->expectException(ReceivedTaskException::class);
-        $this->expectErrorMessage('Task payload does not have a valid header.');
+        $this->expectExceptionMessage('Task payload does not have a valid header.');
 
         $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
         $factory->create(new Payload(null));
@@ -97,7 +97,7 @@ final class ReceivedTaskFactoryTest extends TestCase
         $this->assertSame(5, $task->getOffset());
     }
 
-    public function payloadsDataProvider(): Traversable
+    public static function payloadsDataProvider(): Traversable
     {
         foreach (Driver::cases() as $driver) {
             if ($driver === Driver::Kafka) {

@@ -104,7 +104,5 @@ JSON
             ,
             json_encode($createInfo, JSON_PRETTY_PRINT),
         );
-
-        var_dump(json_encode($createInfo->toArray(), JSON_PRETTY_PRINT));
     }
 }

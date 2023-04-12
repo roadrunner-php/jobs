@@ -75,7 +75,6 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      *
-     * @param Payload $payload
      * @return HeaderPayload
      * @throws SerializationException
      * @throws ReceivedTaskException

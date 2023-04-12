@@ -72,7 +72,7 @@ final class PreparedTaskTest extends TestCase
         $this->assertTrue($task->getAutoAck());
     }
 
-    public function optionsDataProvider(): Traversable
+    public static function optionsDataProvider(): Traversable
     {
         yield [new Options(), null];
         yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];

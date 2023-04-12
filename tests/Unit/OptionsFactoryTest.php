@@ -29,7 +29,7 @@ final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('default', $options->getTopic());
     }
 
-    public function defaultDriversDataProvider(): Traversable
+    public static function defaultDriversDataProvider(): Traversable
     {
         yield [Driver::SQS];
         yield [Driver::AMQP];

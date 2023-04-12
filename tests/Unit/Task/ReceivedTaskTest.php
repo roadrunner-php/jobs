@@ -82,7 +82,7 @@ final class ReceivedTaskTest extends TestCase
     }
 
 
-    public function provideFailData(): Generator
+    public static function provideFailData(): Generator
     {
         yield 'default' => ['Some error message', false, null, []];
         yield 'requeue' => ['Some error message', true, null, []];

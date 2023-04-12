@@ -18,9 +18,8 @@ use Spiral\RoadRunner\Jobs\Task\QueuedTaskInterface;
 
 final class Queue implements QueueInterface
 {
-    private OptionsInterface $options;
-    private Pipeline $pipeline;
-    private RPCInterface $rpc;
+    private readonly Pipeline $pipeline;
+    private readonly RPCInterface $rpc;
 
     /**
      * @param non-empty-string $name
@@ -28,7 +27,7 @@ final class Queue implements QueueInterface
     public function __construct(
         public readonly string $name,
         RPCInterface $rpc,
-        ?OptionsInterface $options = null,
+        private ?OptionsInterface $options = null,
     ) {
         \assert($name !== '', 'Precondition [name !== ""] failed');
 

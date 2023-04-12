@@ -6,7 +6,7 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
 use Spiral\RoadRunner\Jobs\Options;
 
-class OptionsTestCase extends TestCase
+class OptionsTest extends BaseTestCase
 {
     public function testDelay(): void
     {

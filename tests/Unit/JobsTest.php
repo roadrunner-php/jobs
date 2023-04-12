@@ -21,7 +21,7 @@ use function count;
 use function iterator_to_array;
 use function random_bytes;
 
-class JobsTestCase extends TestCase
+class JobsTest extends BaseTestCase
 {
     /**
      * @testdox Checking creating a new queue with given info.

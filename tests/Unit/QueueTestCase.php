@@ -13,7 +13,7 @@ use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue;
 
-class QueueTestCase extends TestCase
+class QueueTestCase extends BaseTestCase
 {
     public function testName(): void
     {

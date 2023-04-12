@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
+namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -131,7 +131,7 @@ final class PipelineTest extends TestCase
         $pipeline->send(new PreparedTask('bar', 'foo=bar'));
     }
 
-    public function taskToProtoDataProvider(): Traversable
+    public static function taskToProtoDataProvider(): Traversable
     {
         yield [
             new Options(5, 10),

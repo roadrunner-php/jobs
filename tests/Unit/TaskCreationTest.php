@@ -11,7 +11,7 @@ use Spiral\RoadRunner\Jobs\Queue;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
-class TaskCreationTestCase extends TestCase
+class TaskCreationTest extends BaseTestCase
 {
     public function testTaskCreation(): void
     {
