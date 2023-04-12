@@ -1,7 +1,7 @@
 # RoadRunner Jobs Plugin
 
 [![PHP Version Require](https://poser.pugx.org/spiral/roadrunner-jobs/require/php)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![Latest Stable Version](https://poser.pugx.org/spiral/spiral/roadrunner-jobs/v/stable)](https://packagist.org/packages/spiral/roadrunner-jobs)
+[![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner-jobs/v/stable)](https://packagist.org/packages/spiral/roadrunner-jobs)
 [![phpunit](https://github.com/spiral/roadrunner-jobs/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
 [![psalm](https://github.com/spiral/roadrunner-jobs/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
 [![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/3.x/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
@@ -28,8 +28,7 @@ vendor/bin/rr get
 
 ## Configuration
 
-First you need to add at least one jobs adapter to your RoadRunner configuration. For example, such a configuration 
-would be quite feasible to run:
+First you need to add at least one jobs adapter to your RoadRunner configuration. For example, such a configuration would be quite feasible to run:
 
 ```yaml
 version: '3.0'

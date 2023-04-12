@@ -5,8 +5,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Wolfy-J",
-            "email": "wolfy.jd@gmail.com"
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
         },
         {
             "name": "Pavel Buchnev (butschster)",
@@ -70,11 +70,6 @@
     "scripts": {
         "tests": "phpunit",
         "psalm": "psalm --no-cache"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.0.x-dev"
-        }
     },
     "config": {
         "sort-packages": true
