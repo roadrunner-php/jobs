@@ -98,7 +98,7 @@ final class Jobs implements JobsInterface
 
     /**
      * @param CreateInfoArrayType $map
-     * @return non-empty-array<array-key, string>
+     * @return string[]
      * @throws \Throwable
      * @psalm-suppress MixedAssignment
      */

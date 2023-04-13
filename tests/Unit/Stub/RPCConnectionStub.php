@@ -45,10 +45,7 @@ final class RPCConnectionStub implements RPCInterface
         return $self;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function call(string $method, $payload, $options = null)
+    public function call(string $method, $payload, $options = null): mixed
     {
         if (!\array_key_exists($method, $this->mapping)) {
             throw new BadFunctionCallException(

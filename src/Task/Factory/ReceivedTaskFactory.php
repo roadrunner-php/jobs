@@ -15,7 +15,7 @@ use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
 /**
- * @psalm-type HeaderPayload = array {
+ * @psalm-type HeaderPayload = array{
  *    id:         non-empty-string,
  *    job:        non-empty-string,
  *    headers:    array<string, array<string>>|null,
@@ -42,7 +42,10 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
     public function create(Payload $payload): ReceivedTaskInterface
     {
         $header = $this->getHeader($payload);
+        $headers = (array) $header['headers'];
 
+        $id = $header['id'];
+        $job = $header['job'];
         $driver = Driver::tryFrom($header['driver'] ?? 'unknown') ?? Driver::Unknown;
         $queue = $header['queue'] ?? 'unknown';
         $pipeline = $header['pipeline'] ?? 'unknown';
@@ -50,24 +53,24 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
         return match ($driver) {
             Driver::Kafka => new KafkaReceivedTask(
                 $this->worker,
-                $header['id'],
+                $id,
                 $pipeline,
-                $header['job'],
+                $job,
                 $queue, // Kafka topic name
                 (int)$header['partition'] ?? 0,
                 (int)$header['offset'] ?? 0,
                 $payload->body,
-                (array)$header['headers']
+                $headers
             ),
             default => new ReceivedTask(
                 $this->worker,
-                $header['id'],
+                $id,
                 $driver,
                 $pipeline,
-                $header['job'],
+                $job,
                 $queue, // Queue broker queue name
                 $payload->body,
-                (array)$header['headers']
+                $headers
             ),
         };
     }

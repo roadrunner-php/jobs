@@ -20,6 +20,7 @@ final class Queue implements QueueInterface
 {
     private readonly Pipeline $pipeline;
     private readonly RPCInterface $rpc;
+    private OptionsInterface $options;
 
     /**
      * @param non-empty-string $name
@@ -27,7 +28,7 @@ final class Queue implements QueueInterface
     public function __construct(
         public readonly string $name,
         RPCInterface $rpc,
-        private ?OptionsInterface $options = null,
+        ?OptionsInterface $options = null,
     ) {
         \assert($name !== '', 'Precondition [name !== ""] failed');
 
@@ -88,7 +89,7 @@ final class Queue implements QueueInterface
         string|\Stringable $payload,
         OptionsInterface $options = null,
     ): PreparedTaskInterface {
-        if (\method_exists($this->options, 'mergeOptional')) {
+        if ($this->options !== null && \method_exists($this->options, 'mergeOptional')) {
             /** @var OptionsInterface $options */
             $options = $this->options->mergeOptional($options);
         }
