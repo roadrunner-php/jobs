@@ -31,8 +31,6 @@ vendor/bin/rr get
 First you need to add at least one jobs adapter to your RoadRunner configuration. For example, such a configuration would be quite feasible to run:
 
 ```yaml
-version: '3.0'
-
 rpc:
   listen: tcp://127.0.0.1:6001
 
