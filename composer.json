@@ -48,9 +48,9 @@
         "google/protobuf": "^v3.17",
         "ramsey/uuid": "^3 || ^4",
         "roadrunner-php/roadrunner-api-dto": "^1.0",
-        "spiral/goridge": "^3.1",
-        "spiral/roadrunner": "^2.0 || ^2023.1",
-        "spiral/roadrunner-worker": "^2.0.2"
+        "spiral/goridge": "^4.0",
+        "spiral/roadrunner": "^2023.1",
+        "spiral/roadrunner-worker": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0",
