@@ -4,7 +4,7 @@
 [![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner-jobs/v/stable)](https://packagist.org/packages/spiral/roadrunner-jobs)
 [![phpunit](https://github.com/spiral/roadrunner-jobs/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
 [![psalm](https://github.com/spiral/roadrunner-jobs/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
-[![Codecov](https://codecov.io/gh/spiral/roadrunner-jobs/branch/3.x/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner-jobs/)
+[![Codecov](https://codecov.io/gh/roadrunner-php/jobs/branch/4.x/graph/badge.svg)](https://codecov.io/gh/roadrunner-php/jobs/)
 [![Total Downloads](https://poser.pugx.org/spiral/roadrunner-jobs/downloads)](https://packagist.org/packages/spiral/roadrunner-jobs)
 [![StyleCI](https://github.styleci.io/repos/388772135/shield?branch=master)](https://github.styleci.io/repos/388772135?branch=master)
 <a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
