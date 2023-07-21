@@ -7,7 +7,7 @@
 [![Codecov](https://codecov.io/gh/roadrunner-php/jobs/branch/4.x/graph/badge.svg)](https://codecov.io/gh/roadrunner-php/jobs/)
 [![Total Downloads](https://poser.pugx.org/spiral/roadrunner-jobs/downloads)](https://packagist.org/packages/spiral/roadrunner-jobs)
 [![StyleCI](https://github.styleci.io/repos/388772135/shield?branch=master)](https://github.styleci.io/repos/388772135?branch=master)
-<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
+<a href="https://discord.gg/spiralphp"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
 
