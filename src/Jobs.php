@@ -113,6 +113,7 @@ final class Jobs implements JobsInterface
                 $value instanceof \Stringable,
                 \is_object($value) && \method_exists($value, '__toString') => (string)$value,
                 \is_bool($value) => $value ? 'true' : 'false',
+                $value instanceof \JsonSerializable,
                 \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
                 default => throw new \InvalidArgumentException(
                     \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
