@@ -110,8 +110,7 @@ final class Jobs implements JobsInterface
             $marshalled[$key] = match (true) {
                 \is_int($value),
                 \is_string($value),
-                $value instanceof \Stringable,
-                // @psalm-suppress RedundantCast
+                $value instanceof \Stringable => (string)$value,
                 \is_object($value) && \method_exists($value, '__toString') => (string)$value,
                 \is_bool($value) => $value ? 'true' : 'false',
                 $value instanceof \JsonSerializable,
