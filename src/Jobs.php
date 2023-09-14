@@ -26,9 +26,12 @@ final class Jobs implements JobsInterface
     public function create(CreateInfoInterface $info, ?OptionsInterface $options = null): QueueInterface
     {
         try {
-            $this->rpc->call('jobs.Declare', new DeclareRequest([
-                'pipeline' => $this->toStringOfStringMap($info->toArray()),
-            ]));
+            $this->rpc->call(
+                'jobs.Declare',
+                new DeclareRequest([
+                    'pipeline' => $this->toStringOfStringMap($info->toArray()),
+                ]),
+            );
 
             return $this->connect($info->getName(), $options ?? OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
@@ -49,9 +52,12 @@ final class Jobs implements JobsInterface
     public function pause(string|QueueInterface $queue, string|QueueInterface ...$queues): void
     {
         try {
-            $this->rpc->call('jobs.Pause', new Pipelines([
-                'pipelines' => $this->names($queue, ...$queues),
-            ]));
+            $this->rpc->call(
+                'jobs.Pause',
+                new Pipelines([
+                    'pipelines' => $this->names($queue, ...$queues),
+                ]),
+            );
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -60,9 +66,12 @@ final class Jobs implements JobsInterface
     public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void
     {
         try {
-            $this->rpc->call('jobs.Resume', new Pipelines([
-                'pipelines' => $this->names($queue, ...$queues),
-            ]));
+            $this->rpc->call(
+                'jobs.Resume',
+                new Pipelines([
+                    'pipelines' => $this->names($queue, ...$queues),
+                ]),
+            );
         } catch (\Throwable $e) {
             throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -108,15 +117,15 @@ final class Jobs implements JobsInterface
 
         foreach ($map as $key => $value) {
             $marshalled[$key] = match (true) {
-                \is_int($value),
-                \is_string($value),
-                $value instanceof \Stringable => (string)$value,
-                \is_object($value) && \method_exists($value, '__toString') => (string)$value,
+                \is_int($value) => (string)$value,
+                \is_object($value) && \method_exists($value, '__toString') => (string)$value->__toString(),
+                $value instanceof \Stringable => $value->__toString(),
+                \is_string($value) => $value,
                 \is_bool($value) => $value ? 'true' : 'false',
                 $value instanceof \JsonSerializable,
                 \is_array($value) => \json_encode($value, \JSON_THROW_ON_ERROR),
                 default => throw new \InvalidArgumentException(
-                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value))
+                    \sprintf('Can not cast to string unrecognized value of type %s', \get_debug_type($value)),
                 ),
             };
         }
