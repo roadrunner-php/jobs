@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
@@ -11,7 +12,11 @@ use Spiral\RoadRunner\Jobs\Jobs;
 use Spiral\RoadRunner\Jobs\JobsInterface;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
+use Spiral\RoadRunner\Jobs\Queue\CreateInfoInterface;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
+use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
+use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
 use function array_map;
@@ -23,24 +28,40 @@ use function random_bytes;
 
 class JobsTest extends BaseTestCase
 {
+    public static function createOptionsProvider(): iterable
+    {
+        yield 'default' => [
+            new CreateInfo(Driver::Memory, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE),
+            '{"pipeline":{"name":"foo","driver":"memory","priority":"10"}}',
+        ];
+
+        yield 'kafka' => [
+            new KafkaCreateInfo(
+                name: 'foo',
+                priority: 3,
+                autoCreateTopicsEnable: true,
+                producerOptions: new ProducerOptions(),
+                consumerOptions: new ConsumerOptions(topics: ['foo']),
+            ),
+            '{"pipeline":{"name":"foo","driver":"kafka","priority":"3","auto_create_topics_enable":"true","producer_options":"{\"disable_idempotent\":false,\"max_message_bytes\":1000012,\"required_acks\":\"AllISRAck\"}","consumer_options":"{\"topics\":[\"foo\"],\"consume_regexp\":false,\"max_fetch_message_size\":50000,\"min_fetch_message_size\":1,\"consumer_offset\":{\"type\":\"AtStart\",\"value\":1}}"}}',
+        ];
+    }
+
     /**
      * @testdox Checking creating a new queue with given info.
      */
-    public function testCreate(): void
+    #[DataProvider(methodName: 'createOptionsProvider')]
+    public function testCreate(CreateInfoInterface $dto, string $expected): void
     {
-        $dto = new CreateInfo(Driver::Memory, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
-
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use ($dto) {
-                $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
-                $this->assertSame($dto->getDriver()->value, $request->getPipeline()->offsetGet('driver'));
-                $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
+            'jobs.Declare' => function (DeclareRequest $request) use ($expected) {
+                $this->assertSame($expected, $request->serializeToJsonString());
             },
         ]);
 
         $queue = $jobs->create($dto);
 
-        $this->assertSame('foo', $queue->getName());
+        $this->assertSame($dto->getName(), $queue->getName());
     }
 
     /**
@@ -57,10 +78,11 @@ class JobsTest extends BaseTestCase
         $dto = new CreateInfo(Driver::SQS, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use ($dto) {
-                $this->assertSame($dto->getName(), $request->getPipeline()->offsetGet('name'));
-                $this->assertSame($dto->getDriver()->value, $request->getPipeline()->offsetGet('driver'));
-                $this->assertSame('10', $request->getPipeline()->offsetGet('priority'));
+            'jobs.Declare' => function (DeclareRequest $request) use ($expected) {
+                $this->assertSame(
+                    expected: '{"pipeline":{"name":"foo","driver":"sqs","priority":"10"}}', //
+                    actual: $request->serializeToJsonString(),
+                );
             },
         ]);
 
@@ -87,7 +109,7 @@ class JobsTest extends BaseTestCase
         $this->assertSame(
             $expected,
             array_map(
-                static fn (QueueInterface $queue) => $queue->getName(),
+                static fn(QueueInterface $queue) => $queue->getName(),
                 array_values(iterator_to_array($jobs)),
             ),
         );
