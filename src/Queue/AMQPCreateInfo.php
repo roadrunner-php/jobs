@@ -18,6 +18,7 @@ final class AMQPCreateInfo extends CreateInfo
     public const REQUEUE_ON_FAIL_DEFAULT_VALUE = false;
     public const DURABLE_DEFAULT_VALUE = false;
     public const CONSUME_ALL_DEFAULT_VALUE = false;
+    public const QUEUE_HEADERS_DEFAULT_VALUE = [];
 
     /**
      * @param non-empty-string $name
@@ -26,6 +27,7 @@ final class AMQPCreateInfo extends CreateInfo
      * @param string $queue Queue name. Required for consumer.
      * @param non-empty-string $exchange
      * @param string $routingKey Routing key. Required for publisher.
+     * @param array<string, string> $queueHeaders
      */
     public function __construct(
         string $name,
@@ -41,6 +43,7 @@ final class AMQPCreateInfo extends CreateInfo
         public readonly bool $durable = self::DURABLE_DEFAULT_VALUE,
         public readonly bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE,
         public readonly bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE,
+        public readonly array $queueHeaders = self::QUEUE_HEADERS_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::AMQP, $name, $priority);
 
@@ -62,6 +65,7 @@ final class AMQPCreateInfo extends CreateInfo
             'requeue_on_fail' => $this->requeueOnFail,
             'durable' => $this->durable,
             'consume_all' => $this->consumeAll,
+            'queue_headers' => $this->queueHeaders,
         ]);
     }
 }

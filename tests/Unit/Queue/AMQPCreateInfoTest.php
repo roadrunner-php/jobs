@@ -38,7 +38,12 @@ final class AMQPCreateInfoTest extends TestCase
             true,
             true,
             true,
-            true
+            true,
+            true,
+            true,
+            [
+                'x-queue-type' => 'quorum',
+            ],
         );
 
         $this->assertSame(200, $amqpCreateInfo->prefetch);
@@ -50,6 +55,9 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertTrue($amqpCreateInfo->multipleAck);
         $this->assertTrue($amqpCreateInfo->requeueOnFail);
         $this->assertTrue($amqpCreateInfo->durable);
+        $this->assertTrue($amqpCreateInfo->exchangeDurable);
+        $this->assertTrue($amqpCreateInfo->consumeAll);
+        $this->assertSame(['x-queue-type' => 'quorum'], $amqpCreateInfo->queueHeaders);
     }
 
     public function testToArray()
@@ -65,7 +73,12 @@ final class AMQPCreateInfoTest extends TestCase
             true,
             true,
             true,
-            true
+            true,
+            true,
+            true,
+            [
+                'x-queue-type' => 'quorum',
+            ],
         );
 
         $expectedArray = [
@@ -81,8 +94,11 @@ final class AMQPCreateInfoTest extends TestCase
             'multiple_ack' => true,
             'requeue_on_fail' => true,
             'durable' => true,
-            'exchange_durable' => false,
-            'consume_all' => false,
+            'exchange_durable' => true,
+            'consume_all' => true,
+            'queue_headers' => [
+                'x-queue-type' => 'quorum',
+            ],
         ];
 
         $this->assertEquals($expectedArray, $amqpCreateInfo->toArray());
