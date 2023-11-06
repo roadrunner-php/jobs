@@ -51,7 +51,7 @@ final class BoltdbCreateInfoTest extends TestCase
             'priority' => $priority,
             'prefetch' => $prefetch,
             'file' => $file,
-            'permissions' => 0777,
+            'permissions' => 0755,
         ];
 
         $this->assertEquals($expectedArray, $boltdbCreateInfo->toArray());

@@ -11,7 +11,7 @@ final class BoltdbCreateInfo extends CreateInfo
 {
     public const PREFETCH_DEFAULT_VALUE = 10000;
     public const FILE_DEFAULT_VALUE = 'rr.db';
-    public const PERMISSIONS_DEFAULT_VALUE = 0777;
+    public const PERMISSIONS_DEFAULT_VALUE = 0755;
 
     /**
      * @param non-empty-string $name
