@@ -15,13 +15,15 @@ final class BoltdbCreateInfoTest extends TestCase
         $file = 'custom_file.db';
         $priority = 2;
         $prefetch = 5000;
+        $permissions = 0666;
 
-        $boltdbCreateInfo = new BoltdbCreateInfo($name, $file, $priority, $prefetch);
+        $boltdbCreateInfo = new BoltdbCreateInfo($name, $file, $priority, $prefetch, $permissions);
 
         $this->assertEquals($name, $boltdbCreateInfo->name);
         $this->assertEquals($file, $boltdbCreateInfo->file);
         $this->assertEquals($priority, $boltdbCreateInfo->priority);
         $this->assertEquals($prefetch, $boltdbCreateInfo->prefetch);
+        $this->assertEquals($permissions, $boltdbCreateInfo->permissions);
     }
 
     public function testDefaultValues(): void
@@ -31,6 +33,7 @@ final class BoltdbCreateInfoTest extends TestCase
         $this->assertEquals(BoltdbCreateInfo::PRIORITY_DEFAULT_VALUE, $boltdbCreateInfo->priority);
         $this->assertEquals(BoltdbCreateInfo::PREFETCH_DEFAULT_VALUE, $boltdbCreateInfo->prefetch);
         $this->assertEquals(BoltdbCreateInfo::FILE_DEFAULT_VALUE, $boltdbCreateInfo->file);
+        $this->assertEquals(BoltdbCreateInfo::PERMISSIONS_DEFAULT_VALUE, $boltdbCreateInfo->permissions);
     }
 
     public function testToArray(): void
@@ -48,6 +51,7 @@ final class BoltdbCreateInfoTest extends TestCase
             'priority' => $priority,
             'prefetch' => $prefetch,
             'file' => $file,
+            'permissions' => 0777,
         ];
 
         $this->assertEquals($expectedArray, $boltdbCreateInfo->toArray());

@@ -21,6 +21,7 @@ final class BeanstalkCreateInfoTest extends TestCase
         $this->assertEquals(BeanstalkCreateInfo::TUBE_PRIORITY_DEFAULT_VALUE, $beanstalkCreateInfo->tubePriority);
         $this->assertEquals(BeanstalkCreateInfo::TUBE_DEFAULT_VALUE, $beanstalkCreateInfo->tube);
         $this->assertEquals(BeanstalkCreateInfo::RESERVE_TIMEOUT_DEFAULT_VALUE, $beanstalkCreateInfo->reserveTimeout);
+        $this->assertEquals(BeanstalkCreateInfo::CONSUME_ALL_DEFAULT_VALUE, $beanstalkCreateInfo->consumeAll);
     }
 
     public function testBeanstalkCreateInfoCustomValues(): void
@@ -30,8 +31,16 @@ final class BeanstalkCreateInfoTest extends TestCase
         $tubePriority = 100;
         $tube = 'my-tube';
         $reserveTimeout = 30;
+        $consumeAll = true;
 
-        $beanstalkCreateInfo = new BeanstalkCreateInfo($name, $priority, $tubePriority, $tube, $reserveTimeout);
+        $beanstalkCreateInfo = new BeanstalkCreateInfo(
+            name: $name,
+            priority: $priority,
+            tubePriority: $tubePriority,
+            tube: $tube,
+            reserveTimeout: $reserveTimeout,
+            consumeAll: $consumeAll
+        );
 
         $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
         $this->assertEquals($name, $beanstalkCreateInfo->name);
@@ -39,6 +48,7 @@ final class BeanstalkCreateInfoTest extends TestCase
         $this->assertEquals($tubePriority, $beanstalkCreateInfo->tubePriority);
         $this->assertEquals($tube, $beanstalkCreateInfo->tube);
         $this->assertEquals($reserveTimeout, $beanstalkCreateInfo->reserveTimeout);
+        $this->assertEquals($consumeAll, $beanstalkCreateInfo->consumeAll);
     }
 
     public function testToArray(): void
@@ -48,8 +58,16 @@ final class BeanstalkCreateInfoTest extends TestCase
         $tubePriority = 100;
         $tube = 'my-tube';
         $reserveTimeout = 30;
+        $consumeAll = true;
 
-        $beanstalkCreateInfo = new BeanstalkCreateInfo($name, $priority, $tubePriority, $tube, $reserveTimeout);
+        $beanstalkCreateInfo = new BeanstalkCreateInfo(
+            name: $name,
+            priority: $priority,
+            tubePriority: $tubePriority,
+            tube: $tube,
+            reserveTimeout: $reserveTimeout,
+            consumeAll: $consumeAll
+        );
 
         $expectedArray = [
             'driver' => Driver::Beanstalk->value,
@@ -58,6 +76,7 @@ final class BeanstalkCreateInfoTest extends TestCase
             'tube_priority' => $tubePriority,
             'tube' => $tube,
             'reserve_timeout' => $reserveTimeout,
+            'consume_all' => $consumeAll,
         ];
 
         $this->assertEquals($expectedArray, $beanstalkCreateInfo->toArray());
