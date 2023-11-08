@@ -33,6 +33,8 @@ final class SQSCreateInfo extends CreateInfo
     public const ATTRIBUTES_DEFAULT_VALUE = [];
     public const TAGS_DEFAULT_VALUE = [];
     public const QUEUE_DEFAULT_VALUE = 'default';
+    public const MESSAGE_GROUP_ID_DEFAULT_VALUE = null;
+    public const SKIP_QUEUE_DECLARATION_DEFAULT_VALUE = false;
 
     /**
      * @param non-empty-string $name
@@ -43,6 +45,7 @@ final class SQSCreateInfo extends CreateInfo
      * @param non-empty-string $queue
      * @param array|SQSAttributesMap $attributes
      * @param array<non-empty-string, non-empty-string> $tags
+     * @param non-empty-string|null $messageGroupId
      */
     public function __construct(
         string $name,
@@ -53,6 +56,8 @@ final class SQSCreateInfo extends CreateInfo
         public readonly string $queue = self::QUEUE_DEFAULT_VALUE,
         public readonly array $attributes = self::ATTRIBUTES_DEFAULT_VALUE,
         public readonly array $tags = self::TAGS_DEFAULT_VALUE,
+        public readonly ?string $messageGroupId = self::MESSAGE_GROUP_ID_DEFAULT_VALUE,
+        public readonly bool $skipQueueDeclaration = self::SKIP_QUEUE_DECLARATION_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::SQS, $name, $priority);
 
@@ -60,6 +65,9 @@ final class SQSCreateInfo extends CreateInfo
         \assert($this->visibilityTimeout >= 0, 'Precondition [visibilityTimeout >= 0] failed');
         \assert($this->waitTimeSeconds >= 0, 'Precondition [waitTimeSeconds >= 0] failed');
         \assert($this->queue !== '', 'Precondition [queue !== ""] failed');
+        if ($this->messageGroupId !== null) {
+            \assert($this->messageGroupId !== '', 'Precondition [messageGroupId !== ""] failed');
+        }
     }
 
     public function toArray(): array
@@ -67,14 +75,18 @@ final class SQSCreateInfo extends CreateInfo
         $result = \array_merge(parent::toArray(), [
             'prefetch' => $this->prefetch,
             'visibility_timeout' => $this->visibilityTimeout,
-            'wait_time_seconds' => $this->waitTimeSeconds,
+            'wait_time' => $this->waitTimeSeconds,
             'queue' => $this->queue,
+            'skip_queue_declaration' => $this->skipQueueDeclaration,
         ]);
         if ($this->attributes !== []) {
             $result['attributes'] = $this->attributes;
         }
         if ($this->tags !== []) {
             $result['tags'] = $this->tags;
+        }
+        if (!empty($this->messageGroupId)) {
+            $result['message_group_id'] = $this->messageGroupId;
         }
 
         return $result;

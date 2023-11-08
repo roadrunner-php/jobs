@@ -14,6 +14,8 @@ final class AMQPCreateInfoTest extends TestCase
     {
         $amqpCreateInfo = new AMQPCreateInfo('test');
 
+        $this->assertSame('test', $amqpCreateInfo->name);
+        $this->assertSame(AMQPCreateInfo::PRIORITY_DEFAULT_VALUE, $amqpCreateInfo->priority);
         $this->assertSame(AMQPCreateInfo::PREFETCH_DEFAULT_VALUE, $amqpCreateInfo->prefetch);
         $this->assertSame(AMQPCreateInfo::QUEUE_DEFAULT_VALUE, $amqpCreateInfo->queue);
         $this->assertSame(AMQPCreateInfo::EXCHANGE_DEFAULT_VALUE, $amqpCreateInfo->exchange);
@@ -23,27 +25,40 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertFalse($amqpCreateInfo->multipleAck);
         $this->assertFalse($amqpCreateInfo->requeueOnFail);
         $this->assertFalse($amqpCreateInfo->durable);
+        $this->assertSame(AMQPCreateInfo::EXCHANGE_DURABLE_DEFAULT_VALUE, $amqpCreateInfo->exchangeDurable);
+        $this->assertSame(AMQPCreateInfo::CONSUME_ALL_DEFAULT_VALUE, $amqpCreateInfo->consumeAll);
+        $this->assertSame(AMQPCreateInfo::QUEUE_HEADERS_DEFAULT_VALUE, $amqpCreateInfo->queueHeaders);
+        $this->assertSame(AMQPCreateInfo::DELETE_QUEUE_ON_STOP_DEFAULT_VALUE, $amqpCreateInfo->deleteQueueOnStop);
+        $this->assertSame(AMQPCreateInfo::REDIAL_TIMEOUT_DEFAULT_VALUE, $amqpCreateInfo->redialTimeout);
+        $this->assertSame(AMQPCreateInfo::EXCHANGE_AUTO_DELETE_DEFAULT_VALUE, $amqpCreateInfo->exchangeAutoDelete);
+        $this->assertSame(AMQPCreateInfo::QUEUE_AUTO_DELETE_DEFAULT_VALUE, $amqpCreateInfo->queueAutoDelete);
+        $this->assertSame(AMQPCreateInfo::CONSUMER_ID_DEFAULT_VALUE, $amqpCreateInfo->consumerId);
     }
 
     public function testCustomValues(): void
     {
         $amqpCreateInfo = new AMQPCreateInfo(
-            'test',
-            5,
-            200,
-            'custom_queue',
-            'custom_exchange',
-            ExchangeType::Topics,
-            'custom_routing_key',
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            [
+            name: 'test',
+            priority: 5,
+            prefetch: 200,
+            queue: 'custom_queue',
+            exchange: 'custom_exchange',
+            exchangeType: ExchangeType::Topics,
+            routingKey: 'custom_routing_key',
+            exclusive: true,
+            multipleAck: true,
+            requeueOnFail: true,
+            durable: true,
+            exchangeDurable: true,
+            consumeAll: true,
+            queueHeaders: [
                 'x-queue-type' => 'quorum',
             ],
+            deleteQueueOnStop: true,
+            redialTimeout: 10,
+            exchangeAutoDelete: true,
+            queueAutoDelete: true,
+            consumerId: 'custom_consumer_id'
         );
 
         $this->assertSame(200, $amqpCreateInfo->prefetch);
@@ -58,27 +73,37 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertTrue($amqpCreateInfo->exchangeDurable);
         $this->assertTrue($amqpCreateInfo->consumeAll);
         $this->assertSame(['x-queue-type' => 'quorum'], $amqpCreateInfo->queueHeaders);
+        $this->assertTrue($amqpCreateInfo->deleteQueueOnStop);
+        $this->assertSame(10, $amqpCreateInfo->redialTimeout);
+        $this->assertTrue($amqpCreateInfo->exchangeAutoDelete);
+        $this->assertTrue($amqpCreateInfo->queueAutoDelete);
+        $this->assertSame('custom_consumer_id', $amqpCreateInfo->consumerId);
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $amqpCreateInfo = new AMQPCreateInfo(
-            'test',
-            5,
-            200,
-            'custom_queue',
-            'custom_exchange',
-            ExchangeType::Fanout,
-            'custom_routing_key',
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            [
+            name: 'test',
+            priority: 5,
+            prefetch: 200,
+            queue: 'custom_queue',
+            exchange: 'custom_exchange',
+            exchangeType: ExchangeType::Fanout,
+            routingKey: 'custom_routing_key',
+            exclusive: true,
+            multipleAck: true,
+            requeueOnFail: true,
+            durable: true,
+            exchangeDurable: true,
+            consumeAll: true,
+            queueHeaders: [
                 'x-queue-type' => 'quorum',
             ],
+            deleteQueueOnStop: true,
+            redialTimeout: 10,
+            exchangeAutoDelete: true,
+            queueAutoDelete: true,
+            consumerId: 'custom_consumer_id'
         );
 
         $expectedArray = [
@@ -99,6 +124,11 @@ final class AMQPCreateInfoTest extends TestCase
             'queue_headers' => [
                 'x-queue-type' => 'quorum',
             ],
+            'exchange_auto_delete' => true,
+            'delete_queue_on_stop' => true,
+            'redial_timeout' => 10,
+            'queue_auto_delete' => true,
+            'consumer_id' => 'custom_consumer_id'
         ];
 
         $this->assertEquals($expectedArray, $amqpCreateInfo->toArray());
