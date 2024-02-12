@@ -56,7 +56,7 @@ jobs:
 ```
 
 > **Note**
-> Read more about all available drivers on the [documentation](https://roadrunner.dev/docs/plugins-jobs/2.x/en) page.
+> Read more about all available drivers on the [documentation](https://docs.roadrunner.dev/queues-and-jobs/overview-queues) page.
 
 After starting the server with this configuration, one driver named `local` will be available to you.
 
