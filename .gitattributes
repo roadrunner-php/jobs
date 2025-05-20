@@ -1,7 +1,7 @@
 * text=auto
 
 /.*       export-ignore
-/.github/ export-ignore
 /tests/   export-ignore
 /*.yml    export-ignore
 /*.xml    export-ignore
+/*.dist.xml    export-ignore
