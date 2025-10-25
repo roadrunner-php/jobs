@@ -36,7 +36,7 @@ final class NatsCreateInfo extends CreateInfo
         public readonly int $rateLimit = self::RATE_LIMIT_DEFAULT_VALUE,
         public readonly bool $deleteStreamOnStop = self::DELETE_STREAM_ON_STOP_DEFAULT_VALUE,
         public readonly bool $deleteAfterAck = self::DELETE_AFTER_ACK_DEFAULT_VALUE,
-        public readonly bool $ackWait = self::ACK_WAIT_DEFAULT_VALUE,
+        public readonly int $ackWait = self::ACK_WAIT_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::NATS, $name, $priority);
 

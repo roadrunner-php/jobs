@@ -21,7 +21,8 @@ final class NatsCreateInfoTest extends TestCase
             false,
             300,
             true,
-            true
+            true,
+            0
         );
 
         $this->assertSame(Driver::NATS, $natsCreateInfo->driver);
@@ -34,6 +35,7 @@ final class NatsCreateInfoTest extends TestCase
         $this->assertSame(300, $natsCreateInfo->rateLimit);
         $this->assertTrue($natsCreateInfo->deleteStreamOnStop);
         $this->assertTrue($natsCreateInfo->deleteAfterAck);
+        $this->assertTrue($natsCreateInfo->ackWait);
     }
 
     public function testToArray(): void
@@ -47,7 +49,8 @@ final class NatsCreateInfoTest extends TestCase
             false,
             300,
             true,
-            true
+            true,
+            0
         );
 
         $expectedArray = [
@@ -61,6 +64,7 @@ final class NatsCreateInfoTest extends TestCase
             'stream' => 'test_stream',
             'delete_stream_on_stop' => true,
             'delete_after_ack' => true,
+            'ack_wait' => 0,
         ];
 
         $this->assertSame($expectedArray, $natsCreateInfo->toArray());
