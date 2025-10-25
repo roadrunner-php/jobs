@@ -35,7 +35,7 @@ final class NatsCreateInfoTest extends TestCase
         $this->assertSame(300, $natsCreateInfo->rateLimit);
         $this->assertTrue($natsCreateInfo->deleteStreamOnStop);
         $this->assertTrue($natsCreateInfo->deleteAfterAck);
-        $this->assertTrue($natsCreateInfo->ackWait);
+        $this->assertSame(0, $natsCreateInfo->ackWait);
     }
 
     public function testToArray(): void
