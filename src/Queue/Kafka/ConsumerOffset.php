@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue\Kafka;
 
-final class ConsumerOffset implements \JsonSerializable
+class ConsumerOffset implements \JsonSerializable
 {
     /**
      * @param int<0,max>|null $value
