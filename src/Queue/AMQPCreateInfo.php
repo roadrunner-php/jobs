@@ -18,7 +18,6 @@ final class AMQPCreateInfo extends CreateInfo
     public const MULTIPLE_ACK_DEFAULT_VALUE = false;
     public const REQUEUE_ON_FAIL_DEFAULT_VALUE = false;
     public const DURABLE_DEFAULT_VALUE = false;
-    public const CONSUME_ALL_DEFAULT_VALUE = false;
     public const QUEUE_HEADERS_DEFAULT_VALUE = [];
     public const DELETE_QUEUE_ON_STOP_DEFAULT_VALUE = false;
     public const REDIAL_TIMEOUT_DEFAULT_VALUE = 60;
@@ -49,7 +48,6 @@ final class AMQPCreateInfo extends CreateInfo
         public readonly bool $requeueOnFail = self::REQUEUE_ON_FAIL_DEFAULT_VALUE,
         public readonly bool $durable = self::DURABLE_DEFAULT_VALUE,
         public readonly bool $exchangeDurable = self::EXCHANGE_DURABLE_DEFAULT_VALUE,
-        public readonly bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE,
         public readonly array $queueHeaders = self::QUEUE_HEADERS_DEFAULT_VALUE,
         public readonly bool $deleteQueueOnStop = self::DELETE_QUEUE_ON_STOP_DEFAULT_VALUE,
         public readonly int $redialTimeout = self::REDIAL_TIMEOUT_DEFAULT_VALUE,
@@ -83,7 +81,6 @@ final class AMQPCreateInfo extends CreateInfo
             'multiple_ack' => $this->multipleAck,
             'requeue_on_fail' => $this->requeueOnFail,
             'durable' => $this->durable,
-            'consume_all' => $this->consumeAll,
             'delete_queue_on_stop' => $this->deleteQueueOnStop,
             'redial_timeout' => $this->redialTimeout,
         ]);

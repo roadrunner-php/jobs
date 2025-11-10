@@ -26,7 +26,6 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertFalse($amqpCreateInfo->requeueOnFail);
         $this->assertFalse($amqpCreateInfo->durable);
         $this->assertSame(AMQPCreateInfo::EXCHANGE_DURABLE_DEFAULT_VALUE, $amqpCreateInfo->exchangeDurable);
-        $this->assertSame(AMQPCreateInfo::CONSUME_ALL_DEFAULT_VALUE, $amqpCreateInfo->consumeAll);
         $this->assertSame(AMQPCreateInfo::QUEUE_HEADERS_DEFAULT_VALUE, $amqpCreateInfo->queueHeaders);
         $this->assertSame(AMQPCreateInfo::DELETE_QUEUE_ON_STOP_DEFAULT_VALUE, $amqpCreateInfo->deleteQueueOnStop);
         $this->assertSame(AMQPCreateInfo::REDIAL_TIMEOUT_DEFAULT_VALUE, $amqpCreateInfo->redialTimeout);
@@ -50,7 +49,6 @@ final class AMQPCreateInfoTest extends TestCase
             requeueOnFail: true,
             durable: true,
             exchangeDurable: true,
-            consumeAll: true,
             queueHeaders: [
                 'x-queue-type' => 'quorum',
             ],
@@ -71,7 +69,6 @@ final class AMQPCreateInfoTest extends TestCase
         $this->assertTrue($amqpCreateInfo->requeueOnFail);
         $this->assertTrue($amqpCreateInfo->durable);
         $this->assertTrue($amqpCreateInfo->exchangeDurable);
-        $this->assertTrue($amqpCreateInfo->consumeAll);
         $this->assertSame(['x-queue-type' => 'quorum'], $amqpCreateInfo->queueHeaders);
         $this->assertTrue($amqpCreateInfo->deleteQueueOnStop);
         $this->assertSame(10, $amqpCreateInfo->redialTimeout);
@@ -95,7 +92,6 @@ final class AMQPCreateInfoTest extends TestCase
             requeueOnFail: true,
             durable: true,
             exchangeDurable: true,
-            consumeAll: true,
             queueHeaders: [
                 'x-queue-type' => 'quorum',
             ],
@@ -120,7 +116,6 @@ final class AMQPCreateInfoTest extends TestCase
             'requeue_on_fail' => true,
             'durable' => true,
             'exchange_durable' => true,
-            'consume_all' => true,
             'queue_headers' => [
                 'x-queue-type' => 'quorum',
             ],

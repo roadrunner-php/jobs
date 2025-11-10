@@ -13,7 +13,6 @@ final class BeanstalkCreateInfo extends CreateInfo
     public const TUBE_PRIORITY_MAX_VALUE = 2 ** 32;
     public const TUBE_DEFAULT_VALUE = 'default';
     public const RESERVE_TIMEOUT_DEFAULT_VALUE = 5;
-    public const CONSUME_ALL_DEFAULT_VALUE = false;
 
     /**
      * @param non-empty-string $name
@@ -28,7 +27,6 @@ final class BeanstalkCreateInfo extends CreateInfo
         public readonly int $tubePriority = self::TUBE_PRIORITY_DEFAULT_VALUE,
         public readonly string $tube = self::TUBE_DEFAULT_VALUE,
         public readonly int $reserveTimeout = self::RESERVE_TIMEOUT_DEFAULT_VALUE,
-        public readonly bool $consumeAll = self::CONSUME_ALL_DEFAULT_VALUE,
     ) {
         parent::__construct(Driver::Beanstalk, $name, $priority);
 
@@ -43,7 +41,6 @@ final class BeanstalkCreateInfo extends CreateInfo
             'tube_priority' => $this->tubePriority,
             'tube' => $this->tube,
             'reserve_timeout' => $this->reserveTimeout,
-            'consume_all' => $this->consumeAll,
         ]);
     }
 }
