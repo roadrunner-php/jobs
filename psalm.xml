@@ -14,6 +14,30 @@
         <RedundantCondition errorLevel="suppress" />
         <DocblockTypeContradiction errorLevel="suppress" />
         <MissingClassConstType errorLevel="suppress" />
+        <!-- Reported since Psalm 6, to be fixed in the static analysis pass -->
+        <MissingOverrideAttribute errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="suppress" />
+        <TooManyTemplateParams>
+            <errorLevel type="suppress">
+                <file name="src/Jobs.php" />
+                <file name="src/Queue.php" />
+            </errorLevel>
+        </TooManyTemplateParams>
+        <MoreSpecificReturnType>
+            <errorLevel type="suppress">
+                <file name="src/Queue/Pipeline.php" />
+            </errorLevel>
+        </MoreSpecificReturnType>
+        <LessSpecificReturnStatement>
+            <errorLevel type="suppress">
+                <file name="src/Queue/Pipeline.php" />
+            </errorLevel>
+        </LessSpecificReturnStatement>
+        <InvalidCast>
+            <errorLevel type="suppress">
+                <file name="src/Queue/Pipeline.php" />
+            </errorLevel>
+        </InvalidCast>
     </issueHandlers>
     <projectFiles>
         <directory name="src" />

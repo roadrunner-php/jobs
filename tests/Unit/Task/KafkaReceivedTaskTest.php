@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
+use Testo\Lifecycle\BeforeTest;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
 use Spiral\RoadRunner\WorkerInterface;
 
-final class KafkaReceivedTaskTest extends TestCase
+#[Test]
+final class KafkaReceivedTaskTest
 {
     public function testGetsDriver(): void
     {
         $task = $this->createTask();
-        $this->assertEquals(Driver::Kafka, $task->getDriver());
+        Assert::equals($task->getDriver(), Driver::Kafka);
     }
 
     public function createTask(
@@ -44,38 +47,37 @@ final class KafkaReceivedTaskTest extends TestCase
     {
         $task = $this->createTask(queue: 'kafka-queue-name');
 
-        $this->assertSame('kafka-queue-name', $task->getQueue());
+        Assert::same($task->getQueue(), 'kafka-queue-name');
     }
 
     public function testGetsPartition(): void
     {
         $task = $this->createTask(partition: 1);
-        $this->assertSame(1, $task->getPartition());
+        Assert::same($task->getPartition(), 1);
 
 
         $task = $this->createTask(partition: 100);
-        $this->assertSame(100, $task->getPartition());
+        Assert::same($task->getPartition(), 100);
     }
 
     public function testGetsOffset(): void
     {
         $task = $this->createTask(offset: 1);
-        $this->assertSame(1, $task->getOffset());
+        Assert::same($task->getOffset(), 1);
 
         $task = $this->createTask(offset: 100);
-        $this->assertSame(100, $task->getOffset());
+        Assert::same($task->getOffset(), 100);
     }
 
     public function testGetsPipeline(): void
     {
         $task = $this->createTask(pipeline: 'custom');
-        $this->assertSame('custom', $task->getPipeline());
+        Assert::same($task->getPipeline(), 'custom');
     }
 
+    #[BeforeTest]
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->worker = $this->createMock(WorkerInterface::class);
+        $this->worker = \Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing();
     }
 }

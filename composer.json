@@ -43,7 +43,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "ramsey/uuid": "^3 || ^4",
         "roadrunner-php/roadrunner-api-dto": "^1.0",
@@ -53,9 +53,11 @@
     },
     "require-dev": {
         "google/protobuf": "^3.17 || ^4.0",
-        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.6",
         "spiral/code-style": "^2.3.1",
-        "vimeo/psalm": ">=5.8"
+        "testo/bridge-mockery": "^0.1.2",
+        "testo/testo": "^0.10.55",
+        "vimeo/psalm": "^6 || ^7"
     },
     "autoload": {
         "psr-4": {
@@ -70,7 +72,7 @@
     "scripts": {
         "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
         "cs:fix": "php-cs-fixer fix -v",
-        "tests": "phpunit",
+        "tests": "testo",
         "psalm": "psalm --no-cache"
     },
     "config": {

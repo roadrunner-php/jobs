@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 
-final class ConsumerOffsetTest extends TestCase
+#[Test]
+final class ConsumerOffsetTest
 {
     public function testConstructor(): void
     {
@@ -17,15 +19,12 @@ final class ConsumerOffsetTest extends TestCase
 
         $consumerOffset = new ConsumerOffset($type, $value);
 
-        $this->assertSame($type, $consumerOffset->type);
-        $this->assertSame($value, $consumerOffset->value);
+        Assert::same($consumerOffset->type, $type);
+        Assert::same($consumerOffset->value, $value);
     }
 
     public function testJsonSerialize(): void
     {
-        $this->assertEquals(
-            '{"type":"AfterMilli","value":456}',
-            \json_encode(new ConsumerOffset(OffsetType::AfterMilli, 456)),
-        );
+        Assert::equals(\json_encode(new ConsumerOffset(OffsetType::AfterMilli, 456)), '{"type":"AfterMilli","value":456}');
     }
 }

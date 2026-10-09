@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
@@ -11,7 +13,8 @@ use Spiral\RoadRunner\Jobs\Queue;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
-class TaskCreationTest extends BaseTestCase
+#[Test]
+final class TaskCreationTest extends BaseTestCase
 {
     public function testTaskCreation(): void
     {
@@ -19,7 +22,7 @@ class TaskCreationTest extends BaseTestCase
 
         $task = $this->queue()->create($expected, 'foo=bar');
 
-        $this->assertSame($expected, $task->getName());
+        Assert::same($task->getName(), $expected);
     }
 
     public function testTaskCreationWithPayload(): void
@@ -29,7 +32,7 @@ class TaskCreationTest extends BaseTestCase
         $task = $this->queue()
             ->create('task', $expected);
 
-        $this->assertSame($expected, $task->getPayload());
+        Assert::same($task->getPayload(), $expected);
     }
 
     public function testTaskCreationWithDefaultOptions(): void
@@ -38,10 +41,10 @@ class TaskCreationTest extends BaseTestCase
 
         $task = $this->queue()->create($expected, 'foo=bar');
 
-        $this->assertSame($expected, $task->getName());
-        $this->assertSame(0, $task->getDelay());
-        $this->assertSame(0, $task->getPriority());
-        $this->assertFalse($task->getAutoAck());
+        Assert::same($task->getName(), $expected);
+        Assert::same($task->getDelay(), 0);
+        Assert::same($task->getPriority(), 0);
+        Assert::false($task->getAutoAck());
     }
 
     public function testTaskCreationWithOverriddenDefaultOptions(): void
@@ -52,10 +55,10 @@ class TaskCreationTest extends BaseTestCase
 
         $task = $queue->create($expected, 'foo=bar');
 
-        $this->assertSame($expected, $task->getName());
-        $this->assertSame(10, $task->getDelay());
-        $this->assertSame(100, $task->getPriority());
-        $this->assertTrue($task->getAutoAck());
+        Assert::same($task->getName(), $expected);
+        Assert::same($task->getDelay(), 10);
+        Assert::same($task->getPriority(), 100);
+        Assert::true($task->getAutoAck());
     }
 
     public function testTaskCreationWithOptions(): void
@@ -64,10 +67,10 @@ class TaskCreationTest extends BaseTestCase
 
         $task = $this->queue()->create($expected, 'bar', new Options(10, 100, true));
 
-        $this->assertSame($expected, $task->getName());
-        $this->assertSame(10, $task->getDelay());
-        $this->assertSame(100, $task->getPriority());
-        $this->assertTrue($task->getAutoAck());
+        Assert::same($task->getName(), $expected);
+        Assert::same($task->getDelay(), 10);
+        Assert::same($task->getPriority(), 100);
+        Assert::true($task->getAutoAck());
     }
 
     public function testTaskCreationPassedOptionsHighPriority(): void
@@ -78,10 +81,10 @@ class TaskCreationTest extends BaseTestCase
 
         $task = $queue->create($expected, 'bar', new Options(10, 150, true));
 
-        $this->assertSame($expected, $task->getName());
-        $this->assertSame(10, $task->getDelay());
-        $this->assertSame(150, $task->getPriority());
-        $this->assertTrue($task->getAutoAck());
+        Assert::same($task->getName(), $expected);
+        Assert::same($task->getDelay(), 10);
+        Assert::same($task->getPriority(), 150);
+        Assert::true($task->getAutoAck());
     }
 
     public function testTaskCreationOtherRealizationOptions(): void
@@ -93,11 +96,11 @@ class TaskCreationTest extends BaseTestCase
             ->create($expected, 'bar', new KafkaOptions('kafka-topic', 15, 30, false));
         $options = $task->getOptions();
 
-        $this->assertInstanceOf(KafkaOptions::class, $options);
-        $this->assertSame('kafka-topic', $options->getTopic());
-        $this->assertSame(15, $task->getDelay());
-        $this->assertSame(30, $task->getPriority());
-        $this->assertFalse($task->getAutoAck());
+        Assert::instanceOf($options, KafkaOptions::class);
+        Assert::same($options->getTopic(), 'kafka-topic');
+        Assert::same($task->getDelay(), 15);
+        Assert::same($task->getPriority(), 30);
+        Assert::false($task->getAutoAck());
     }
 
     /**

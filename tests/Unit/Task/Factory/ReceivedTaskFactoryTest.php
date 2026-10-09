@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task\Factory;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Expect;
+use Testo\Assert;
+use Testo\Data\DataProvider;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactory;
@@ -13,7 +16,8 @@ use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
 
-final class ReceivedTaskFactoryTest extends TestCase
+#[Test]
+final class ReceivedTaskFactoryTest
 {
     public static function payloadsDataProvider(): \Traversable
     {
@@ -78,16 +82,15 @@ final class ReceivedTaskFactoryTest extends TestCase
 
     public function testEmptyHeader(): void
     {
-        $this->expectException(ReceivedTaskException::class);
-        $this->expectExceptionMessage('Task payload does not have a valid header.');
+        Expect::exception(ReceivedTaskException::class)->withMessageContaining('Task payload does not have a valid header.');
 
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
         $factory->create(new Payload(null));
     }
 
     public function testEmptyBody(): void
     {
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
         $task = $factory->create(new Payload(
             null,
             \json_encode([
@@ -100,30 +103,28 @@ final class ReceivedTaskFactoryTest extends TestCase
             ]),
         ));
 
-        $this->assertSame('', $task->getPayload());
+        Assert::same($task->getPayload(), '');
     }
 
-    /**
-     * @dataProvider payloadsDataProvider
-     */
+    #[DataProvider('payloadsDataProvider')]
     public function testCreate(Payload $payload, string $expectedTaskClass, Driver $expectedDriver): void
     {
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
 
         $task = $factory->create($payload);
 
-        $this->assertInstanceOf($expectedTaskClass, $task);
-        $this->assertSame($expectedDriver, $task->getDriver());
+        Assert::instanceOf($task, $expectedTaskClass);
+        Assert::same($task->getDriver(), $expectedDriver);
 
-        $this->assertSame('job-id', $task->getId());
-        $this->assertSame('job-pipeline', $task->getPipeline());
-        $this->assertSame('job-queue', $task->getQueue());
-        $this->assertSame('job-name', $task->getName());
+        Assert::same($task->getId(), 'job-id');
+        Assert::same($task->getPipeline(), 'job-pipeline');
+        Assert::same($task->getQueue(), 'job-queue');
+        Assert::same($task->getName(), 'job-name');
     }
 
     public function testKafkaReceivedTaskShouldReceiveCorrectParams(): void
     {
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
 
         $task = $factory->create(
             new Payload(
@@ -141,13 +142,13 @@ final class ReceivedTaskFactoryTest extends TestCase
             ),
         );
 
-        $this->assertInstanceOf(KafkaReceivedTask::class, $task);
+        Assert::instanceOf($task, KafkaReceivedTask::class);
 
-        $this->assertSame('job-id', $task->getId());
-        $this->assertSame('job-pipeline', $task->getPipeline());
-        $this->assertSame('job-queue', $task->getQueue());
-        $this->assertSame('job-name', $task->getName());
-        $this->assertSame(3, $task->getPartition());
-        $this->assertSame(5, $task->getOffset());
+        Assert::same($task->getId(), 'job-id');
+        Assert::same($task->getPipeline(), 'job-pipeline');
+        Assert::same($task->getQueue(), 'job-queue');
+        Assert::same($task->getName(), 'job-name');
+        Assert::same($task->getPartition(), 3);
+        Assert::same($task->getOffset(), 5);
     }
 }

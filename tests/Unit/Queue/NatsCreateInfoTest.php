@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\NatsCreateInfo;
 
-final class NatsCreateInfoTest extends TestCase
+#[Test]
+final class NatsCreateInfoTest
 {
     public function testCreateNatsCreateInfo(): void
     {
@@ -25,17 +27,17 @@ final class NatsCreateInfoTest extends TestCase
             0,
         );
 
-        $this->assertSame(Driver::NATS, $natsCreateInfo->driver);
-        $this->assertSame('test_name', $natsCreateInfo->name);
-        $this->assertSame(3, $natsCreateInfo->priority);
-        $this->assertSame('test_subject', $natsCreateInfo->subject);
-        $this->assertSame('test_stream', $natsCreateInfo->stream);
-        $this->assertSame(200, $natsCreateInfo->prefetch);
-        $this->assertFalse($natsCreateInfo->deliverNew);
-        $this->assertSame(300, $natsCreateInfo->rateLimit);
-        $this->assertTrue($natsCreateInfo->deleteStreamOnStop);
-        $this->assertTrue($natsCreateInfo->deleteAfterAck);
-        $this->assertSame(0, $natsCreateInfo->ackWait);
+        Assert::same($natsCreateInfo->driver, Driver::NATS);
+        Assert::same($natsCreateInfo->name, 'test_name');
+        Assert::same($natsCreateInfo->priority, 3);
+        Assert::same($natsCreateInfo->subject, 'test_subject');
+        Assert::same($natsCreateInfo->stream, 'test_stream');
+        Assert::same($natsCreateInfo->prefetch, 200);
+        Assert::false($natsCreateInfo->deliverNew);
+        Assert::same($natsCreateInfo->rateLimit, 300);
+        Assert::true($natsCreateInfo->deleteStreamOnStop);
+        Assert::true($natsCreateInfo->deleteAfterAck);
+        Assert::same($natsCreateInfo->ackWait, 0);
     }
 
     public function testToArray(): void
@@ -67,6 +69,6 @@ final class NatsCreateInfoTest extends TestCase
             'ack_wait' => 0,
         ];
 
-        $this->assertSame($expectedArray, $natsCreateInfo->toArray());
+        Assert::same($natsCreateInfo->toArray(), $expectedArray);
     }
 }

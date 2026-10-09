@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Goridge\RPC\RPCInterface;
 use Spiral\RoadRunner\Jobs\Tests\Unit\Stub\RPCConnectionStub;
 
-abstract class BaseTestCase extends TestCase
+abstract class BaseTestCase
 {
     /**
      * @param array<string, string|callable> $mapping

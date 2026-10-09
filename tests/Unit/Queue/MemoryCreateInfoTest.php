@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\MemoryCreateInfo;
 
-final class MemoryCreateInfoTest extends TestCase
+#[Test]
+final class MemoryCreateInfoTest
 {
     public function testConstructor(): void
     {
         $memoryCreateInfo = new MemoryCreateInfo('test-name');
 
-        $this->assertEquals(Driver::Memory, $memoryCreateInfo->driver);
-        $this->assertEquals('test-name', $memoryCreateInfo->name);
-        $this->assertEquals(MemoryCreateInfo::PRIORITY_DEFAULT_VALUE, $memoryCreateInfo->priority);
-        $this->assertEquals(MemoryCreateInfo::PREFETCH_DEFAULT_VALUE, $memoryCreateInfo->prefetch);
+        Assert::equals($memoryCreateInfo->driver, Driver::Memory);
+        Assert::equals($memoryCreateInfo->name, 'test-name');
+        Assert::equals($memoryCreateInfo->priority, MemoryCreateInfo::PRIORITY_DEFAULT_VALUE);
+        Assert::equals($memoryCreateInfo->prefetch, MemoryCreateInfo::PREFETCH_DEFAULT_VALUE);
     }
 
     public function testConstructorWithParameters(): void
     {
         $memoryCreateInfo = new MemoryCreateInfo('test-name', 50, 20);
 
-        $this->assertEquals(50, $memoryCreateInfo->priority);
-        $this->assertEquals(20, $memoryCreateInfo->prefetch);
+        Assert::equals($memoryCreateInfo->priority, 50);
+        Assert::equals($memoryCreateInfo->prefetch, 20);
     }
 
     public function testToArray(): void
@@ -39,6 +41,6 @@ final class MemoryCreateInfoTest extends TestCase
             'prefetch' => 20,
         ];
 
-        $this->assertEquals($expectedArray, $memoryCreateInfo->toArray());
+        Assert::equals($memoryCreateInfo->toArray(), $expectedArray);
     }
 }

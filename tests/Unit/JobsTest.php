@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use Testo\Test;
+use Testo\Data\DataProvider;
+use Testo\Assert;
+use Testo\Assert\ExpectException;
+use Testo\Expect;
 use RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
@@ -21,7 +25,8 @@ use Spiral\RoadRunner\Jobs\QueueInterface;
 
 use function count;
 
-class JobsTest extends BaseTestCase
+#[Test]
+final class JobsTest extends BaseTestCase
 {
     public static function createOptionsProvider(): iterable
     {
@@ -45,18 +50,18 @@ class JobsTest extends BaseTestCase
     /**
      * @testdox Checking creating a new queue with given info.
      */
-    #[DataProvider(methodName: 'createOptionsProvider')]
+    #[DataProvider('createOptionsProvider')]
     public function testCreate(CreateInfoInterface $dto, string $expected): void
     {
         $jobs = $this->jobs([
             'jobs.Declare' => function (DeclareRequest $request) use ($expected) {
-                $this->assertSame($expected, $request->serializeToJsonString());
+                Assert::same($request->serializeToJsonString(), $expected);
             },
         ]);
 
         $queue = $jobs->create($dto);
 
-        $this->assertSame($dto->getName(), $queue->getName());
+        Assert::same($queue->getName(), $dto->getName());
     }
 
     public function testCreateWithOptions(): void
@@ -64,18 +69,18 @@ class JobsTest extends BaseTestCase
         $dto = new CreateInfo(Driver::SQS, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
 
         $jobs = $this->jobs([
-            'jobs.Declare' => function (DeclareRequest $request) use ($expected) {
-                $this->assertSame(
-                    expected: '{"pipeline":{"name":"foo","driver":"sqs","priority":"10"}}', //
-                    actual: $request->serializeToJsonString(),
+            'jobs.Declare' => function (DeclareRequest $request) {
+                Assert::same(
+                    $request->serializeToJsonString(),
+                    '{"pipeline":{"name":"foo","driver":"sqs","priority":"10"}}',
                 );
             },
         ]);
 
         $queue = $jobs->create($dto, new Options(100, 200, true));
 
-        $this->assertSame('foo', $queue->getName());
-        $this->assertEquals(new Options(100, 200, true), $queue->getDefaultOptions());
+        Assert::same($queue->getName(), 'foo');
+        Assert::equals($queue->getDefaultOptions(), new Options(100, 200, true));
     }
 
     /**
@@ -92,22 +97,18 @@ class JobsTest extends BaseTestCase
         ]);
 
         // Execute "$jobs->getIterator()"
-        $this->assertSame(
-            $expected,
-            \array_map(
-                static fn(QueueInterface $queue) => $queue->getName(),
-                \array_values(\iterator_to_array($jobs)),
-            ),
-        );
+        Assert::same(\array_map(
+            static fn(QueueInterface $queue) => $queue->getName(),
+            \array_values(\iterator_to_array($jobs)),
+        ), $expected);
     }
 
     /**
      * @testdox In case RPC returns an unrecognized error while retrieving the queue list, it is processed correctly.
      */
+    #[ExpectException(JobsException::class)]
     public function testQueueListError(): void
     {
-        $this->expectException(JobsException::class);
-
         \iterator_to_array($this->jobs());
     }
 
@@ -124,16 +125,15 @@ class JobsTest extends BaseTestCase
             },
         ]);
 
-        $this->assertCount(2, $jobs);
+        Assert::count($jobs, 2);
     }
 
     /**
      * @testdox In case RPC returns an unrecognized error while retrieving the queues count, it is processed correctly.
      */
+    #[ExpectException(JobsException::class)]
     public function testQueueListCountError(): void
     {
-        $this->expectException(JobsException::class);
-
         \count($this->jobs());
     }
 
@@ -157,7 +157,7 @@ class JobsTest extends BaseTestCase
             $jobs->connect('queue-2'),
         );
 
-        $this->assertSame(['queue-1', 'queue-2'], $actual);
+        Assert::same($actual, ['queue-1', 'queue-2']);
     }
 
     /**
@@ -165,7 +165,7 @@ class JobsTest extends BaseTestCase
      */
     public function testQueuesResumeError(): void
     {
-        $this->expectException(JobsException::class);
+        Expect::exception(JobsException::class);
 
         $jobs = $this->jobs();
 
@@ -195,7 +195,7 @@ class JobsTest extends BaseTestCase
             $jobs->connect('queue-2'),
         );
 
-        $this->assertSame(['queue-1', 'queue-2'], $actual);
+        Assert::same($actual, ['queue-1', 'queue-2']);
     }
 
     /**
@@ -203,7 +203,7 @@ class JobsTest extends BaseTestCase
      */
     public function testQueuesPauseError(): void
     {
-        $this->expectException(JobsException::class);
+        Expect::exception(JobsException::class);
 
         $jobs = $this->jobs();
 
@@ -221,7 +221,7 @@ class JobsTest extends BaseTestCase
             $expected = \bin2hex(\random_bytes(32)),
         );
 
-        $this->assertSame($expected, $actual->getName());
+        Assert::same($actual->getName(), $expected);
     }
 
     /**

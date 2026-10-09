@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\SQSCreateInfo;
 
-final class SQSCreateInfoTest extends TestCase
+#[Test]
+final class SQSCreateInfoTest
 {
     public function testConstructor(): void
     {
@@ -25,17 +27,17 @@ final class SQSCreateInfoTest extends TestCase
             skipQueueDeclaration: true,
         );
 
-        $this->assertEquals(Driver::SQS, $sqsCreateInfo->driver);
-        $this->assertEquals('testName', $sqsCreateInfo->name);
-        $this->assertEquals(1, $sqsCreateInfo->priority);
-        $this->assertEquals(20, $sqsCreateInfo->prefetch);
-        $this->assertEquals(30, $sqsCreateInfo->visibilityTimeout);
-        $this->assertEquals(40, $sqsCreateInfo->waitTimeSeconds);
-        $this->assertEquals('customQueue', $sqsCreateInfo->queue);
-        $this->assertEquals(['key' => 'value'], $sqsCreateInfo->attributes);
-        $this->assertEquals(['tagKey' => 'tagValue'], $sqsCreateInfo->tags);
-        $this->assertEquals('customMessageGroupId', $sqsCreateInfo->messageGroupId);
-        $this->assertTrue($sqsCreateInfo->skipQueueDeclaration);
+        Assert::equals($sqsCreateInfo->driver, Driver::SQS);
+        Assert::equals($sqsCreateInfo->name, 'testName');
+        Assert::equals($sqsCreateInfo->priority, 1);
+        Assert::equals($sqsCreateInfo->prefetch, 20);
+        Assert::equals($sqsCreateInfo->visibilityTimeout, 30);
+        Assert::equals($sqsCreateInfo->waitTimeSeconds, 40);
+        Assert::equals($sqsCreateInfo->queue, 'customQueue');
+        Assert::equals($sqsCreateInfo->attributes, ['key' => 'value']);
+        Assert::equals($sqsCreateInfo->tags, ['tagKey' => 'tagValue']);
+        Assert::equals($sqsCreateInfo->messageGroupId, 'customMessageGroupId');
+        Assert::true($sqsCreateInfo->skipQueueDeclaration);
     }
 
     public function testToArray(): void
@@ -65,7 +67,7 @@ final class SQSCreateInfoTest extends TestCase
             'skip_queue_declaration' => false,
         ];
 
-        $this->assertEquals($expected, $result);
+        Assert::equals($result, $expected);
     }
 
     public function testCreateWithTags(): void
@@ -81,7 +83,7 @@ final class SQSCreateInfoTest extends TestCase
             ['foo' => 'bar'],
         );
 
-        $this->assertEquals([
+        Assert::equals($info->toArray(), [
             'name' => 'foo',
             'driver' => 'sqs',
             'priority' => 10,
@@ -91,7 +93,7 @@ final class SQSCreateInfoTest extends TestCase
             'queue' => 'default',
             'tags' => ['foo' => 'bar'],
             'skip_queue_declaration' => false,
-        ], $info->toArray());
+        ]);
     }
 
     public function testCreateWithAttributes(): void
@@ -106,7 +108,7 @@ final class SQSCreateInfoTest extends TestCase
             ['foo' => 'bar'],
         );
 
-        $this->assertEquals([
+        Assert::equals($info->toArray(), [
             'name' => 'foo',
             'driver' => 'sqs',
             'priority' => 10,
@@ -116,7 +118,7 @@ final class SQSCreateInfoTest extends TestCase
             'queue' => 'default',
             'attributes' => ['foo' => 'bar'],
             'skip_queue_declaration' => false,
-        ], $info->toArray());
+        ]);
     }
 
     public function testToArrayWithDefaults(): void
@@ -135,7 +137,7 @@ final class SQSCreateInfoTest extends TestCase
             'skip_queue_declaration' => false,
         ];
 
-        $this->assertEquals($expected, $result);
+        Assert::equals($result, $expected);
     }
 
     public function testCreateWithTagsAndAttributes(): void
@@ -151,7 +153,7 @@ final class SQSCreateInfoTest extends TestCase
             ['baz' => 'some'],
         );
 
-        $this->assertEquals([
+        Assert::equals($info->toArray(), [
             'name' => 'foo',
             'driver' => 'sqs',
             'priority' => 10,
@@ -162,14 +164,14 @@ final class SQSCreateInfoTest extends TestCase
             'attributes' => ['foo' => 'bar'],
             'tags' => ['baz' => 'some'],
             'skip_queue_declaration' => false,
-        ], $info->toArray());
+        ]);
     }
 
     public function testCreateWithoutTagsAndAttributes(): void
     {
         $info = new SQSCreateInfo('foo');
 
-        $this->assertSame([
+        Assert::same($info->toArray(), [
             'name' => 'foo',
             'driver' => 'sqs',
             'priority' => 10,
@@ -178,14 +180,14 @@ final class SQSCreateInfoTest extends TestCase
             'wait_time' => 0,
             'queue' => 'default',
             'skip_queue_declaration' => false,
-        ], $info->toArray());
+        ]);
     }
 
     public function testCreateWithMessageGroupId(): void
     {
         $info = new SQSCreateInfo(name: 'foo', messageGroupId: 'bar');
 
-        $this->assertSame([
+        Assert::same($info->toArray(), [
             'name' => 'foo',
             'driver' => 'sqs',
             'priority' => 10,
@@ -195,6 +197,6 @@ final class SQSCreateInfoTest extends TestCase
             'queue' => 'default',
             'skip_queue_declaration' => false,
             'message_group_id' => 'bar',
-        ], $info->toArray());
+        ]);
     }
 }

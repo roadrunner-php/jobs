@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Data\DataProvider;
+use Testo\Assert;
+use Testo\Expect;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactoryInterface;
 use RoadRunner\Jobs\DTO\V1\Options as DTOOptions;
@@ -18,7 +21,8 @@ use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 
-final class PipelineTest extends TestCase
+#[Test]
+final class PipelineTest
 {
     public static function taskToProtoDataProvider(): \Traversable
     {
@@ -49,56 +53,51 @@ final class PipelineTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider taskToProtoDataProvider
-     */
+    #[DataProvider('taskToProtoDataProvider')]
     public function testSend(OptionsInterface $options, DTOOptions $expected): void
     {
         $pipeline = new Pipeline(
             'foo',
-            $rpc = $this->createMock(RPCInterface::class),
-            $uuid = $this->createMock(UuidFactoryInterface::class),
+            $rpc = \Mockery::mock(RPCInterface::class)->shouldIgnoreMissing(),
+            $uuid = \Mockery::mock(UuidFactoryInterface::class)->shouldIgnoreMissing(),
         );
 
-        $uuid->method('uuid4')->willReturn($uuid = Uuid::uuid4());
+        $uuid->shouldReceive('uuid4')->andReturn($uuid = Uuid::uuid4());
 
-        $rpc->method('call')->with(
+        $rpc->shouldReceive('call')->once()->with(
             'jobs.Push',
-            $this->callback(function (PushRequest $request) use ($expected, $uuid) {
+            \Mockery::on(function (PushRequest $request) use ($expected, $uuid) {
                 return $request->getJob()->getJob() === 'bar'
                     && $request->getJob()->getId() === (string) $uuid
                     && $request->getJob()->getPayload() === 'foo=bar'
                     && $request->getJob()->getHeaders()->count() === 0
                     && \json_encode($request->getJob()->getOptions()) === \json_encode($expected);
             }),
-            null,
         );
 
         $queuedTask = $pipeline->send(new PreparedTask('bar', 'foo=bar', $options));
 
-        $this->assertSame((string) $uuid, $queuedTask->getId());
-        $this->assertSame('bar', $queuedTask->getName());
-        $this->assertSame('foo', $queuedTask->getPipeline());
-        $this->assertSame('foo=bar', $queuedTask->getPayload());
-        $this->assertSame([], $queuedTask->getHeaders());
+        Assert::same($queuedTask->getId(), (string) $uuid);
+        Assert::same($queuedTask->getName(), 'bar');
+        Assert::same($queuedTask->getPipeline(), 'foo');
+        Assert::same($queuedTask->getPayload(), 'foo=bar');
+        Assert::same($queuedTask->getHeaders(), []);
     }
 
-    /**
-     * @dataProvider taskToProtoDataProvider
-     */
+    #[DataProvider('taskToProtoDataProvider')]
     public function testSendMany(OptionsInterface $options, DTOOptions $expected): void
     {
         $pipeline = new Pipeline(
             'foo',
-            $rpc = $this->createMock(RPCInterface::class),
-            $uuid = $this->createMock(UuidFactoryInterface::class),
+            $rpc = \Mockery::mock(RPCInterface::class)->shouldIgnoreMissing(),
+            $uuid = \Mockery::mock(UuidFactoryInterface::class)->shouldIgnoreMissing(),
         );
 
-        $uuid->method('uuid4')->willReturn($uuid1 = Uuid::uuid4(), $uuid2 = Uuid::uuid4());
+        $uuid->shouldReceive('uuid4')->andReturn($uuid1 = Uuid::uuid4(), $uuid2 = Uuid::uuid4());
 
-        $rpc->method('call')->with(
+        $rpc->shouldReceive('call')->once()->with(
             'jobs.PushBatch',
-            $this->callback(function (PushBatchRequest $request) use ($expected, $uuid1, $uuid2) {
+            \Mockery::on(function (PushBatchRequest $request) use ($expected, $uuid1, $uuid2) {
                 return $request->getJobs()->count() === 2
                     && $request->getJobs()->offsetGet(0)->getJob() === 'bar'
                     && $request->getJobs()->offsetGet(0)->getId() === (string) $uuid1
@@ -107,7 +106,6 @@ final class PipelineTest extends TestCase
                     && $request->getJobs()->offsetGet(1)->getId() === (string) $uuid2
                     && $request->getJobs()->offsetGet(1)->getPayload() === 'foo=bar1';
             }),
-            null,
         );
 
         $queuedTasks = $pipeline->sendMany([
@@ -115,32 +113,31 @@ final class PipelineTest extends TestCase
             new PreparedTask('baz', 'foo=bar1', $options),
         ]);
 
-        $this->assertCount(2, $queuedTasks);
+        Assert::count($queuedTasks, 2);
 
-        $this->assertSame((string) $uuid1, $queuedTasks[0]->getId());
-        $this->assertSame('bar', $queuedTasks[0]->getName());
-        $this->assertSame('foo', $queuedTasks[0]->getPipeline());
-        $this->assertSame('foo=bar', $queuedTasks[0]->getPayload());
-        $this->assertSame([], $queuedTasks[0]->getHeaders());
+        Assert::same($queuedTasks[0]->getId(), (string) $uuid1);
+        Assert::same($queuedTasks[0]->getName(), 'bar');
+        Assert::same($queuedTasks[0]->getPipeline(), 'foo');
+        Assert::same($queuedTasks[0]->getPayload(), 'foo=bar');
+        Assert::same($queuedTasks[0]->getHeaders(), []);
 
-        $this->assertSame((string) $uuid2, $queuedTasks[1]->getId());
-        $this->assertSame('baz', $queuedTasks[1]->getName());
-        $this->assertSame('foo', $queuedTasks[1]->getPipeline());
-        $this->assertSame('foo=bar1', $queuedTasks[1]->getPayload());
-        $this->assertSame([], $queuedTasks[1]->getHeaders());
+        Assert::same($queuedTasks[1]->getId(), (string) $uuid2);
+        Assert::same($queuedTasks[1]->getName(), 'baz');
+        Assert::same($queuedTasks[1]->getPipeline(), 'foo');
+        Assert::same($queuedTasks[1]->getPayload(), 'foo=bar1');
+        Assert::same($queuedTasks[1]->getHeaders(), []);
     }
 
     public function testSendManyWithError(): void
     {
-        $this->expectException(JobsException::class);
-        $this->expectExceptionMessage('Some error');
+        Expect::exception(JobsException::class)->withMessageContaining('Some error');
 
         $pipeline = new Pipeline(
             'foo',
-            $rpc = $this->createMock(RPCInterface::class),
+            $rpc = \Mockery::mock(RPCInterface::class)->shouldIgnoreMissing(),
         );
 
-        $rpc->method('call')->willThrowException(new \Exception('Some error'));
+        $rpc->shouldReceive('call')->andThrow(new \Exception('Some error'));
 
         $pipeline->sendMany([
             new PreparedTask('bar', 'foo=bar'),
@@ -150,15 +147,14 @@ final class PipelineTest extends TestCase
 
     public function testSendWithError(): void
     {
-        $this->expectException(JobsException::class);
-        $this->expectExceptionMessage('Some error');
+        Expect::exception(JobsException::class)->withMessageContaining('Some error');
 
         $pipeline = new Pipeline(
             'foo',
-            $rpc = $this->createMock(RPCInterface::class),
+            $rpc = \Mockery::mock(RPCInterface::class)->shouldIgnoreMissing(),
         );
 
-        $rpc->method('call')->willThrowException(new \Exception('Some error'));
+        $rpc->shouldReceive('call')->andThrow(new \Exception('Some error'));
 
         $pipeline->send(new PreparedTask('bar', 'foo=bar'));
     }
