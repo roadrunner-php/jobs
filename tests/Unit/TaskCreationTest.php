@@ -22,16 +22,6 @@ class TaskCreationTest extends BaseTestCase
         $this->assertSame($expected, $task->getName());
     }
 
-    /**
-     * @param array<string, string|callable> $mapping
-     * @param non-empty-string $name
-     * @return QueueInterface
-     */
-    protected function queue(array $mapping = [], string $name = 'queue', ?Driver $driver = null): QueueInterface
-    {
-        return new Queue($name, $this->rpc($mapping), $driver !== null ? OptionsFactory::create($driver) : null);
-    }
-
     public function testTaskCreationWithPayload(): void
     {
         $expected = 'payload';
@@ -108,5 +98,14 @@ class TaskCreationTest extends BaseTestCase
         $this->assertSame(15, $task->getDelay());
         $this->assertSame(30, $task->getPriority());
         $this->assertFalse($task->getAutoAck());
+    }
+
+    /**
+     * @param array<string, string|callable> $mapping
+     * @param non-empty-string $name
+     */
+    protected function queue(array $mapping = [], string $name = 'queue', ?Driver $driver = null): QueueInterface
+    {
+        return new Queue($name, $this->rpc($mapping), $driver !== null ? OptionsFactory::create($driver) : null);
     }
 }

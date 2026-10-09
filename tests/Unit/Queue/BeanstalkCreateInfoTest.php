@@ -12,7 +12,7 @@ final class BeanstalkCreateInfoTest extends TestCase
 {
     public function testConstructor(): void
     {
-        $beanstalkCreateInfo = new BeanstalkCreateInfo('test',);
+        $beanstalkCreateInfo = new BeanstalkCreateInfo('test', );
 
         $this->assertInstanceOf(BeanstalkCreateInfo::class, $beanstalkCreateInfo);
         $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
@@ -39,7 +39,7 @@ final class BeanstalkCreateInfoTest extends TestCase
             tubePriority: $tubePriority,
             tube: $tube,
             reserveTimeout: $reserveTimeout,
-            consumeAll: $consumeAll
+            consumeAll: $consumeAll,
         );
 
         $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
@@ -66,7 +66,7 @@ final class BeanstalkCreateInfoTest extends TestCase
             tubePriority: $tubePriority,
             tube: $tube,
             reserveTimeout: $reserveTimeout,
-            consumeAll: $consumeAll
+            consumeAll: $consumeAll,
         );
 
         $expectedArray = [

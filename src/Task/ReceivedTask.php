@@ -77,7 +77,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void
     {
         $data = [
-            'message' => (string)$error,
+            'message' => (string) $error,
             'requeue' => $requeue,
             'delay_seconds' => $this->delay,
         ];
@@ -169,7 +169,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
             } catch (\JsonException $e) {
                 throw new SerializationException($e->getMessage(), $e->getCode(), $e);
             } catch (\Throwable $e) {
-                throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+                throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             $this->completed = $type;

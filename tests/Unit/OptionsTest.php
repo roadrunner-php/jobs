@@ -11,7 +11,7 @@ class OptionsTest extends BaseTestCase
     public function testDelay(): void
     {
         $options = new Options(
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
         $this->assertSame($expected, $options->getDelay());
@@ -20,7 +20,7 @@ class OptionsTest extends BaseTestCase
     public function testDelayImmutability(): void
     {
         $original = new Options(
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
         $this->assertSame($expected, $original->getDelay());
@@ -35,7 +35,7 @@ class OptionsTest extends BaseTestCase
     {
         $copy = Options::from(
             $original = new Options(
-                $delay = \random_int(0, \PHP_INT_MAX)
+                $delay = \random_int(0, \PHP_INT_MAX),
             ),
         );
 
@@ -48,7 +48,7 @@ class OptionsTest extends BaseTestCase
     public function testDelayMergingWithDefaults(): void
     {
         $original = new Options(
-            $delay = \random_int(0, \PHP_INT_MAX)
+            $delay = \random_int(0, \PHP_INT_MAX),
         );
 
         $this->assertSame($delay, $original->merge(new Options())->getDelay());
@@ -58,7 +58,7 @@ class OptionsTest extends BaseTestCase
     public function testDelayMergingByNewestValue(): void
     {
         $defaults = new Options(
-            $delay = 0xDEAD_BEEF
+            $delay = 0xDEAD_BEEF,
         );
 
         $modified = new Options(
@@ -73,7 +73,7 @@ class OptionsTest extends BaseTestCase
         $options = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            $expected = true
+            $expected = true,
         );
 
         $this->assertSame($expected, $options->getAutoAck());
@@ -84,7 +84,7 @@ class OptionsTest extends BaseTestCase
         $original = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            $expected = true
+            $expected = true,
         );
 
         $this->assertSame($expected, $original->getAutoAck());
@@ -101,7 +101,7 @@ class OptionsTest extends BaseTestCase
             $original = new Options(
                 Options::DEFAULT_DELAY,
                 Options::DEFAULT_PRIORITY,
-                $autoAck = true
+                $autoAck = true,
             ),
         );
 
@@ -116,7 +116,7 @@ class OptionsTest extends BaseTestCase
         $original = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            $autoAck = true
+            $autoAck = true,
         );
 
         $this->assertSame($autoAck, $original->merge(new Options())->getAutoAck());
@@ -128,13 +128,13 @@ class OptionsTest extends BaseTestCase
         $defaults = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            false
+            false,
         );
 
         $modified = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            true
+            true,
         );
 
         $this->assertSame(true, $defaults->merge($modified)->getAutoAck());
@@ -144,7 +144,7 @@ class OptionsTest extends BaseTestCase
     {
         $options = new Options(
             Options::DEFAULT_DELAY,
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
         $this->assertSame($expected, $options->getPriority());
@@ -154,7 +154,7 @@ class OptionsTest extends BaseTestCase
     {
         $original = new Options(
             Options::DEFAULT_DELAY,
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
         $this->assertSame($expected, $original->getPriority());
@@ -170,7 +170,7 @@ class OptionsTest extends BaseTestCase
         $copy = Options::from(
             $original = new Options(
                 Options::DEFAULT_DELAY,
-                $priority = \random_int(0, \PHP_INT_MAX)
+                $priority = \random_int(0, \PHP_INT_MAX),
             ),
         );
 
@@ -184,7 +184,7 @@ class OptionsTest extends BaseTestCase
     {
         $original = new Options(
             Options::DEFAULT_DELAY,
-            $priority = \random_int(0, \PHP_INT_MAX)
+            $priority = \random_int(0, \PHP_INT_MAX),
         );
 
         $this->assertSame($priority, $original->merge(new Options())->getPriority());
@@ -195,7 +195,7 @@ class OptionsTest extends BaseTestCase
     {
         $defaults = new Options(
             Options::DEFAULT_DELAY,
-            $priority = 0xDEAD_BEEF
+            $priority = 0xDEAD_BEEF,
         );
 
         $modified = new Options(
@@ -217,12 +217,12 @@ class OptionsTest extends BaseTestCase
     public function testMergingWithNonNull(): void
     {
         $source = new Options(
-            0xDEAD_BEEF
+            0xDEAD_BEEF,
         );
 
         $actual = $source->mergeOptional(
             $modified = new Options(
-                0xDEAD_BEEF * 2
+                0xDEAD_BEEF * 2,
             ),
         );
 

@@ -58,7 +58,7 @@ final class AMQPCreateInfoTest extends TestCase
             redialTimeout: 10,
             exchangeAutoDelete: true,
             queueAutoDelete: true,
-            consumerId: 'custom_consumer_id'
+            consumerId: 'custom_consumer_id',
         );
 
         $this->assertSame(200, $amqpCreateInfo->prefetch);
@@ -103,7 +103,7 @@ final class AMQPCreateInfoTest extends TestCase
             redialTimeout: 10,
             exchangeAutoDelete: true,
             queueAutoDelete: true,
-            consumerId: 'custom_consumer_id'
+            consumerId: 'custom_consumer_id',
         );
 
         $expectedArray = [
@@ -128,7 +128,7 @@ final class AMQPCreateInfoTest extends TestCase
             'delete_queue_on_stop' => true,
             'redial_timeout' => 10,
             'queue_auto_delete' => true,
-            'consumer_id' => 'custom_consumer_id'
+            'consumer_id' => 'custom_consumer_id',
         ];
 
         $this->assertEquals($expectedArray, $amqpCreateInfo->toArray());

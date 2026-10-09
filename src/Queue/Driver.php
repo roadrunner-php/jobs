@@ -19,27 +19,21 @@ enum Driver: string
      * @link http://qpid.apache.org/
      */
     case AMQP = 'amqp';
-
     case Beanstalk = 'beanstalk';
-
     case BoltDB = 'boltdb';
-
     case SQS = 'sqs';
 
     /**
      * @internal NOT Available: Reserved for future use.
      */
     case Redis = 'redis';
-
     case NATS = 'nats';
-
     case Kafka = 'kafka';
 
     /**
      * @internal NOT Available: Reserved for future use.
      */
     case NSQ = 'nsq';
-
     case PubSub = 'google_pub_sub';
 
     /**

@@ -28,7 +28,15 @@ final class KafkaReceivedTaskTest extends TestCase
         array $headers = [],
     ): KafkaReceivedTask {
         return new KafkaReceivedTask(
-            $this->worker, $id, $pipeline, $name, $queue, $partition, $offset, $payload, $headers
+            $this->worker,
+            $id,
+            $pipeline,
+            $name,
+            $queue,
+            $partition,
+            $offset,
+            $payload,
+            $headers,
         );
     }
 

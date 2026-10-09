@@ -19,7 +19,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * @param non-empty-string $name
-     * @param OptionsInterface|null $options
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
@@ -31,11 +30,6 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         $this->options = $options ?? new Options();
 
         parent::__construct($name, $payload, $headers);
-    }
-
-    public function __clone()
-    {
-        $this->options = clone $this->options;
     }
 
     public function getOptions(): OptionsInterface
@@ -115,5 +109,10 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         $self->options = $options;
 
         return $self;
+    }
+
+    public function __clone()
+    {
+        $this->options = clone $this->options;
     }
 }

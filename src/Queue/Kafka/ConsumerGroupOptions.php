@@ -15,8 +15,7 @@ final class ConsumerGroupOptions implements \JsonSerializable
     public function __construct(
         public readonly ?string $groupId = null,
         public bool $blockRebalanceOnPoll = self::BLOCK_REBALANCE_ON_POLL_DEFAULT_VALUE,
-    ) {
-    }
+    ) {}
 
     public function jsonSerialize(): array
     {

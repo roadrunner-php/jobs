@@ -17,11 +17,41 @@ use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
-use Traversable;
 
 final class PipelineTest extends TestCase
 {
-    /** @dataProvider taskToProtoDataProvider */
+    public static function taskToProtoDataProvider(): \Traversable
+    {
+        yield [
+            new Options(5, 10),
+            new DTOOptions([
+                'priority' => 10,
+                'pipeline' => '',
+                'delay' => 5,
+                'auto_ack' => false,
+                'topic' => '',
+                'metadata' => '',
+            ]),
+        ];
+
+        yield [
+            new KafkaOptions('some', 10, 5, true, 'other', 1, 7),
+            new DTOOptions([
+                'priority' => 5,
+                'pipeline' => '',
+                'delay' => 10,
+                'auto_ack' => true,
+                'topic' => 'some',
+                'metadata' => 'other',
+                'offset' => 1,
+                'partition' => 7,
+            ]),
+        ];
+    }
+
+    /**
+     * @dataProvider taskToProtoDataProvider
+     */
     public function testSend(OptionsInterface $options, DTOOptions $expected): void
     {
         $pipeline = new Pipeline(
@@ -36,7 +66,7 @@ final class PipelineTest extends TestCase
             'jobs.Push',
             $this->callback(function (PushRequest $request) use ($expected, $uuid) {
                 return $request->getJob()->getJob() === 'bar'
-                    && $request->getJob()->getId() === (string)$uuid
+                    && $request->getJob()->getId() === (string) $uuid
                     && $request->getJob()->getPayload() === 'foo=bar'
                     && $request->getJob()->getHeaders()->count() === 0
                     && \json_encode($request->getJob()->getOptions()) === \json_encode($expected);
@@ -46,14 +76,16 @@ final class PipelineTest extends TestCase
 
         $queuedTask = $pipeline->send(new PreparedTask('bar', 'foo=bar', $options));
 
-        $this->assertSame((string)$uuid, $queuedTask->getId());
+        $this->assertSame((string) $uuid, $queuedTask->getId());
         $this->assertSame('bar', $queuedTask->getName());
         $this->assertSame('foo', $queuedTask->getPipeline());
         $this->assertSame('foo=bar', $queuedTask->getPayload());
         $this->assertSame([], $queuedTask->getHeaders());
     }
 
-    /** @dataProvider taskToProtoDataProvider */
+    /**
+     * @dataProvider taskToProtoDataProvider
+     */
     public function testSendMany(OptionsInterface $options, DTOOptions $expected): void
     {
         $pipeline = new Pipeline(
@@ -69,10 +101,10 @@ final class PipelineTest extends TestCase
             $this->callback(function (PushBatchRequest $request) use ($expected, $uuid1, $uuid2) {
                 return $request->getJobs()->count() === 2
                     && $request->getJobs()->offsetGet(0)->getJob() === 'bar'
-                    && $request->getJobs()->offsetGet(0)->getId() === (string)$uuid1
+                    && $request->getJobs()->offsetGet(0)->getId() === (string) $uuid1
                     && $request->getJobs()->offsetGet(0)->getPayload() === 'foo=bar'
                     && $request->getJobs()->offsetGet(1)->getJob() === 'baz'
-                    && $request->getJobs()->offsetGet(1)->getId() === (string)$uuid2
+                    && $request->getJobs()->offsetGet(1)->getId() === (string) $uuid2
                     && $request->getJobs()->offsetGet(1)->getPayload() === 'foo=bar1';
             }),
             null,
@@ -85,13 +117,13 @@ final class PipelineTest extends TestCase
 
         $this->assertCount(2, $queuedTasks);
 
-        $this->assertSame((string)$uuid1, $queuedTasks[0]->getId());
+        $this->assertSame((string) $uuid1, $queuedTasks[0]->getId());
         $this->assertSame('bar', $queuedTasks[0]->getName());
         $this->assertSame('foo', $queuedTasks[0]->getPipeline());
         $this->assertSame('foo=bar', $queuedTasks[0]->getPayload());
         $this->assertSame([], $queuedTasks[0]->getHeaders());
 
-        $this->assertSame((string)$uuid2, $queuedTasks[1]->getId());
+        $this->assertSame((string) $uuid2, $queuedTasks[1]->getId());
         $this->assertSame('baz', $queuedTasks[1]->getName());
         $this->assertSame('foo', $queuedTasks[1]->getPipeline());
         $this->assertSame('foo=bar1', $queuedTasks[1]->getPayload());
@@ -129,34 +161,5 @@ final class PipelineTest extends TestCase
         $rpc->method('call')->willThrowException(new \Exception('Some error'));
 
         $pipeline->send(new PreparedTask('bar', 'foo=bar'));
-    }
-
-    public static function taskToProtoDataProvider(): Traversable
-    {
-        yield [
-            new Options(5, 10),
-            new DTOOptions([
-                'priority' => 10,
-                'pipeline' => '',
-                'delay' => 5,
-                'auto_ack' => false,
-                'topic' => '',
-                'metadata' => '',
-            ]),
-        ];
-
-        yield [
-            new KafkaOptions('some', 10, 5, true, 'other', 1, 7),
-            new DTOOptions([
-                'priority' => 5,
-                'pipeline' => '',
-                'delay' => 10,
-                'auto_ack' => true,
-                'topic' => 'some',
-                'metadata' => 'other',
-                'offset' => 1,
-                'partition' => 7,
-            ]),
-        ];
     }
 }

@@ -8,10 +8,21 @@ use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
-use Traversable;
 
 final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
 {
+    public static function defaultDriversDataProvider(): \Traversable
+    {
+        yield [Driver::SQS];
+        yield [Driver::AMQP];
+        yield [Driver::Beanstalk];
+        yield [Driver::BoltDB];
+        yield [Driver::Memory];
+        yield [Driver::NSQ];
+        yield [Driver::NATS];
+        yield [Driver::Redis];
+    }
+
     /**
      * @dataProvider defaultDriversDataProvider
      */
@@ -27,17 +38,5 @@ final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInstanceOf(KafkaOptions::class, $options);
         $this->assertEquals('default', $options->getTopic());
-    }
-
-    public static function defaultDriversDataProvider(): Traversable
-    {
-        yield [Driver::SQS];
-        yield [Driver::AMQP];
-        yield [Driver::Beanstalk];
-        yield [Driver::BoltDB];
-        yield [Driver::Memory];
-        yield [Driver::NSQ];
-        yield [Driver::NATS];
-        yield [Driver::Redis];
     }
 }

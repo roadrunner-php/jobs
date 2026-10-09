@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +17,14 @@ use Spiral\RoadRunner\WorkerInterface;
 final class ReceivedTaskTest extends TestCase
 {
     private MockObject|WorkerInterface $worker;
+
+    public static function provideFailData(): \Generator
+    {
+        yield 'default' => ['Some error message', false, null, []];
+        yield 'requeue' => ['Some error message', true, null, []];
+        yield 'delay' => ['Some error message', false, 10, []];
+        yield 'headers' => ['Some error message', false, null, ['foo' => 'bar']];
+    }
 
     public function testGetsPipeline(): void
     {
@@ -35,7 +42,14 @@ final class ReceivedTaskTest extends TestCase
         array $headers = [],
     ): ReceivedTaskInterface {
         return new ReceivedTask(
-            $this->worker, $id, $driver, $pipeline, $name, $queue, $payload, $headers
+            $this->worker,
+            $id,
+            $driver,
+            $pipeline,
+            $name,
+            $queue,
+            $payload,
+            $headers,
         );
     }
 
@@ -105,14 +119,6 @@ final class ReceivedTaskTest extends TestCase
         $this->assertFalse($task->isFails());
     }
 
-    public static function provideFailData(): Generator
-    {
-        yield 'default' => ['Some error message', false, null, []];
-        yield 'requeue' => ['Some error message', true, null, []];
-        yield 'delay' => ['Some error message', false, 10, []];
-        yield 'headers' => ['Some error message', false, null, ['foo' => 'bar']];
-    }
-
     #[DataProvider('provideFailData')]
     public function testNack(string $error, bool $redelivery, int|null $delay): void
     {
@@ -155,7 +161,6 @@ final class ReceivedTaskTest extends TestCase
         $this->assertTrue($task->isCompleted());
     }
 
-
     #[DataProvider('provideFailData')]
     public function testRequeue(string $error, bool $requeue, int|null $delay, array $headers): void
     {
@@ -190,7 +195,7 @@ final class ReceivedTaskTest extends TestCase
                         $result['data']['headers'] = $headers;
                     }
 
-                    $this->assertEquals(\json_encode($result), $payload->body,);
+                    $this->assertEquals(\json_encode($result), $payload->body, );
 
                     return true;
                 }),
@@ -230,7 +235,7 @@ final class ReceivedTaskTest extends TestCase
                         'data' => [
                             'message' => $error,
                             'requeue' => $requeue,
-                            'delay_seconds' => (int)$delay,
+                            'delay_seconds' => (int) $delay,
                         ],
                     ];
 

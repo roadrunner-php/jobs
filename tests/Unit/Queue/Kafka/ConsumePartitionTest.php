@@ -9,8 +9,6 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 
-use function json_encode;
-
 final class ConsumePartitionTest extends TestCase
 {
     public function testConstructor(): void
@@ -18,7 +16,7 @@ final class ConsumePartitionTest extends TestCase
         $consumePartition = new ConsumePartition(
             $topic = 'my-topic',
             $partition = 1,
-            $offset = new ConsumerOffset(OffsetType::AtStart, 123)
+            $offset = new ConsumerOffset(OffsetType::AtStart, 123),
         );
 
         $this->assertInstanceOf(ConsumePartition::class, $consumePartition);
@@ -29,9 +27,11 @@ final class ConsumePartitionTest extends TestCase
 
     public function testSerialization(): void
     {
-        $string = json_encode(
+        $string = \json_encode(
             new ConsumePartition(
-                'my-topic', 1, new ConsumerOffset(OffsetType::AtStart, 123)
+                'my-topic',
+                1,
+                new ConsumerOffset(OffsetType::AtStart, 123),
             ),
         );
 

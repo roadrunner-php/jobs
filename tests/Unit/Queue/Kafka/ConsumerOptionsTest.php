@@ -10,8 +10,6 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 
-use function json_encode;
-
 final class ConsumerOptionsTest extends TestCase
 {
     public function testConstructor(): void
@@ -32,7 +30,7 @@ final class ConsumerOptionsTest extends TestCase
             $maxFetchMessageSize,
             $minFetchMessageSize,
             $consumePartitions,
-            $consumerOffset
+            $consumerOffset,
         );
 
         $this->assertInstanceOf(ConsumerOptions::class, $consumerOptions);
@@ -85,7 +83,7 @@ final class ConsumerOptionsTest extends TestCase
             $maxFetchMessageSize,
             $minFetchMessageSize,
             $consumePartitions,
-            $consumerOffset
+            $consumerOffset,
         );
 
         $this->assertEquals(
@@ -114,9 +112,8 @@ final class ConsumerOptionsTest extends TestCase
         }
     }
 }
-JOSN
-            ,
-            json_encode($consumerOptions, JSON_PRETTY_PRINT),
+JOSN,
+            \json_encode($consumerOptions, JSON_PRETTY_PRINT),
         );
     }
 
@@ -136,9 +133,8 @@ JOSN
         "value": 1
     }
 }
-JOSN
-            ,
-            json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT),
+JOSN,
+            \json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT),
         );
     }
 }

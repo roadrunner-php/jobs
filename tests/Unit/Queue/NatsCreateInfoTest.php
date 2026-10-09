@@ -22,7 +22,7 @@ final class NatsCreateInfoTest extends TestCase
             300,
             true,
             true,
-            0
+            0,
         );
 
         $this->assertSame(Driver::NATS, $natsCreateInfo->driver);
@@ -50,7 +50,7 @@ final class NatsCreateInfoTest extends TestCase
             300,
             true,
             true,
-            0
+            0,
         );
 
         $expectedArray = [

@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Exception;
 
-class SerializationException extends JobsException
-{
-}
+class SerializationException extends JobsException {}

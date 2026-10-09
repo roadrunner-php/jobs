@@ -37,11 +37,6 @@ final class Queue implements QueueInterface
         $this->options = $options ?? new Options();
     }
 
-    public function __clone()
-    {
-        $this->options = clone $this->options;
-    }
-
     public function getDefaultOptions(): OptionsInterface
     {
         return $this->options;
@@ -66,7 +61,6 @@ final class Queue implements QueueInterface
      * This method exists for compatibility with version RoadRunner 1.x.
      *
      * @param non-empty-string $name
-     * @param OptionsInterface|null $options
      * @throws JobsException
      */
     public function push(
@@ -98,7 +92,7 @@ final class Queue implements QueueInterface
             $name,
             $payload,
             $options,
-            $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : []
+            $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : [],
         );
     }
 
@@ -117,7 +111,7 @@ final class Queue implements QueueInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -139,7 +133,7 @@ final class Queue implements QueueInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -159,7 +153,7 @@ final class Queue implements QueueInterface
             /** @var Stats $stats */
             $stats = $this->rpc->call('jobs.Stat', '', Stats::class);
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         /** @var Stat $stat */
@@ -170,5 +164,10 @@ final class Queue implements QueueInterface
         }
 
         return null;
+    }
+
+    public function __clone()
+    {
+        $this->options = clone $this->options;
     }
 }
