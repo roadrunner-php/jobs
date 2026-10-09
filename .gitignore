@@ -13,6 +13,7 @@ Thumbs.db
 *.exe
 
 # Other
+.phpunit.cache/
 .php_cs.cache
 clover.xml
 .env
