@@ -17,6 +17,7 @@ final class ConsumerGroupOptions implements \JsonSerializable
         public bool $blockRebalanceOnPoll = self::BLOCK_REBALANCE_ON_POLL_DEFAULT_VALUE,
     ) {}
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

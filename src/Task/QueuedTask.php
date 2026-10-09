@@ -29,6 +29,7 @@ class QueuedTask extends Task implements QueuedTaskInterface
     /**
      * @return non-empty-string
      */
+    #[\Override]
     public function getId(): string
     {
         return $this->id;
@@ -37,6 +38,7 @@ class QueuedTask extends Task implements QueuedTaskInterface
     /**
      * @return non-empty-string
      */
+    #[\Override]
     public function getPipeline(): string
     {
         return $this->pipeline;

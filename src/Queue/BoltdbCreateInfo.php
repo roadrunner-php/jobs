@@ -32,6 +32,7 @@ final class BoltdbCreateInfo extends CreateInfo
         \assert($file !== '', 'Precondition [file !== ""] failed');
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

@@ -23,6 +23,7 @@ final class Jobs implements JobsInterface
         $this->rpc = $rpc->withCodec(new ProtobufCodec());
     }
 
+    #[\Override]
     public function create(CreateInfoInterface $info, ?OptionsInterface $options = null): QueueInterface
     {
         try {
@@ -42,6 +43,7 @@ final class Jobs implements JobsInterface
     /**
      * @param non-empty-string $queue
      */
+    #[\Override]
     public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
     {
         \assert($queue !== '', 'Precondition [queue !== ""] failed');
@@ -49,6 +51,7 @@ final class Jobs implements JobsInterface
         return new Queue($queue, $this->rpc, $options);
     }
 
+    #[\Override]
     public function pause(string|QueueInterface $queue, string|QueueInterface ...$queues): void
     {
         try {
@@ -63,6 +66,7 @@ final class Jobs implements JobsInterface
         }
     }
 
+    #[\Override]
     public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void
     {
         try {
@@ -81,6 +85,7 @@ final class Jobs implements JobsInterface
      * @return int<0, max>
      * @throws JobsException
      */
+    #[\Override]
     public function count(): int
     {
         return \iterator_count($this->getIterator());
@@ -90,6 +95,7 @@ final class Jobs implements JobsInterface
      * @return \Traversable<non-empty-string, QueueInterface>
      * @throws JobsException
      */
+    #[\Override]
     public function getIterator(): \Traversable
     {
         try {

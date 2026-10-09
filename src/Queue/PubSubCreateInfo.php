@@ -34,6 +34,7 @@ final class PubSubCreateInfo extends CreateInfo
         }
     }
 
+    #[\Override]
     public function toArray(): array
     {
         $result = \array_merge(parent::toArray(), [

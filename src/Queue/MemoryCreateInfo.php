@@ -26,6 +26,7 @@ final class MemoryCreateInfo extends CreateInfo
         \assert($this->prefetch >= 1, 'Precondition [prefetch >= 1] failed');
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

@@ -37,6 +37,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
      * @throws ReceivedTaskException
      * @psalm-suppress ArgumentTypeCoercion
      */
+    #[\Override]
     public function create(Payload $payload): ReceivedTaskInterface
     {
         $header = $this->getHeader($payload);

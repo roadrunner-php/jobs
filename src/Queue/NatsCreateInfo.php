@@ -47,6 +47,7 @@ final class NatsCreateInfo extends CreateInfo
         \assert($ackWait >= 0, 'Precondition [ackWait >= 0] failed');
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

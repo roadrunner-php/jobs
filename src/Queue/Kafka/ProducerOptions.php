@@ -41,6 +41,7 @@ final class ProducerOptions implements \JsonSerializable
         public readonly ?CompressionCodec $compressionCodec = null,
     ) {}
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = [
