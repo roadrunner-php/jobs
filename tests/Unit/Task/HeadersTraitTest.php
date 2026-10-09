@@ -44,6 +44,38 @@ final class HeadersTraitTest
         Assert::same($task->getHeader('baz'), []);
     }
 
+    public function testWithAddedHeaderAppendsValues(): void
+    {
+        $task = $this->getTask(['foo' => ['bar']]);
+
+        $withString = $task->withAddedHeader('foo', 'baz');
+        $withList = $withString->withAddedHeader('foo', ['qux', 'quux']);
+        $withNew = $task->withAddedHeader('new', 'value');
+
+        Assert::same($task->getHeader('foo'), ['bar']);
+        Assert::same($withString->getHeader('foo'), ['bar', 'baz']);
+        Assert::same($withList->getHeader('foo'), ['bar', 'baz', 'qux', 'quux']);
+        Assert::same($withNew->getHeaders(), ['foo' => ['bar'], 'new' => ['value']]);
+    }
+
+    public function testWithoutHeaderRemovesHeader(): void
+    {
+        $task = $this->getTask(['foo' => ['bar'], 'baz' => ['qux']]);
+
+        $without = $task->withoutHeader('foo');
+
+        Assert::notSame($without, $task);
+        Assert::same($without->getHeaders(), ['baz' => ['qux']]);
+        Assert::same($task->getHeaders(), ['foo' => ['bar'], 'baz' => ['qux']]);
+    }
+
+    public function testWithoutMissingHeaderKeepsInstance(): void
+    {
+        $task = $this->getTask(['foo' => ['bar']]);
+
+        Assert::same($task->withoutHeader('missing'), $task);
+    }
+
     public function getTask(array $headers = ['foo' => ['bar']]): PreparedTask
     {
         return new PreparedTask(

@@ -81,4 +81,21 @@ final class PreparedTaskTest
         $task = $task->withAutoAck(true);
         Assert::true($task->getAutoAck());
     }
+
+    public function testImmutableOptionsAreLeftUntouched(): void
+    {
+        $options = \Mockery::mock(OptionsInterface::class);
+        $options->shouldReceive('getDelay')->andReturn(5);
+        $options->shouldReceive('getPriority')->andReturn(2);
+        $options->shouldReceive('getAutoAck')->andReturn(true);
+
+        $task = new PreparedTask(name: 'foo', payload: 'bar', options: $options);
+
+        Assert::same($task->withDelay(100), $task);
+        Assert::same($task->withPriority(100), $task);
+        Assert::same($task->withAutoAck(false), $task);
+        Assert::same($task->getDelay(), 5);
+        Assert::same($task->getPriority(), 2);
+        Assert::true($task->getAutoAck());
+    }
 }

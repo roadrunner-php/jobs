@@ -138,6 +138,14 @@ class QueueTestCase extends BaseTestCase
     }
 
     #[Test]
+    public function testPipelineStatError(): void
+    {
+        Expect::exception(JobsException::class)->withMessageContaining('jobs.Stat');
+
+        $this->queue()->getPipelineStat();
+    }
+
+    #[Test]
     public function testIsPaused(): void
     {
         $handler = [

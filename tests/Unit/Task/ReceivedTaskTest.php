@@ -9,6 +9,8 @@ use Testo\Assert;
 use Testo\Data\DataProvider;
 use Testo\Lifecycle\BeforeTest;
 use Mockery\MockInterface;
+use Spiral\RoadRunner\Jobs\Exception\JobsException;
+use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
@@ -234,6 +236,36 @@ final class ReceivedTaskTest
         Assert::true($task->isFails());
         Assert::false($task->isSuccessful());
         Assert::true($task->isCompleted());
+    }
+
+    public function testCompleteWrapsWorkerError(): void
+    {
+        $task = $this->createTask();
+        $this->worker->shouldReceive('respond')->andThrow(new \RuntimeException('Connection lost', 42));
+
+        try {
+            $task->complete();
+            Assert::fail('JobsException was not thrown');
+        } catch (JobsException $e) {
+            Assert::same($e->getMessage(), 'Connection lost');
+            Assert::same($e->getCode(), 42);
+        }
+
+        Assert::false($task->isCompleted());
+    }
+
+    public function testFailWithMessageThatCannotBeEncoded(): void
+    {
+        $task = $this->createTask();
+        $this->worker->shouldReceive('respond')->never();
+
+        try {
+            $task->fail("\xB1\x31");
+            Assert::fail('SerializationException was not thrown');
+        } catch (SerializationException) {
+        }
+
+        Assert::false($task->isCompleted());
     }
 
     #[BeforeTest]
