@@ -44,6 +44,18 @@ final class ConsumerOptionsTest
         Assert::equals($consumerOptions->consumerOffset, $consumerOffset);
     }
 
+    public function testConstructorWithPartitionsOnly(): void
+    {
+        $consumePartitions = [
+            new ConsumePartition('my-topic', 1, new ConsumerOffset(OffsetType::AtStart, 0)),
+        ];
+
+        $consumerOptions = new ConsumerOptions(consumePartitions: $consumePartitions);
+
+        Assert::same($consumerOptions->topics, []);
+        Assert::same($consumerOptions->consumePartitions, $consumePartitions);
+    }
+
     public function testConstructorWithDefaultValues(): void
     {
         $topics = ['my-topic'];

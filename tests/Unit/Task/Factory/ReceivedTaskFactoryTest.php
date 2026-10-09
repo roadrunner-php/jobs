@@ -9,6 +9,7 @@ use Testo\Expect;
 use Testo\Assert;
 use Testo\Data\DataProvider;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
+use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactory;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
@@ -86,6 +87,14 @@ final class ReceivedTaskFactoryTest
 
         $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
         $factory->create(new Payload(null));
+    }
+
+    public function testMalformedHeader(): void
+    {
+        Expect::exception(SerializationException::class);
+
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
+        $factory->create(new Payload(null, '{"id":'));
     }
 
     public function testEmptyBody(): void

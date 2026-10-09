@@ -224,6 +224,24 @@ final class JobsTest extends BaseTestCase
         Assert::same($actual->getName(), $expected);
     }
 
+    public function testCreateWrapsRpcError(): void
+    {
+        Expect::exception(JobsException::class)->withMessageContaining('jobs.Declare');
+
+        $this->jobs()->create(new CreateInfo(Driver::Memory, 'foo'));
+    }
+
+    public function testCreateRejectsUnsupportedPipelineValue(): void
+    {
+        Expect::exception(JobsException::class)
+            ->withMessageContaining('Can not cast to string unrecognized value of type float');
+
+        $info = \Mockery::mock(CreateInfoInterface::class);
+        $info->shouldReceive('toArray')->andReturn(['name' => 'foo', 'ratio' => 1.5]);
+
+        $this->jobs(['jobs.Declare' => static fn(): string => ''])->create($info);
+    }
+
     /**
      * @param array<string, string|callable> $mapping
      */

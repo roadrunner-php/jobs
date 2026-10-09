@@ -20,6 +20,7 @@ use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
+use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
 
 #[Test]
 final class PipelineTest
@@ -157,5 +158,88 @@ final class PipelineTest
         $rpc->shouldReceive('call')->andThrow(new \Exception('Some error'));
 
         $pipeline->send(new PreparedTask('bar', 'foo=bar'));
+    }
+
+    public function testSendRethrowsJobsExceptionAsIs(): void
+    {
+        $pipeline = new Pipeline('foo', $rpc = \Mockery::mock(RPCInterface::class));
+        $rpc->shouldReceive('call')->andThrow($exception = new JobsException('Queue is closed'));
+
+        try {
+            $pipeline->send(new PreparedTask('bar', 'foo=bar'));
+            Assert::fail('JobsException was not thrown');
+        } catch (JobsException $e) {
+            Assert::same($e, $exception);
+        }
+    }
+
+    public function testSendManyRethrowsJobsExceptionAsIs(): void
+    {
+        $pipeline = new Pipeline('foo', $rpc = \Mockery::mock(RPCInterface::class));
+        $rpc->shouldReceive('call')->andThrow($exception = new JobsException('Queue is closed'));
+
+        try {
+            $pipeline->sendMany([new PreparedTask('bar', 'foo=bar')]);
+            Assert::fail('JobsException was not thrown');
+        } catch (JobsException $e) {
+            Assert::same($e, $exception);
+        }
+    }
+
+    public function testSendSkipsHeadersWithoutValues(): void
+    {
+        $pipeline = new Pipeline('foo', $rpc = \Mockery::mock(RPCInterface::class));
+
+        $sentHeaders = null;
+        $rpc->shouldReceive('call')->once()->with('jobs.Push', \Mockery::on(
+            static function (PushRequest $request) use (&$sentHeaders): bool {
+                $sentHeaders = [];
+                foreach ($request->getJob()->getHeaders() as $name => $value) {
+                    $sentHeaders[$name] = \iterator_to_array($value->getValue());
+                }
+
+                return true;
+            },
+        ));
+
+        $pipeline->send(new PreparedTask('bar', 'foo=bar', headers: ['foo' => ['bar', 'baz'], 'empty' => []]));
+
+        Assert::same($sentHeaders, ['foo' => ['bar', 'baz']]);
+    }
+
+    public function testSendTakesOptionsFromGettersWithoutToArray(): void
+    {
+        $task = \Mockery::mock(PreparedTaskInterface::class);
+        $task->shouldReceive('getName')->andReturn('bar');
+        $task->shouldReceive('getPayload')->andReturn('foo=bar');
+        $task->shouldReceive('getHeaders')->andReturn([]);
+        $task->shouldReceive('getPriority')->andReturn(7);
+        $task->shouldReceive('getDelay')->andReturn(3);
+        $task->shouldReceive('getAutoAck')->andReturn(true);
+
+        $pipeline = new Pipeline(
+            'foo',
+            $rpc = \Mockery::mock(RPCInterface::class),
+            $uuid = \Mockery::mock(UuidFactoryInterface::class),
+        );
+        $uuid->shouldReceive('uuid4')->andReturn($id = Uuid::uuid4());
+
+        $sentOptions = null;
+        $rpc->shouldReceive('call')->once()->with('jobs.Push', \Mockery::on(
+            static function (PushRequest $request) use (&$sentOptions): bool {
+                $sentOptions = $request->getJob()->getOptions();
+
+                return true;
+            },
+        ));
+
+        $queuedTask = $pipeline->send($task);
+
+        Assert::same($queuedTask->getId(), (string) $id);
+        Assert::instanceOf($sentOptions, DTOOptions::class);
+        Assert::same($sentOptions->getPriority(), 7);
+        Assert::same($sentOptions->getDelay(), 3);
+        Assert::true($sentOptions->getAutoAck());
+        Assert::same($sentOptions->getPipeline(), 'foo');
     }
 }
