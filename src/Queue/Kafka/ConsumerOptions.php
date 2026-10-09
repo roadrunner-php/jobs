@@ -51,6 +51,7 @@ final class ConsumerOptions implements \JsonSerializable
         \assert($this->minFetchMessageSize > 0, 'Precondition [minFetchMessageSize > 0] failed');
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = [

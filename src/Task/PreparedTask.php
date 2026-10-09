@@ -32,11 +32,13 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         parent::__construct($name, $payload, $headers);
     }
 
+    #[\Override]
     public function getOptions(): OptionsInterface
     {
         return $this->options;
     }
 
+    #[\Override]
     public function getDelay(): int
     {
         return $this->options->getDelay();
@@ -46,6 +48,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
+    #[\Override]
     public function withDelay(int $seconds): self
     {
         \assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
@@ -61,6 +64,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
+    #[\Override]
     public function getPriority(): int
     {
         return $this->options->getPriority();
@@ -85,6 +89,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
+    #[\Override]
     public function getAutoAck(): bool
     {
         return $this->options->getAutoAck();
@@ -103,6 +108,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
+    #[\Override]
     public function withOptions(OptionsInterface $options): OptionsAwareInterface
     {
         $self = clone $this;

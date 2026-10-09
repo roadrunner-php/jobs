@@ -14,6 +14,7 @@ class ConsumerOffset implements \JsonSerializable
         public readonly ?int $value = null,
     ) {}
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = [

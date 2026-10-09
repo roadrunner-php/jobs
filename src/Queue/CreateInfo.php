@@ -25,21 +25,25 @@ class CreateInfo implements CreateInfoInterface
         \assert($this->priority >= 1, 'Precondition [priority >= 1] failed');
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getDriver(): Driver
     {
         return $this->driver;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

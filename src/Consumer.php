@@ -50,6 +50,7 @@ final class Consumer implements ConsumerInterface
      * @throws SerializationException
      * @psalm-suppress ArgumentTypeCoercion
      */
+    #[\Override]
     public function waitTask(): ?ReceivedTaskInterface
     {
         $payload = $this->worker->waitPayload();

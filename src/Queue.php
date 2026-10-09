@@ -37,6 +37,7 @@ final class Queue implements QueueInterface
         $this->options = $options ?? new Options();
     }
 
+    #[\Override]
     public function getDefaultOptions(): OptionsInterface
     {
         return $this->options;
@@ -46,6 +47,7 @@ final class Queue implements QueueInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
+    #[\Override]
     public function withDefaultOptions(?OptionsInterface $options = null): self
     {
         $self = clone $this;
@@ -73,11 +75,13 @@ final class Queue implements QueueInterface
         );
     }
 
+    #[\Override]
     public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface
     {
         return $this->pipeline->send($task);
     }
 
+    #[\Override]
     public function create(
         string $name,
         string|\Stringable $payload,
@@ -96,11 +100,13 @@ final class Queue implements QueueInterface
         );
     }
 
+    #[\Override]
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable
     {
         return $this->pipeline->sendMany($tasks);
     }
 
+    #[\Override]
     public function pause(): void
     {
         try {
@@ -118,11 +124,13 @@ final class Queue implements QueueInterface
     /**
      * @return non-empty-string
      */
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function resume(): void
     {
         try {
@@ -137,6 +145,7 @@ final class Queue implements QueueInterface
         }
     }
 
+    #[\Override]
     public function isPaused(): bool
     {
         $stat = $this->getPipelineStat();
