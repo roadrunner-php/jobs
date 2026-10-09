@@ -46,10 +46,10 @@
         "php": ">=8.2",
         "ext-json": "*",
         "ramsey/uuid": "^3 || ^4",
-        "roadrunner-php/roadrunner-api-dto": "^1.0",
-        "spiral/goridge": "^4.0",
-        "spiral/roadrunner": "^2024.2 || ^2025.1",
-        "spiral/roadrunner-worker": "^3.0"
+        "roadrunner-php/roadrunner-api-dto": "^1.18 || ^2.0",
+        "spiral/goridge": "^4.3",
+        "spiral/roadrunner": "^3.0",
+        "spiral/roadrunner-worker": "^3.7"
     },
     "require-dev": {
         "google/protobuf": "^3.17 || ^4.0 || ^5.0",
