@@ -43,7 +43,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "ramsey/uuid": "^3 || ^4",
         "roadrunner-php/roadrunner-api-dto": "^1.0",
@@ -55,7 +55,7 @@
         "google/protobuf": "^3.17 || ^4.0",
         "phpunit/phpunit": "^10.0",
         "spiral/code-style": "^2.3.1",
-        "vimeo/psalm": ">=5.8"
+        "vimeo/psalm": "^6 || ^7"
     },
     "autoload": {
         "psr-4": {
