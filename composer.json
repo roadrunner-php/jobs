@@ -55,6 +55,7 @@
         "google/protobuf": "^3.17 || ^4.0",
         "phpunit/phpunit": "^10.0",
         "roave/security-advisories": "dev-master",
+        "spiral/code-style": "^2.3.1",
         "vimeo/psalm": ">=5.8"
     },
     "autoload": {
@@ -68,6 +69,8 @@
         }
     },
     "scripts": {
+        "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
+        "cs:fix": "php-cs-fixer fix -v",
         "tests": "phpunit",
         "psalm": "psalm --no-cache"
     },
