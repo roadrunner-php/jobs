@@ -47,7 +47,7 @@ final class HeadersTraitTest extends TestCase
         return new PreparedTask(
             'foo',
             'foo=bar',
-            headers: $headers
+            headers: $headers,
         );
     }
 }

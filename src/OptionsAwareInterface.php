@@ -18,7 +18,6 @@ interface OptionsAwareInterface
      * immutability of the message, and MUST return an instance that has the
      * new {@see OptionsInterface} implementation.
      *
-     * @param OptionsInterface $options
      * @return $this
      */
     public function withOptions(OptionsInterface $options): self;

@@ -19,12 +19,7 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
 use Spiral\RoadRunner\Jobs\QueueInterface;
 
-use function array_map;
-use function array_values;
-use function bin2hex;
 use function count;
-use function iterator_to_array;
-use function random_bytes;
 
 class JobsTest extends BaseTestCase
 {
@@ -64,15 +59,6 @@ class JobsTest extends BaseTestCase
         $this->assertSame($dto->getName(), $queue->getName());
     }
 
-    /**
-     * @param array<string, string|callable> $mapping
-     * @return JobsInterface
-     */
-    protected function jobs(array $mapping = []): JobsInterface
-    {
-        return new Jobs($this->rpc($mapping));
-    }
-
     public function testCreateWithOptions(): void
     {
         $dto = new CreateInfo(Driver::SQS, 'foo', CreateInfo::PRIORITY_DEFAULT_VALUE);
@@ -108,9 +94,9 @@ class JobsTest extends BaseTestCase
         // Execute "$jobs->getIterator()"
         $this->assertSame(
             $expected,
-            array_map(
+            \array_map(
                 static fn(QueueInterface $queue) => $queue->getName(),
-                array_values(iterator_to_array($jobs)),
+                \array_values(\iterator_to_array($jobs)),
             ),
         );
     }
@@ -122,7 +108,7 @@ class JobsTest extends BaseTestCase
     {
         $this->expectException(JobsException::class);
 
-        iterator_to_array($this->jobs());
+        \iterator_to_array($this->jobs());
     }
 
     /**
@@ -148,7 +134,7 @@ class JobsTest extends BaseTestCase
     {
         $this->expectException(JobsException::class);
 
-        count($this->jobs());
+        \count($this->jobs());
     }
 
     /**
@@ -227,15 +213,22 @@ class JobsTest extends BaseTestCase
         );
     }
 
-
     public function testQueueConnection(): void
     {
         $jobs = $this->jobs();
 
         $actual = $jobs->connect(
-            $expected = bin2hex(random_bytes(32)),
+            $expected = \bin2hex(\random_bytes(32)),
         );
 
         $this->assertSame($expected, $actual->getName());
+    }
+
+    /**
+     * @param array<string, string|callable> $mapping
+     */
+    protected function jobs(array $mapping = []): JobsInterface
+    {
+        return new Jobs($this->rpc($mapping));
     }
 }

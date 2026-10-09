@@ -36,6 +36,6 @@ abstract class Task implements TaskInterface
 
     public function getPayload(): string
     {
-        return (string)$this->payload;
+        return (string) $this->payload;
     }
 }

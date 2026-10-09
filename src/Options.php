@@ -30,7 +30,7 @@ class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerial
         return new self(
             $options->getDelay(),
             $options->getPriority(),
-            $options->getAutoAck()
+            $options->getAutoAck(),
         );
     }
 

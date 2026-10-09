@@ -29,7 +29,7 @@ final class ConsumerTest extends \PHPUnit\Framework\TestCase
                     'pipeline' => 'job-pipeline',
                     'job' => 'job-name',
                     'headers' => ['foo' => 'bar'],
-                ])
+                ]),
             ),
         );
 

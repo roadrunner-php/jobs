@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
-use DateInterval;
 use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\Acks;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\CompressionCodec;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
-
-use function json_encode;
 
 final class ProducerOptionsTest extends TestCase
 {
@@ -33,18 +30,18 @@ final class ProducerOptionsTest extends TestCase
             true,
             Acks::NoAck,
             100,
-            new DateInterval('PT5S'),
-            new DateInterval('PT50S'),
-            new DateInterval('PT20S'),
-            CompressionCodec::Gzip
+            new \DateInterval('PT5S'),
+            new \DateInterval('PT50S'),
+            new \DateInterval('PT20S'),
+            CompressionCodec::Gzip,
         );
 
         $this->assertTrue($options->disableIdempotent);
         $this->assertSame(Acks::NoAck, $options->requiredAcks);
         $this->assertSame(100, $options->maxMessageBytes);
-        $this->assertEquals(new DateInterval('PT5S'), $options->requestTimeout);
-        $this->assertEquals(new DateInterval('PT50S'), $options->deliveryTimeout);
-        $this->assertEquals(new DateInterval('PT20S'), $options->transactionTimeout);
+        $this->assertEquals(new \DateInterval('PT5S'), $options->requestTimeout);
+        $this->assertEquals(new \DateInterval('PT50S'), $options->deliveryTimeout);
+        $this->assertEquals(new \DateInterval('PT20S'), $options->transactionTimeout);
         $this->assertSame(CompressionCodec::Gzip, $options->compressionCodec);
     }
 
@@ -54,10 +51,10 @@ final class ProducerOptionsTest extends TestCase
             true,
             Acks::AllISRAck,
             100,
-            new DateInterval('PT5S'),
-            new DateInterval('PT50S'),
-            new DateInterval('PT20S'),
-            CompressionCodec::Gzip
+            new \DateInterval('PT5S'),
+            new \DateInterval('PT50S'),
+            new \DateInterval('PT20S'),
+            CompressionCodec::Gzip,
         );
 
         $this->assertSame(
@@ -71,9 +68,8 @@ final class ProducerOptionsTest extends TestCase
     "required_acks": "AllISRAck",
     "compression_codec": "gzip"
 }
-JSON
-            ,
-            json_encode($options, JSON_PRETTY_PRINT),
+JSON,
+            \json_encode($options, JSON_PRETTY_PRINT),
         );
     }
 }

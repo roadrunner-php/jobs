@@ -12,8 +12,7 @@ class ConsumerOffset implements \JsonSerializable
     public function __construct(
         public readonly OffsetType $type,
         public readonly ?int $value = null,
-    ) {
-    }
+    ) {}
 
     public function jsonSerialize(): array
     {

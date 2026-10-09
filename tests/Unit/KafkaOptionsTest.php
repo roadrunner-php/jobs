@@ -6,8 +6,6 @@ namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 
-use function json_encode;
-
 final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstructor(): void
@@ -119,9 +117,8 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
     "offset": 50,
     "partition": 1
 }
-JOSN
-            ,
-            json_encode($options, JSON_PRETTY_PRINT),
+JOSN,
+            \json_encode($options, JSON_PRETTY_PRINT),
         );
     }
 }

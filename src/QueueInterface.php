@@ -32,7 +32,6 @@ interface QueueInterface
      * Please note that the settings for already created tasks will NOT
      * be changed.
      *
-     * @param OptionsInterface|null $options
      * @return $this
      */
     public function withDefaultOptions(?OptionsInterface $options): self;
@@ -41,7 +40,6 @@ interface QueueInterface
      * Creates a new task to run on the specified queue.
      *
      * @param non-empty-string $name
-     * @param OptionsInterface|null $options
      */
     public function create(
         string $name,

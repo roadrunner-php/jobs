@@ -35,7 +35,7 @@ final class Jobs implements JobsInterface
 
             return $this->connect($info->getName(), $options ?? OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -59,7 +59,7 @@ final class Jobs implements JobsInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -73,7 +73,7 @@ final class Jobs implements JobsInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -101,7 +101,7 @@ final class Jobs implements JobsInterface
                 yield $queue => $this->connect($queue);
             }
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -117,8 +117,8 @@ final class Jobs implements JobsInterface
 
         foreach ($map as $key => $value) {
             $marshalled[$key] = match (true) {
-                \is_int($value) => (string)$value,
-                \is_object($value) && \method_exists($value, '__toString') => (string)$value->__toString(),
+                \is_int($value) => (string) $value,
+                \is_object($value) && \method_exists($value, '__toString') => (string) $value->__toString(),
                 $value instanceof \Stringable => $value->__toString(),
                 \is_string($value) => $value,
                 \is_bool($value) => $value ? 'true' : 'false',

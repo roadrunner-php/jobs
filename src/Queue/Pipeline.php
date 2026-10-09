@@ -30,8 +30,7 @@ final class Pipeline
         private readonly string $name,
         private readonly RPCInterface $rpc,
         private readonly UuidFactoryInterface $uuid = new UuidFactory(),
-    ) {
-    }
+    ) {}
 
     /**
      * @throws JobsException
@@ -44,7 +43,7 @@ final class Pipeline
         } catch (JobsException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $this->createQueuedTask($job, $task);
@@ -74,7 +73,7 @@ final class Pipeline
         } catch (JobsException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -96,7 +95,7 @@ final class Pipeline
      */
     private function createTaskId(): string
     {
-        return (string)$this->uuid->uuid4();
+        return (string) $this->uuid->uuid4();
     }
 
     /**
@@ -138,7 +137,7 @@ final class Pipeline
 
 
         return new OptionsMessage(
-            \array_merge($data, ['pipeline' => $this->name])
+            \array_merge($data, ['pipeline' => $this->name]),
         );
     }
 
@@ -152,7 +151,7 @@ final class Pipeline
             $this->name,
             $task->getName(),
             $task->getPayload(),
-            $task->getHeaders()
+            $task->getHeaders(),
         );
     }
 }

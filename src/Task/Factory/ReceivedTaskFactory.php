@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Task\Factory;
 
-use JsonException;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
@@ -31,8 +30,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
 {
     public function __construct(
         private readonly WorkerInterface $worker,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws SerializationException
@@ -57,10 +55,10 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
                 $pipeline,
                 $job,
                 $queue, // Kafka topic name
-                (int)$header['partition'] ?? 0,
-                (int)$header['offset'] ?? 0,
+                (int) $header['partition'] ?? 0,
+                (int) $header['offset'] ?? 0,
                 $payload->body,
-                $headers
+                $headers,
             ),
             default => new ReceivedTask(
                 $this->worker,
@@ -70,7 +68,7 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
                 $job,
                 $queue, // Queue broker queue name
                 $payload->body,
-                $headers
+                $headers,
             ),
         };
     }
@@ -89,8 +87,8 @@ final class ReceivedTaskFactory implements ReceivedTaskFactoryInterface
         }
 
         try {
-            return (array)\json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+            return (array) \json_decode($payload->header, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
             throw new SerializationException($e->getMessage(), $e->getCode(), $e);
         }
     }

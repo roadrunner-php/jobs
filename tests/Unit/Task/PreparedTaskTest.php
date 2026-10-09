@@ -9,11 +9,20 @@ use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
-use Traversable;
 
 final class PreparedTaskTest extends TestCase
 {
-    /** @dataProvider optionsDataProvider */
+    public static function optionsDataProvider(): \Traversable
+    {
+        yield [new Options(), null];
+        yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];
+        yield [new KafkaOptions('default'), new KafkaOptions('default')];
+        yield [(new KafkaOptions('default'))->withDelay(10), (new KafkaOptions('default'))->withDelay(10)];
+    }
+
+    /**
+     * @dataProvider optionsDataProvider
+     */
     public function testGetOptions(OptionsInterface $expected, ?OptionsInterface $options = null): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar', options: $options);
@@ -70,13 +79,5 @@ final class PreparedTaskTest extends TestCase
 
         $task = $task->withAutoAck(true);
         $this->assertTrue($task->getAutoAck());
-    }
-
-    public static function optionsDataProvider(): Traversable
-    {
-        yield [new Options(), null];
-        yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];
-        yield [new KafkaOptions('default'), new KafkaOptions('default')];
-        yield [(new KafkaOptions('default'))->withDelay(10), (new KafkaOptions('default'))->withDelay(10)];
     }
 }

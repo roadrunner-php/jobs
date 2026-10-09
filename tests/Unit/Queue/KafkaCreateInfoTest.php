@@ -12,10 +12,7 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\SASL;
 use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
-
-use function json_encode;
 
 final class KafkaCreateInfoTest extends TestCase
 {
@@ -53,7 +50,7 @@ final class KafkaCreateInfoTest extends TestCase
             true,
             $producerOptions,
             $consumerOptions,
-            $groupOptions
+            $groupOptions,
         );
 
         $this->assertSame(
@@ -100,9 +97,8 @@ final class KafkaCreateInfoTest extends TestCase
         "block_rebalance_on_poll": false
     }
 }
-JSON
-            ,
-            json_encode($createInfo, JSON_PRETTY_PRINT),
+JSON,
+            \json_encode($createInfo, JSON_PRETTY_PRINT),
         );
     }
 }

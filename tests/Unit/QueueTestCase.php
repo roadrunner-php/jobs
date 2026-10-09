@@ -22,16 +22,6 @@ class QueueTestCase extends BaseTestCase
         $this->assertSame($expect, $queue->getName());
     }
 
-    /**
-     * @param array<string, string|callable> $mapping
-     * @param non-empty-string $name
-     * @return Queue
-     */
-    protected function queue(array $mapping = [], string $name = 'queue', ?OptionsInterface $options = null): Queue
-    {
-        return new Queue($name, $this->rpc($mapping), $options);
-    }
-
     public function testDefaultOptions(): void
     {
         $queue = $this->queue();
@@ -54,11 +44,6 @@ class QueueTestCase extends BaseTestCase
 
         $this->assertNotSame($options, $queue->getDefaultOptions());
         $this->assertSame($newOptions, $queue->getDefaultOptions());
-    }
-
-    private function randomName(): string
-    {
-        return 'generated-' . \bin2hex(\random_bytes(32));
     }
 
     public function testTaskDispatch(): void
@@ -143,13 +128,13 @@ class QueueTestCase extends BaseTestCase
     public function testIsPaused(): void
     {
         $handler = [
-            'jobs.Stat' => static fn () => new Stats([
+            'jobs.Stat' => static fn() => new Stats([
                 'stats' => [
                     new Stat([
                         'pipeline' => 'queue',
                         'ready' => false,
-                    ])
-                ]
+                    ]),
+                ],
             ]),
         ];
 
@@ -159,7 +144,7 @@ class QueueTestCase extends BaseTestCase
     public function testIsNotPaused(): void
     {
         $handler = [
-            'jobs.Stat' => static fn () => new Stats([
+            'jobs.Stat' => static fn() => new Stats([
                 'stats' => [
                     new Stat([
                         'pipeline' => 'queue',
@@ -168,8 +153,8 @@ class QueueTestCase extends BaseTestCase
                     new Stat([
                         'pipeline' => 'test',
                         'ready' => false,
-                    ])
-                ]
+                    ]),
+                ],
             ]),
         ];
 
@@ -220,5 +205,19 @@ class QueueTestCase extends BaseTestCase
         $queue = $this->queue();
 
         $this->assertSame([], $queue->create('foo', 'foo=bar')->getHeaders());
+    }
+
+    /**
+     * @param array<string, string|callable> $mapping
+     * @param non-empty-string $name
+     */
+    protected function queue(array $mapping = [], string $name = 'queue', ?OptionsInterface $options = null): Queue
+    {
+        return new Queue($name, $this->rpc($mapping), $options);
+    }
+
+    private function randomName(): string
+    {
+        return 'generated-' . \bin2hex(\random_bytes(32));
     }
 }
