@@ -4,35 +4,37 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\AMQP\ExchangeType;
 use Spiral\RoadRunner\Jobs\Queue\AMQPCreateInfo;
 
-final class AMQPCreateInfoTest extends TestCase
+#[Test]
+final class AMQPCreateInfoTest
 {
     public function testDefaultValues(): void
     {
         $amqpCreateInfo = new AMQPCreateInfo('test');
 
-        $this->assertSame('test', $amqpCreateInfo->name);
-        $this->assertSame(AMQPCreateInfo::PRIORITY_DEFAULT_VALUE, $amqpCreateInfo->priority);
-        $this->assertSame(AMQPCreateInfo::PREFETCH_DEFAULT_VALUE, $amqpCreateInfo->prefetch);
-        $this->assertSame(AMQPCreateInfo::QUEUE_DEFAULT_VALUE, $amqpCreateInfo->queue);
-        $this->assertSame(AMQPCreateInfo::EXCHANGE_DEFAULT_VALUE, $amqpCreateInfo->exchange);
-        $this->assertSame(ExchangeType::Direct, $amqpCreateInfo->exchangeType);
-        $this->assertSame(AMQPCreateInfo::ROUTING_KEY_DEFAULT_VALUE, $amqpCreateInfo->routingKey);
-        $this->assertFalse($amqpCreateInfo->exclusive);
-        $this->assertFalse($amqpCreateInfo->multipleAck);
-        $this->assertFalse($amqpCreateInfo->requeueOnFail);
-        $this->assertFalse($amqpCreateInfo->durable);
-        $this->assertSame(AMQPCreateInfo::EXCHANGE_DURABLE_DEFAULT_VALUE, $amqpCreateInfo->exchangeDurable);
-        $this->assertSame(AMQPCreateInfo::CONSUME_ALL_DEFAULT_VALUE, $amqpCreateInfo->consumeAll);
-        $this->assertSame(AMQPCreateInfo::QUEUE_HEADERS_DEFAULT_VALUE, $amqpCreateInfo->queueHeaders);
-        $this->assertSame(AMQPCreateInfo::DELETE_QUEUE_ON_STOP_DEFAULT_VALUE, $amqpCreateInfo->deleteQueueOnStop);
-        $this->assertSame(AMQPCreateInfo::REDIAL_TIMEOUT_DEFAULT_VALUE, $amqpCreateInfo->redialTimeout);
-        $this->assertSame(AMQPCreateInfo::EXCHANGE_AUTO_DELETE_DEFAULT_VALUE, $amqpCreateInfo->exchangeAutoDelete);
-        $this->assertSame(AMQPCreateInfo::QUEUE_AUTO_DELETE_DEFAULT_VALUE, $amqpCreateInfo->queueAutoDelete);
-        $this->assertSame(AMQPCreateInfo::CONSUMER_ID_DEFAULT_VALUE, $amqpCreateInfo->consumerId);
+        Assert::same($amqpCreateInfo->name, 'test');
+        Assert::same($amqpCreateInfo->priority, AMQPCreateInfo::PRIORITY_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->prefetch, AMQPCreateInfo::PREFETCH_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->queue, AMQPCreateInfo::QUEUE_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->exchange, AMQPCreateInfo::EXCHANGE_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->exchangeType, ExchangeType::Direct);
+        Assert::same($amqpCreateInfo->routingKey, AMQPCreateInfo::ROUTING_KEY_DEFAULT_VALUE);
+        Assert::false($amqpCreateInfo->exclusive);
+        Assert::false($amqpCreateInfo->multipleAck);
+        Assert::false($amqpCreateInfo->requeueOnFail);
+        Assert::false($amqpCreateInfo->durable);
+        Assert::same($amqpCreateInfo->exchangeDurable, AMQPCreateInfo::EXCHANGE_DURABLE_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->consumeAll, AMQPCreateInfo::CONSUME_ALL_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->queueHeaders, AMQPCreateInfo::QUEUE_HEADERS_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->deleteQueueOnStop, AMQPCreateInfo::DELETE_QUEUE_ON_STOP_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->redialTimeout, AMQPCreateInfo::REDIAL_TIMEOUT_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->exchangeAutoDelete, AMQPCreateInfo::EXCHANGE_AUTO_DELETE_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->queueAutoDelete, AMQPCreateInfo::QUEUE_AUTO_DELETE_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->consumerId, AMQPCreateInfo::CONSUMER_ID_DEFAULT_VALUE);
     }
 
     public function testCustomValues(): void
@@ -61,23 +63,23 @@ final class AMQPCreateInfoTest extends TestCase
             consumerId: 'custom_consumer_id',
         );
 
-        $this->assertSame(200, $amqpCreateInfo->prefetch);
-        $this->assertSame('custom_queue', $amqpCreateInfo->queue);
-        $this->assertSame('custom_exchange', $amqpCreateInfo->exchange);
-        $this->assertSame(ExchangeType::Topics, $amqpCreateInfo->exchangeType);
-        $this->assertSame('custom_routing_key', $amqpCreateInfo->routingKey);
-        $this->assertTrue($amqpCreateInfo->exclusive);
-        $this->assertTrue($amqpCreateInfo->multipleAck);
-        $this->assertTrue($amqpCreateInfo->requeueOnFail);
-        $this->assertTrue($amqpCreateInfo->durable);
-        $this->assertTrue($amqpCreateInfo->exchangeDurable);
-        $this->assertTrue($amqpCreateInfo->consumeAll);
-        $this->assertSame(['x-queue-type' => 'quorum'], $amqpCreateInfo->queueHeaders);
-        $this->assertTrue($amqpCreateInfo->deleteQueueOnStop);
-        $this->assertSame(10, $amqpCreateInfo->redialTimeout);
-        $this->assertTrue($amqpCreateInfo->exchangeAutoDelete);
-        $this->assertTrue($amqpCreateInfo->queueAutoDelete);
-        $this->assertSame('custom_consumer_id', $amqpCreateInfo->consumerId);
+        Assert::same($amqpCreateInfo->prefetch, 200);
+        Assert::same($amqpCreateInfo->queue, 'custom_queue');
+        Assert::same($amqpCreateInfo->exchange, 'custom_exchange');
+        Assert::same($amqpCreateInfo->exchangeType, ExchangeType::Topics);
+        Assert::same($amqpCreateInfo->routingKey, 'custom_routing_key');
+        Assert::true($amqpCreateInfo->exclusive);
+        Assert::true($amqpCreateInfo->multipleAck);
+        Assert::true($amqpCreateInfo->requeueOnFail);
+        Assert::true($amqpCreateInfo->durable);
+        Assert::true($amqpCreateInfo->exchangeDurable);
+        Assert::true($amqpCreateInfo->consumeAll);
+        Assert::same($amqpCreateInfo->queueHeaders, ['x-queue-type' => 'quorum']);
+        Assert::true($amqpCreateInfo->deleteQueueOnStop);
+        Assert::same($amqpCreateInfo->redialTimeout, 10);
+        Assert::true($amqpCreateInfo->exchangeAutoDelete);
+        Assert::true($amqpCreateInfo->queueAutoDelete);
+        Assert::same($amqpCreateInfo->consumerId, 'custom_consumer_id');
     }
 
     public function testToArray(): void
@@ -131,13 +133,13 @@ final class AMQPCreateInfoTest extends TestCase
             'consumer_id' => 'custom_consumer_id',
         ];
 
-        $this->assertEquals($expectedArray, $amqpCreateInfo->toArray());
+        Assert::equals($amqpCreateInfo->toArray(), $expectedArray);
     }
 
     public function testToArrayWithEmptyQueueHeaders(): void
     {
         $amqpCreateInfo = new AMQPCreateInfo(name: 'foo');
 
-        $this->assertArrayNotHasKey('queue_headers', $amqpCreateInfo->toArray());
+        Assert::array($amqpCreateInfo->toArray())->doesNotHaveKeys('queue_headers');
     }
 }

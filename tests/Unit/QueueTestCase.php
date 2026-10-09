@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
+use Testo\Test;
+use Testo\Assert;
+use Testo\Expect;
 use RoadRunner\Jobs\DTO\V1\PushBatchRequest;
 use RoadRunner\Jobs\DTO\V1\PushRequest;
 use RoadRunner\Jobs\DTO\V1\Stat;
@@ -15,37 +18,42 @@ use Spiral\RoadRunner\Jobs\Queue;
 
 class QueueTestCase extends BaseTestCase
 {
+    #[Test]
     public function testName(): void
     {
         $queue = $this->queue([], $expect = $this->randomName());
 
-        $this->assertSame($expect, $queue->getName());
+        Assert::same($queue->getName(), $expect);
     }
 
+    #[Test]
     public function testDefaultOptions(): void
     {
         $queue = $this->queue();
 
-        $this->assertEquals(new Options(), $queue->getDefaultOptions());
+        Assert::equals($queue->getDefaultOptions(), new Options());
     }
 
+    #[Test]
     public function testCustomDefaultOptions(): void
     {
-        $queue = $this->queue(options: $options = $this->createMock(OptionsInterface::class));
+        $queue = $this->queue(options: $options = \Mockery::mock(OptionsInterface::class)->shouldIgnoreMissing());
 
-        $this->assertEquals($options, $queue->getDefaultOptions());
+        Assert::equals($queue->getDefaultOptions(), $options);
     }
 
+    #[Test]
     public function testOverridingCustomDefaultOptions(): void
     {
-        $queue = $this->queue(options: $options = $this->createMock(OptionsInterface::class));
+        $queue = $this->queue(options: $options = \Mockery::mock(OptionsInterface::class)->shouldIgnoreMissing());
 
-        $queue = $queue->withDefaultOptions($newOptions = $this->createMock(OptionsInterface::class));
+        $queue = $queue->withDefaultOptions($newOptions = \Mockery::mock(OptionsInterface::class)->shouldIgnoreMissing());
 
-        $this->assertNotSame($options, $queue->getDefaultOptions());
-        $this->assertSame($newOptions, $queue->getDefaultOptions());
+        Assert::notSame($queue->getDefaultOptions(), $options);
+        Assert::same($queue->getDefaultOptions(), $newOptions);
     }
 
+    #[Test]
     public function testTaskDispatch(): void
     {
         $actual = null;
@@ -63,9 +71,10 @@ class QueueTestCase extends BaseTestCase
             ),
         );
 
-        $this->assertSame($expect, $actual);
+        Assert::same($actual, $expect);
     }
 
+    #[Test]
     public function testTaskDispatchUsingPushMethod(): void
     {
         $actual = null;
@@ -78,9 +87,10 @@ class QueueTestCase extends BaseTestCase
 
         $queue->push($expect = $this->randomName(), 'foo=bar');
 
-        $this->assertSame($expect, $actual);
+        Assert::same($actual, $expect);
     }
 
+    #[Test]
     public function testMultipleTasksDispatch(): void
     {
         $expect = $actual = [];
@@ -99,9 +109,10 @@ class QueueTestCase extends BaseTestCase
             $queue->create($expect[] = $this->randomName(), 'foo=bar'),
         );
 
-        $this->assertSame($expect, $actual);
+        Assert::same($actual, $expect);
     }
 
+    #[Test]
     public function testPausing(): void
     {
         $paused = false;
@@ -114,17 +125,19 @@ class QueueTestCase extends BaseTestCase
         $this->queue($handler)
             ->pause();
 
-        $this->assertTrue($paused);
+        Assert::true($paused);
     }
 
+    #[Test]
     public function testPausingError(): void
     {
-        $this->expectException(JobsException::class);
+        Expect::exception(JobsException::class);
 
         $queue = $this->queue();
         $queue->pause();
     }
 
+    #[Test]
     public function testIsPaused(): void
     {
         $handler = [
@@ -138,9 +151,10 @@ class QueueTestCase extends BaseTestCase
             ]),
         ];
 
-        $this->assertTrue($this->queue($handler)->isPaused());
+        Assert::true($this->queue($handler)->isPaused());
     }
 
+    #[Test]
     public function testIsNotPaused(): void
     {
         $handler = [
@@ -158,10 +172,11 @@ class QueueTestCase extends BaseTestCase
             ]),
         ];
 
-        $this->assertFalse($this->queue($handler)->isPaused());
-        $this->assertFalse($this->queue($handler, 'foo')->isPaused());
+        Assert::false($this->queue($handler)->isPaused());
+        Assert::false($this->queue($handler, 'foo')->isPaused());
     }
 
+    #[Test]
     public function testResuming(): void
     {
         $resumed = false;
@@ -174,37 +189,37 @@ class QueueTestCase extends BaseTestCase
         $this->queue($handler)
             ->resume();
 
-        $this->assertTrue($resumed);
+        Assert::true($resumed);
     }
 
+    #[Test]
     public function testResumingError(): void
     {
-        $this->expectException(JobsException::class);
+        Expect::exception(JobsException::class);
 
         $queue = $this->queue();
         $queue->resume();
     }
 
+    #[Test]
     public function testCreateWithHeaders(): void
     {
         $queue = $this->queue();
 
-        $this->assertSame(
-            ['foo' => ['bar']],
-            $queue->create(
-                name: 'foo',
-                payload: 'bar',
-                options: (new Options())->withHeader('foo', 'bar'),
-            )
-                ->getHeaders(),
-        );
+        Assert::same($queue->create(
+            name: 'foo',
+            payload: 'bar',
+            options: (new Options())->withHeader('foo', 'bar'),
+        )
+            ->getHeaders(), ['foo' => ['bar']]);
     }
 
+    #[Test]
     public function testCreateWithoutHeaders(): void
     {
         $queue = $this->queue();
 
-        $this->assertSame([], $queue->create('foo', 'foo=bar')->getHeaders());
+        Assert::same($queue->create('foo', 'foo=bar')->getHeaders(), []);
     }
 
     /**

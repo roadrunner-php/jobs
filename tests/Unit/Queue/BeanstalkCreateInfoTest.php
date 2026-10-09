@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\BeanstalkCreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 
-final class BeanstalkCreateInfoTest extends TestCase
+#[Test]
+final class BeanstalkCreateInfoTest
 {
     public function testConstructor(): void
     {
         $beanstalkCreateInfo = new BeanstalkCreateInfo('test', );
 
-        $this->assertInstanceOf(BeanstalkCreateInfo::class, $beanstalkCreateInfo);
-        $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
-        $this->assertEquals('test', $beanstalkCreateInfo->name);
-        $this->assertEquals(BeanstalkCreateInfo::PRIORITY_DEFAULT_VALUE, $beanstalkCreateInfo->priority);
-        $this->assertEquals(BeanstalkCreateInfo::TUBE_PRIORITY_DEFAULT_VALUE, $beanstalkCreateInfo->tubePriority);
-        $this->assertEquals(BeanstalkCreateInfo::TUBE_DEFAULT_VALUE, $beanstalkCreateInfo->tube);
-        $this->assertEquals(BeanstalkCreateInfo::RESERVE_TIMEOUT_DEFAULT_VALUE, $beanstalkCreateInfo->reserveTimeout);
-        $this->assertEquals(BeanstalkCreateInfo::CONSUME_ALL_DEFAULT_VALUE, $beanstalkCreateInfo->consumeAll);
+        Assert::instanceOf($beanstalkCreateInfo, BeanstalkCreateInfo::class);
+        Assert::equals($beanstalkCreateInfo->driver, Driver::Beanstalk);
+        Assert::equals($beanstalkCreateInfo->name, 'test');
+        Assert::equals($beanstalkCreateInfo->priority, BeanstalkCreateInfo::PRIORITY_DEFAULT_VALUE);
+        Assert::equals($beanstalkCreateInfo->tubePriority, BeanstalkCreateInfo::TUBE_PRIORITY_DEFAULT_VALUE);
+        Assert::equals($beanstalkCreateInfo->tube, BeanstalkCreateInfo::TUBE_DEFAULT_VALUE);
+        Assert::equals($beanstalkCreateInfo->reserveTimeout, BeanstalkCreateInfo::RESERVE_TIMEOUT_DEFAULT_VALUE);
+        Assert::equals($beanstalkCreateInfo->consumeAll, BeanstalkCreateInfo::CONSUME_ALL_DEFAULT_VALUE);
     }
 
     public function testBeanstalkCreateInfoCustomValues(): void
@@ -42,13 +44,13 @@ final class BeanstalkCreateInfoTest extends TestCase
             consumeAll: $consumeAll,
         );
 
-        $this->assertEquals(Driver::Beanstalk, $beanstalkCreateInfo->driver);
-        $this->assertEquals($name, $beanstalkCreateInfo->name);
-        $this->assertEquals($priority, $beanstalkCreateInfo->priority);
-        $this->assertEquals($tubePriority, $beanstalkCreateInfo->tubePriority);
-        $this->assertEquals($tube, $beanstalkCreateInfo->tube);
-        $this->assertEquals($reserveTimeout, $beanstalkCreateInfo->reserveTimeout);
-        $this->assertEquals($consumeAll, $beanstalkCreateInfo->consumeAll);
+        Assert::equals($beanstalkCreateInfo->driver, Driver::Beanstalk);
+        Assert::equals($beanstalkCreateInfo->name, $name);
+        Assert::equals($beanstalkCreateInfo->priority, $priority);
+        Assert::equals($beanstalkCreateInfo->tubePriority, $tubePriority);
+        Assert::equals($beanstalkCreateInfo->tube, $tube);
+        Assert::equals($beanstalkCreateInfo->reserveTimeout, $reserveTimeout);
+        Assert::equals($beanstalkCreateInfo->consumeAll, $consumeAll);
     }
 
     public function testToArray(): void
@@ -79,6 +81,6 @@ final class BeanstalkCreateInfoTest extends TestCase
             'consume_all' => $consumeAll,
         ];
 
-        $this->assertEquals($expectedArray, $beanstalkCreateInfo->toArray());
+        Assert::equals($beanstalkCreateInfo->toArray(), $expectedArray);
     }
 }

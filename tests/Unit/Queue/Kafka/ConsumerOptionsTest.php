@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 
-final class ConsumerOptionsTest extends TestCase
+#[Test]
+final class ConsumerOptionsTest
 {
     public function testConstructor(): void
     {
@@ -33,13 +35,13 @@ final class ConsumerOptionsTest extends TestCase
             $consumerOffset,
         );
 
-        $this->assertInstanceOf(ConsumerOptions::class, $consumerOptions);
-        $this->assertEquals($topics, $consumerOptions->topics);
-        $this->assertEquals($consumeRegexp, $consumerOptions->consumeRegexp);
-        $this->assertEquals($maxFetchMessageSize, $consumerOptions->maxFetchMessageSize);
-        $this->assertEquals($minFetchMessageSize, $consumerOptions->minFetchMessageSize);
-        $this->assertEquals($consumePartitions, $consumerOptions->consumePartitions);
-        $this->assertEquals($consumerOffset, $consumerOptions->consumerOffset);
+        Assert::instanceOf($consumerOptions, ConsumerOptions::class);
+        Assert::equals($consumerOptions->topics, $topics);
+        Assert::equals($consumerOptions->consumeRegexp, $consumeRegexp);
+        Assert::equals($consumerOptions->maxFetchMessageSize, $maxFetchMessageSize);
+        Assert::equals($consumerOptions->minFetchMessageSize, $minFetchMessageSize);
+        Assert::equals($consumerOptions->consumePartitions, $consumePartitions);
+        Assert::equals($consumerOptions->consumerOffset, $consumerOffset);
     }
 
     public function testConstructorWithDefaultValues(): void
@@ -48,21 +50,15 @@ final class ConsumerOptionsTest extends TestCase
 
         $consumerOptions = new ConsumerOptions($topics);
 
-        $this->assertInstanceOf(ConsumerOptions::class, $consumerOptions);
-        $this->assertEquals($topics, $consumerOptions->topics);
-        $this->assertFalse($consumerOptions->consumeRegexp);
-        $this->assertEquals(
-            ConsumerOptions::CONSUMER_MAX_FETCH_MESSAGE_SIZE_DEFAULT_VALUE,
-            $consumerOptions->maxFetchMessageSize,
-        );
-        $this->assertEquals(
-            ConsumerOptions::CONSUMER_MIN_FETCH_MESSAGE_SIZE_DEFAULT_VALUE,
-            $consumerOptions->minFetchMessageSize,
-        );
-        $this->assertEmpty($consumerOptions->consumePartitions);
-        $this->assertInstanceOf(ConsumerOffset::class, $consumerOptions->consumerOffset);
-        $this->assertEquals(OffsetType::AtStart, $consumerOptions->consumerOffset->type);
-        $this->assertEquals(1, $consumerOptions->consumerOffset->value);
+        Assert::instanceOf($consumerOptions, ConsumerOptions::class);
+        Assert::equals($consumerOptions->topics, $topics);
+        Assert::false($consumerOptions->consumeRegexp);
+        Assert::equals($consumerOptions->maxFetchMessageSize, ConsumerOptions::CONSUMER_MAX_FETCH_MESSAGE_SIZE_DEFAULT_VALUE);
+        Assert::equals($consumerOptions->minFetchMessageSize, ConsumerOptions::CONSUMER_MIN_FETCH_MESSAGE_SIZE_DEFAULT_VALUE);
+        Assert::blank($consumerOptions->consumePartitions);
+        Assert::instanceOf($consumerOptions->consumerOffset, ConsumerOffset::class);
+        Assert::equals($consumerOptions->consumerOffset->type, OffsetType::AtStart);
+        Assert::equals($consumerOptions->consumerOffset->value, 1);
     }
 
     public function testJsonSerialize(): void
@@ -86,8 +82,7 @@ final class ConsumerOptionsTest extends TestCase
             $consumerOffset,
         );
 
-        $this->assertEquals(
-            <<<'JOSN'
+        Assert::equals(\json_encode($consumerOptions, JSON_PRETTY_PRINT), <<<'JOSN'
 {
     "topics": [
         "my-topic"
@@ -112,15 +107,12 @@ final class ConsumerOptionsTest extends TestCase
         }
     }
 }
-JOSN,
-            \json_encode($consumerOptions, JSON_PRETTY_PRINT),
-        );
+JOSN);
     }
 
     public function testJsonSerializeWithoutConsumePartitions(): void
     {
-        $this->assertEquals(
-            <<<'JOSN'
+        Assert::equals(\json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT), <<<'JOSN'
 {
     "topics": [
         "my-topic"
@@ -133,8 +125,6 @@ JOSN,
         "value": 1
     }
 }
-JOSN,
-            \json_encode(new ConsumerOptions(['my-topic']), JSON_PRETTY_PRINT),
-        );
+JOSN);
     }
 }

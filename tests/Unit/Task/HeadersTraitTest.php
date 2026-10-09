@@ -4,42 +4,44 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 
-final class HeadersTraitTest extends TestCase
+#[Test]
+final class HeadersTraitTest
 {
     public function testGetsHeaders(): void
     {
         $task = $this->getTask($headers = ['foo' => ['bar']]);
 
-        $this->assertSame($headers, $task->getHeaders());
+        Assert::same($task->getHeaders(), $headers);
     }
 
     public function testHasHeader(): void
     {
         $task = $this->getTask(['foo' => ['bar'], 'bar' => []]);
 
-        $this->assertTrue($task->hasHeader('foo'));
-        $this->assertFalse($task->hasHeader('bar'));
-        $this->assertFalse($task->hasHeader('baz'));
+        Assert::true($task->hasHeader('foo'));
+        Assert::false($task->hasHeader('bar'));
+        Assert::false($task->hasHeader('baz'));
     }
 
     public function testGetsHeaderLine(): void
     {
         $task = $this->getTask(['foo' => ['bar', 'baz', 'baf']]);
 
-        $this->assertSame('bar,baz,baf', $task->getHeaderLine('foo'));
-        $this->assertSame('', $task->getHeaderLine('bar'));
+        Assert::same($task->getHeaderLine('foo'), 'bar,baz,baf');
+        Assert::same($task->getHeaderLine('bar'), '');
     }
 
     public function testGetsHeader(): void
     {
         $task = $this->getTask(['foo' => ['bar'], 'bar' => []]);
 
-        $this->assertSame(['bar'], $task->getHeader('foo'));
-        $this->assertSame([], $task->getHeader('bar'));
-        $this->assertSame([], $task->getHeader('baz'));
+        Assert::same($task->getHeader('foo'), ['bar']);
+        Assert::same($task->getHeader('bar'), []);
+        Assert::same($task->getHeader('baz'), []);
     }
 
     public function getTask(array $headers = ['foo' => ['bar']]): PreparedTask

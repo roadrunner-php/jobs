@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 
-final class ConsumePartitionTest extends TestCase
+#[Test]
+final class ConsumePartitionTest
 {
     public function testConstructor(): void
     {
@@ -19,10 +21,10 @@ final class ConsumePartitionTest extends TestCase
             $offset = new ConsumerOffset(OffsetType::AtStart, 123),
         );
 
-        $this->assertInstanceOf(ConsumePartition::class, $consumePartition);
-        $this->assertSame($topic, $consumePartition->topic);
-        $this->assertSame($partition, $consumePartition->partition);
-        $this->assertSame($offset, $consumePartition->offset);
+        Assert::instanceOf($consumePartition, ConsumePartition::class);
+        Assert::same($consumePartition->topic, $topic);
+        Assert::same($consumePartition->partition, $partition);
+        Assert::same($consumePartition->offset, $offset);
     }
 
     public function testSerialization(): void
@@ -35,9 +37,6 @@ final class ConsumePartitionTest extends TestCase
             ),
         );
 
-        $this->assertSame(
-            '{"topic":"my-topic","partition":1,"offset":{"type":"AtStart","value":123}}',
-            $string,
-        );
+        Assert::same($string, '{"topic":"my-topic","partition":1,"offset":{"type":"AtStart","value":123}}');
     }
 }

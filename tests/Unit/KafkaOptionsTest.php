@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 
-final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
+#[Test]
+final class KafkaOptionsTest
 {
     public function testConstructor(): void
     {
         $options = new KafkaOptions('my-topic', 100, 10, true, 'metadata', 50, 1);
 
-        $this->assertEquals('my-topic', $options->getTopic());
-        $this->assertEquals(100, $options->getDelay());
-        $this->assertEquals(10, $options->getPriority());
-        $this->assertTrue($options->getAutoAck());
-        $this->assertEquals('metadata', $options->getMetadata());
-        $this->assertEquals(50, $options->getOffset());
-        $this->assertEquals(1, $options->getPartition());
+        Assert::equals($options->getTopic(), 'my-topic');
+        Assert::equals($options->getDelay(), 100);
+        Assert::equals($options->getPriority(), 10);
+        Assert::true($options->getAutoAck());
+        Assert::equals($options->getMetadata(), 'metadata');
+        Assert::equals($options->getOffset(), 50);
+        Assert::equals($options->getPartition(), 1);
     }
 
     public function testFrom(): void
@@ -26,24 +29,24 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
         $parentOptions = new KafkaOptions('parent-topic', 50, 5, false);
         $options = KafkaOptions::from($parentOptions);
 
-        $this->assertEquals('parent-topic', $options->getTopic());
-        $this->assertEquals(50, $options->getDelay());
-        $this->assertEquals(5, $options->getPriority());
-        $this->assertFalse($options->getAutoAck());
-        $this->assertEquals(KafkaOptions::DEFAULT_METADATA, $options->getMetadata());
-        $this->assertEquals(KafkaOptions::DEFAULT_OFFSET, $options->getOffset());
-        $this->assertEquals(KafkaOptions::DEFAULT_PARTITION, $options->getPartition());
+        Assert::equals($options->getTopic(), 'parent-topic');
+        Assert::equals($options->getDelay(), 50);
+        Assert::equals($options->getPriority(), 5);
+        Assert::false($options->getAutoAck());
+        Assert::equals($options->getMetadata(), KafkaOptions::DEFAULT_METADATA);
+        Assert::equals($options->getOffset(), KafkaOptions::DEFAULT_OFFSET);
+        Assert::equals($options->getPartition(), KafkaOptions::DEFAULT_PARTITION);
 
         $childOptions = new KafkaOptions('child-topic', 100, 10, true, 'metadata', 50, 1);
         $options = KafkaOptions::from($childOptions);
 
-        $this->assertEquals('child-topic', $options->getTopic());
-        $this->assertEquals(100, $options->getDelay());
-        $this->assertEquals(10, $options->getPriority());
-        $this->assertTrue($options->getAutoAck());
-        $this->assertEquals('metadata', $options->getMetadata());
-        $this->assertEquals(50, $options->getOffset());
-        $this->assertEquals(1, $options->getPartition());
+        Assert::equals($options->getTopic(), 'child-topic');
+        Assert::equals($options->getDelay(), 100);
+        Assert::equals($options->getPriority(), 10);
+        Assert::true($options->getAutoAck());
+        Assert::equals($options->getMetadata(), 'metadata');
+        Assert::equals($options->getOffset(), 50);
+        Assert::equals($options->getPartition(), 1);
     }
 
     public function testMerge(): void
@@ -53,13 +56,13 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
 
         $options = $parentOptions->merge($childOptions);
 
-        $this->assertEquals('child-topic', $options->getTopic());
-        $this->assertEquals(100, $options->getDelay());
-        $this->assertEquals(10, $options->getPriority());
-        $this->assertTrue($options->getAutoAck());
-        $this->assertEquals('metadata-2', $options->getMetadata());
-        $this->assertEquals(20, $options->getOffset());
-        $this->assertEquals(3, $options->getPartition());
+        Assert::equals($options->getTopic(), 'child-topic');
+        Assert::equals($options->getDelay(), 100);
+        Assert::equals($options->getPriority(), 10);
+        Assert::true($options->getAutoAck());
+        Assert::equals($options->getMetadata(), 'metadata-2');
+        Assert::equals($options->getOffset(), 20);
+        Assert::equals($options->getPartition(), 3);
     }
 
     public function testWithTopic(): void
@@ -68,8 +71,8 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
 
         $newOptions = $options->withTopic('new-topic');
 
-        $this->assertEquals('new-topic', $newOptions->getTopic());
-        $this->assertNotEquals($options->getTopic(), $newOptions->getTopic());
+        Assert::equals($newOptions->getTopic(), 'new-topic');
+        Assert::notEquals($newOptions->getTopic(), $options->getTopic());
     }
 
     public function testWithMetadata(): void
@@ -78,8 +81,8 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
 
         $newOptions = $options->withMetadata('new-metadata');
 
-        $this->assertEquals('new-metadata', $newOptions->getMetadata());
-        $this->assertNotEquals($options->getMetadata(), $newOptions->getMetadata());
+        Assert::equals($newOptions->getMetadata(), 'new-metadata');
+        Assert::notEquals($newOptions->getMetadata(), $options->getMetadata());
     }
 
     public function testWithOffset(): void
@@ -88,8 +91,8 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
 
         $newOptions = $options->withOffset(100);
 
-        $this->assertEquals(100, $newOptions->getOffset());
-        $this->assertNotEquals($options->getOffset(), $newOptions->getOffset());
+        Assert::equals($newOptions->getOffset(), 100);
+        Assert::notEquals($newOptions->getOffset(), $options->getOffset());
     }
 
     public function testWithPartition(): void
@@ -98,16 +101,15 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
 
         $newOptions = $options->withPartition(2);
 
-        $this->assertEquals(2, $newOptions->getPartition());
-        $this->assertNotEquals($options->getPartition(), $newOptions->getPartition());
+        Assert::equals($newOptions->getPartition(), 2);
+        Assert::notEquals($newOptions->getPartition(), $options->getPartition());
     }
 
     public function testToArray(): void
     {
         $options = new KafkaOptions('my-topic', 100, 10, true, 'metadata', 50, 1);
 
-        $this->assertSame(
-            <<<'JOSN'
+        Assert::same(\json_encode($options, JSON_PRETTY_PRINT), <<<'JOSN'
 {
     "priority": 10,
     "delay": 100,
@@ -117,8 +119,6 @@ final class KafkaOptionsTest extends \PHPUnit\Framework\TestCase
     "offset": 50,
     "partition": 1
 }
-JOSN,
-            \json_encode($options, JSON_PRETTY_PRINT),
-        );
+JOSN);
     }
 }

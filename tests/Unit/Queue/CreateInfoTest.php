@@ -4,38 +4,40 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
+use Testo\Test;
+use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\CreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 
-final class CreateInfoTest extends TestCase
+#[Test]
+final class CreateInfoTest
 {
     public function testConstructor(): void
     {
         $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
 
-        $this->assertInstanceOf(CreateInfo::class, $createInfo);
+        Assert::instanceOf($createInfo, CreateInfo::class);
     }
 
     public function testDefaultPriority(): void
     {
         $createInfo = new CreateInfo(Driver::Memory, 'name');
 
-        $this->assertEquals(CreateInfo::PRIORITY_DEFAULT_VALUE, $createInfo->priority);
+        Assert::equals($createInfo->priority, CreateInfo::PRIORITY_DEFAULT_VALUE);
     }
 
     public function testGetName(): void
     {
         $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
 
-        $this->assertEquals('name', $createInfo->getName());
+        Assert::equals($createInfo->getName(), 'name');
     }
 
     public function testGetDriver(): void
     {
         $createInfo = new CreateInfo(Driver::Memory, 'name', 5);
 
-        $this->assertEquals(Driver::Memory, $createInfo->getDriver());
+        Assert::equals($createInfo->getDriver(), Driver::Memory);
     }
 
     public function testToArray(): void
@@ -47,6 +49,6 @@ final class CreateInfoTest extends TestCase
             'priority' => 5,
         ];
 
-        $this->assertEquals($expectedArray, $createInfo->toArray());
+        Assert::equals($createInfo->toArray(), $expectedArray);
     }
 }
