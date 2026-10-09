@@ -54,7 +54,6 @@
     "require-dev": {
         "google/protobuf": "^3.17 || ^4.0",
         "phpunit/phpunit": "^10.0",
-        "roave/security-advisories": "dev-master",
         "vimeo/psalm": ">=5.8"
     },
     "autoload": {
@@ -72,7 +71,12 @@
         "psalm": "psalm --no-cache"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "ignore": {
+                "GHSA-g9pc-8g42-g6vq": "False positive: the range < 2025.1.0 also matches RoadRunner 3.x, which is not affected"
+            }
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
