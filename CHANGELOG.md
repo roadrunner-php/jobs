@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.0](https://github.com/roadrunner-php/jobs/compare/v4.8.0...4.9.0) (2026-10-10)
+
+
+### Features
+
+* support RoadRunner v3 ([#76](https://github.com/roadrunner-php/jobs/issues/76)) ([4a71bf4](https://github.com/roadrunner-php/jobs/commit/4a71bf40c04e6b28006d12cfbdbb5daee707b455))
+
+
+### Code Refactoring
+
+* deprecate consume_all option of AMQP and Beanstalk pipelines ([#70](https://github.com/roadrunner-php/jobs/issues/70)) ([64172b9](https://github.com/roadrunner-php/jobs/commit/64172b994c2694af1f009b19779ede2ac32e0fb7))
+
 ## [4.8.0](https://github.com/roadrunner-php/jobs/compare/v4.7.0...v4.8.0) (2026-10-10)
 
 
