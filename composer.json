@@ -1,38 +1,51 @@
 {
-    "name": "spiral/roadrunner-jobs",
+    "name": "roadrunner/jobs",
     "type": "library",
-    "description": "RoadRunner Queues (Jobs) plugin API library",
+    "description": "PHP API for the RoadRunner Jobs (queues) plugin: manage pipelines, push tasks and consume them in workers",
+    "keywords": [
+        "roadrunner",
+        "jobs",
+        "queue",
+        "queues",
+        "worker",
+        "amqp",
+        "kafka",
+        "sqs",
+        "beanstalk",
+        "nats"
+    ],
     "license": "MIT",
     "authors": [
         {
-            "name": "Anton Titov (wolfy-j)",
-            "email": "wolfy-j@spiralscout.com"
+            "name": "Anton Titov",
+            "homepage": "https://github.com/wolfy-j"
         },
         {
-            "name": "Pavel Buchnev (butschster)",
-            "email": "pavel.buchnev@spiralscout.com"
+            "name": "Pavel Buchnev",
+            "homepage": "https://github.com/butschster"
         },
         {
-            "name": "Aleksei Gagarin (roxblnfk)",
-            "email": "alexey.gagarin@spiralscout.com"
+            "name": "Aleksei Gagarin",
+            "homepage": "https://github.com/roxblnfk"
         },
         {
-            "name": "Maksim Smakouz (msmakouz)",
-            "email": "maksim.smakouz@spiralscout.com"
+            "name": "Maksim Smakouz",
+            "homepage": "https://github.com/msmakouz"
         },
         {
-            "name": "Kirill Nesmeyanov (SerafimArts)",
-            "email": "kirill.nesmeyanov@spiralscout.com"
+            "name": "Kirill Nesmeyanov",
+            "homepage": "https://github.com/SerafimArts"
         },
         {
             "name": "RoadRunner Community",
-            "homepage": "https://github.com/spiral/roadrunner/graphs/contributors"
+            "homepage": "https://github.com/roadrunner-server/roadrunner/graphs/contributors"
         }
     ],
     "homepage": "https://roadrunner.dev/",
     "support": {
-        "docs": "https://docs.roadrunner.dev",
+        "docs": "https://docs.roadrunner.dev/docs/queues-and-jobs/overview-queues",
         "issues": "https://github.com/roadrunner-server/roadrunner/issues",
+        "source": "https://github.com/roadrunner-php/jobs",
         "forum": "https://forum.roadrunner.dev/",
         "chat": "https://discord.gg/V6EK4he"
     },
@@ -46,10 +59,10 @@
         "php": ">=8.2",
         "ext-json": "*",
         "ramsey/uuid": "^3 || ^4",
-        "roadrunner-php/roadrunner-api-dto": "^1.18 || ^2.0",
-        "spiral/goridge": "^4.3",
-        "spiral/roadrunner": "^3.0",
-        "spiral/roadrunner-worker": "^3.7"
+        "roadrunner/api-dto": "^2.1",
+        "roadrunner/goridge": "^4.5",
+        "roadrunner/worker": "^3.8",
+        "spiral/roadrunner": "^3.0"
     },
     "require-dev": {
         "google/protobuf": "^3.17 || ^4.0 || ^5.0",
@@ -58,6 +71,9 @@
         "testo/bridge-mockery": "^0.1.2",
         "testo/testo": "^0.10.55",
         "vimeo/psalm": "^6 || ^7"
+    },
+    "replace": {
+        "spiral/roadrunner-jobs": "self.version"
     },
     "autoload": {
         "psr-4": {
