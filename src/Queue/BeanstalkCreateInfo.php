@@ -14,6 +14,9 @@ final class BeanstalkCreateInfo extends CreateInfo
     public const TUBE_DEFAULT_VALUE = 'default';
     public const RESERVE_TIMEOUT_DEFAULT_VALUE = 5;
 
+    /** @deprecated Since v4.9.0, RoadRunner ignores the `consume_all` option. */
+    public const CONSUME_ALL_DEFAULT_VALUE = false;
+
     /**
      * @param non-empty-string $name
      * @param positive-int $priority
@@ -27,6 +30,8 @@ final class BeanstalkCreateInfo extends CreateInfo
         public readonly int $tubePriority = self::TUBE_PRIORITY_DEFAULT_VALUE,
         public readonly string $tube = self::TUBE_DEFAULT_VALUE,
         public readonly int $reserveTimeout = self::RESERVE_TIMEOUT_DEFAULT_VALUE,
+        /** @deprecated Since v4.9.0, RoadRunner ignores the `consume_all` option, so it is not sent. */
+        public readonly bool $consumeAll = false,
     ) {
         parent::__construct(Driver::Beanstalk, $name, $priority);
 

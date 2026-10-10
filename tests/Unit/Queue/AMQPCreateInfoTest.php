@@ -28,6 +28,7 @@ final class AMQPCreateInfoTest
         Assert::false($amqpCreateInfo->requeueOnFail);
         Assert::false($amqpCreateInfo->durable);
         Assert::same($amqpCreateInfo->exchangeDurable, AMQPCreateInfo::EXCHANGE_DURABLE_DEFAULT_VALUE);
+        Assert::same($amqpCreateInfo->consumeAll, AMQPCreateInfo::CONSUME_ALL_DEFAULT_VALUE);
         Assert::same($amqpCreateInfo->queueHeaders, AMQPCreateInfo::QUEUE_HEADERS_DEFAULT_VALUE);
         Assert::same($amqpCreateInfo->deleteQueueOnStop, AMQPCreateInfo::DELETE_QUEUE_ON_STOP_DEFAULT_VALUE);
         Assert::same($amqpCreateInfo->redialTimeout, AMQPCreateInfo::REDIAL_TIMEOUT_DEFAULT_VALUE);
@@ -51,6 +52,7 @@ final class AMQPCreateInfoTest
             requeueOnFail: true,
             durable: true,
             exchangeDurable: true,
+            consumeAll: true,
             queueHeaders: [
                 'x-queue-type' => 'quorum',
             ],
@@ -71,6 +73,7 @@ final class AMQPCreateInfoTest
         Assert::true($amqpCreateInfo->requeueOnFail);
         Assert::true($amqpCreateInfo->durable);
         Assert::true($amqpCreateInfo->exchangeDurable);
+        Assert::true($amqpCreateInfo->consumeAll);
         Assert::same($amqpCreateInfo->queueHeaders, ['x-queue-type' => 'quorum']);
         Assert::true($amqpCreateInfo->deleteQueueOnStop);
         Assert::same($amqpCreateInfo->redialTimeout, 10);
@@ -94,6 +97,7 @@ final class AMQPCreateInfoTest
             requeueOnFail: true,
             durable: true,
             exchangeDurable: true,
+            consumeAll: true,
             queueHeaders: [
                 'x-queue-type' => 'quorum',
             ],
