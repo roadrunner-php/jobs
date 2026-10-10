@@ -52,7 +52,7 @@
         "spiral/roadrunner-worker": "^3.0"
     },
     "require-dev": {
-        "google/protobuf": "^3.17 || ^4.0",
+        "google/protobuf": "^3.17 || ^4.0 || ^5.0",
         "mockery/mockery": "^1.6",
         "spiral/code-style": "^2.3.1",
         "testo/bridge-mockery": "^0.1.2",
