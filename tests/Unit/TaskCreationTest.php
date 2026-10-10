@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Testo\Test;
-use Testo\Assert;
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
 use Spiral\RoadRunner\Jobs\Queue;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\QueueInterface;
+use Testo\Assert;
+use Testo\Test;
 
 #[Test]
 final class TaskCreationTest extends BaseTestCase
@@ -92,7 +92,7 @@ final class TaskCreationTest extends BaseTestCase
         $expected = 'task-name-' . \bin2hex(\random_bytes(32));
 
         $task = $this
-            ->queue([], 'queue', Queue\Driver::Kafka)
+            ->queue([], 'queue', Driver::Kafka)
             ->create($expected, 'bar', new KafkaOptions('kafka-topic', 15, 30, false));
         $options = $task->getOptions();
 

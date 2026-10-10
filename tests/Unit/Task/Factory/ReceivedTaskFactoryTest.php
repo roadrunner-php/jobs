@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task\Factory;
 
-use Testo\Test;
-use Testo\Expect;
-use Testo\Assert;
-use Testo\Data\DataProvider;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
 use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
@@ -16,6 +12,10 @@ use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Expect;
+use Testo\Test;
 
 #[Test]
 final class ReceivedTaskFactoryTest

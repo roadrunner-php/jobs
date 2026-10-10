@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Testo\Test;
-use Testo\Data\DataProvider;
-use Testo\Assert;
-use Testo\Assert\ExpectException;
-use Testo\Expect;
 use RoadRunner\Jobs\DTO\V1\DeclareRequest;
 use RoadRunner\Jobs\DTO\V1\Pipelines;
 use Spiral\RoadRunner\Jobs\Exception\JobsException;
@@ -22,6 +17,11 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
 use Spiral\RoadRunner\Jobs\QueueInterface;
+use Testo\Assert;
+use Testo\Assert\ExpectException;
+use Testo\Data\DataProvider;
+use Testo\Expect;
+use Testo\Test;
 
 use function count;
 

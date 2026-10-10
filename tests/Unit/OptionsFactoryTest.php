@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Testo\Test;
-use Testo\Data\DataProvider;
-use Testo\Assert;
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Test;
 
 #[Test]
 final class OptionsFactoryTest

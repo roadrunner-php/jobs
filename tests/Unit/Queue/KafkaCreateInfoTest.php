@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use Testo\Test;
-use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
@@ -14,6 +12,8 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
 use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
+use Testo\Assert;
+use Testo\Test;
 
 #[Test]
 final class KafkaCreateInfoTest

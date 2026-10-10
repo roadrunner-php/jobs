@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use Testo\Test;
-use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
+use Testo\Assert;
+use Testo\Test;
 
 #[Test]
 final class HeadersTraitTest

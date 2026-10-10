@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Testo\Test;
-use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Options;
+use Testo\Assert;
+use Testo\Test;
 
 #[Test]
 final class OptionsTest extends BaseTestCase

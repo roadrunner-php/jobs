@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Testo\Test;
-use Testo\Data\DataProvider;
-use Testo\Assert;
-use Testo\Expect;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactoryInterface;
 use RoadRunner\Jobs\DTO\V1\Options as DTOOptions;
@@ -21,6 +17,10 @@ use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue\Pipeline;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
 use Spiral\RoadRunner\Jobs\Task\PreparedTaskInterface;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Expect;
+use Testo\Test;
 
 #[Test]
 final class PipelineTest

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use Testo\Test;
-use Testo\Assert;
 use Spiral\RoadRunner\Jobs\Queue\BeanstalkCreateInfo;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
+use Testo\Assert;
+use Testo\Test;
 
 #[Test]
 final class BeanstalkCreateInfoTest

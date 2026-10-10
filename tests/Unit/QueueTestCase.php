@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
-use Testo\Test;
-use Testo\Assert;
-use Testo\Expect;
 use RoadRunner\Jobs\DTO\V1\PushBatchRequest;
 use RoadRunner\Jobs\DTO\V1\PushRequest;
 use RoadRunner\Jobs\DTO\V1\Stat;
@@ -15,6 +12,9 @@ use Spiral\RoadRunner\Jobs\Exception\JobsException;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Queue;
+use Testo\Assert;
+use Testo\Expect;
+use Testo\Test;
 
 class QueueTestCase extends BaseTestCase
 {

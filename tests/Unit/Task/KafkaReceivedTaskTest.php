@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use Testo\Test;
-use Testo\Assert;
-use Testo\Lifecycle\BeforeTest;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
 use Spiral\RoadRunner\WorkerInterface;
+use Testo\Assert;
+use Testo\Lifecycle\BeforeTest;
+use Testo\Test;
 
 #[Test]
 final class KafkaReceivedTaskTest
