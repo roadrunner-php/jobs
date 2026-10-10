@@ -66,7 +66,6 @@ interface ReceivedTaskInterface extends
      */
     public function getQueue(): string;
 
-
     /**
      * Returns the queue driver name.
      *

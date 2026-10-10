@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Stub;
 
-use BadFunctionCallException;
-use Closure;
 use Google\Protobuf\Internal\Message;
-use LogicException;
 use Spiral\Goridge\RPC\Codec\JsonCodec;
 use Spiral\Goridge\RPC\CodecInterface;
 use Spiral\Goridge\RPC\RPCInterface;
 
 final class RPCConnectionStub implements RPCInterface
 {
-    /**
-     * @var CodecInterface
-     */
     private CodecInterface $codec;
 
     /**
@@ -35,7 +29,7 @@ final class RPCConnectionStub implements RPCInterface
 
     public function withServicePrefix(string $service): RPCInterface
     {
-        throw new LogicException(__METHOD__ . ' not implemented yet');
+        throw new \LogicException(__METHOD__ . ' not implemented yet');
     }
 
     public function withCodec(CodecInterface $codec): RPCInterface
@@ -48,14 +42,14 @@ final class RPCConnectionStub implements RPCInterface
     public function call(string $method, $payload, $options = null): mixed
     {
         if (!\array_key_exists($method, $this->mapping)) {
-            throw new BadFunctionCallException(
-                \sprintf('RPC method [%s] has not been defined', $method)
+            throw new \BadFunctionCallException(
+                \sprintf('RPC method [%s] has not been defined', $method),
             );
         }
 
         $result = $this->mapping[$method];
 
-        if ($result instanceof Closure) {
+        if ($result instanceof \Closure) {
             $result = $result($payload);
         }
 
@@ -63,6 +57,6 @@ final class RPCConnectionStub implements RPCInterface
             $result = $result->serializeToString();
         }
 
-        return $this->codec->decode((string)$result, $options);
+        return $this->codec->decode((string) $result, $options);
     }
 }

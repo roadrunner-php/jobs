@@ -52,11 +52,13 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         parent::__construct($id, $pipeline, $job, $payload, $headers);
     }
 
+    #[\Override]
     public function getDriver(): Driver
     {
         return $this->driver;
     }
 
+    #[\Override]
     public function getQueue(): string
     {
         return $this->queue;
@@ -65,6 +67,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     /**
      * @deprecated Since v4.5.0, use {@see ack()} instead.
      */
+    #[\Override]
     public function complete(): void
     {
         /** @psalm-suppress DeprecatedConstant */
@@ -74,10 +77,11 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     /**
      * @deprecated Since v4.5.0, use {@see nack()} or {@see requeue()} instead.
      */
+    #[\Override]
     public function fail(string|\Stringable|\Throwable $error, bool $requeue = false): void
     {
         $data = [
-            'message' => (string)$error,
+            'message' => (string) $error,
             'requeue' => $requeue,
             'delay_seconds' => $this->delay,
         ];
@@ -102,7 +106,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
     {
         $this->respond(Type::NACK, [
             'message' => (string) $message,
-            'redelivery' => $redelivery,
+            'requeue' => $redelivery,
             'delay_seconds' => $this->delay,
         ]);
     }
@@ -121,17 +125,20 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
         $this->respond(Type::REQUEUE, $data);
     }
 
+    #[\Override]
     public function isCompleted(): bool
     {
         return $this->completed !== null;
     }
 
+    #[\Override]
     public function isSuccessful(): bool
     {
         /** @psalm-suppress DeprecatedConstant */
         return $this->completed === Type::SUCCESS || $this->completed === Type::ACK;
     }
 
+    #[\Override]
     public function isFails(): bool
     {
         /** @psalm-suppress DeprecatedConstant */
@@ -144,6 +151,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
+    #[\Override]
     public function withDelay(int $seconds): self
     {
         \assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
@@ -169,7 +177,7 @@ class ReceivedTask extends QueuedTask implements ReceivedTaskInterface
             } catch (\JsonException $e) {
                 throw new SerializationException($e->getMessage(), $e->getCode(), $e);
             } catch (\Throwable $e) {
-                throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+                throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             $this->completed = $type;

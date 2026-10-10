@@ -37,11 +37,7 @@ final class Queue implements QueueInterface
         $this->options = $options ?? new Options();
     }
 
-    public function __clone()
-    {
-        $this->options = clone $this->options;
-    }
-
+    #[\Override]
     public function getDefaultOptions(): OptionsInterface
     {
         return $this->options;
@@ -51,6 +47,7 @@ final class Queue implements QueueInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
+    #[\Override]
     public function withDefaultOptions(?OptionsInterface $options = null): self
     {
         $self = clone $this;
@@ -66,28 +63,29 @@ final class Queue implements QueueInterface
      * This method exists for compatibility with version RoadRunner 1.x.
      *
      * @param non-empty-string $name
-     * @param OptionsInterface|null $options
      * @throws JobsException
      */
     public function push(
         string $name,
         string|\Stringable $payload,
-        OptionsInterface $options = null,
+        ?OptionsInterface $options = null,
     ): QueuedTaskInterface {
         return $this->dispatch(
             $this->create($name, $payload, $options),
         );
     }
 
+    #[\Override]
     public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface
     {
         return $this->pipeline->send($task);
     }
 
+    #[\Override]
     public function create(
         string $name,
         string|\Stringable $payload,
-        OptionsInterface $options = null,
+        ?OptionsInterface $options = null,
     ): PreparedTaskInterface {
         if ($this->options !== null && \method_exists($this->options, 'mergeOptional')) {
             /** @var OptionsInterface $options */
@@ -98,15 +96,17 @@ final class Queue implements QueueInterface
             $name,
             $payload,
             $options,
-            $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : []
+            $options instanceof ProvidesHeadersInterface ? $options->getHeaders() : [],
         );
     }
 
+    #[\Override]
     public function dispatchMany(PreparedTaskInterface ...$tasks): iterable
     {
         return $this->pipeline->sendMany($tasks);
     }
 
+    #[\Override]
     public function pause(): void
     {
         try {
@@ -117,18 +117,20 @@ final class Queue implements QueueInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
     /**
      * @return non-empty-string
      */
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function resume(): void
     {
         try {
@@ -139,10 +141,11 @@ final class Queue implements QueueInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
+    #[\Override]
     public function isPaused(): bool
     {
         $stat = $this->getPipelineStat();
@@ -159,7 +162,7 @@ final class Queue implements QueueInterface
             /** @var Stats $stats */
             $stats = $this->rpc->call('jobs.Stat', '', Stats::class);
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         /** @var Stat $stat */
@@ -170,5 +173,10 @@ final class Queue implements QueueInterface
         }
 
         return null;
+    }
+
+    public function __clone()
+    {
+        $this->options = clone $this->options;
     }
 }

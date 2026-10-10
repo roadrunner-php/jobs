@@ -30,7 +30,7 @@ class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerial
         return new self(
             $options->getDelay(),
             $options->getPriority(),
-            $options->getAutoAck()
+            $options->getAutoAck(),
         );
     }
 
@@ -38,6 +38,7 @@ class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerial
      * @psalm-immutable
      * @return positive-int|0
      */
+    #[\Override]
     public function getDelay(): int
     {
         \assert($this->delay >= 0, 'Invariant [delay >= 0] failed');
@@ -49,6 +50,7 @@ class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerial
      * @psalm-immutable
      * @return positive-int|0
      */
+    #[\Override]
     public function getPriority(): int
     {
         \assert($this->priority >= 0, 'Invariant [priority >= 0] failed');
@@ -59,6 +61,7 @@ class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerial
     /**
      * @psalm-immutable
      */
+    #[\Override]
     public function getAutoAck(): bool
     {
         return $this->autoAck;
@@ -138,6 +141,7 @@ class Options implements OptionsInterface, WritableHeadersInterface, \JsonSerial
         return $self;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->toArray();

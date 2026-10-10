@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\BoltdbCreateInfo;
+use Testo\Assert;
+use Testo\Test;
 
-final class BoltdbCreateInfoTest extends TestCase
+#[Test]
+final class BoltdbCreateInfoTest
 {
     public function testConstructor(): void
     {
@@ -19,21 +21,21 @@ final class BoltdbCreateInfoTest extends TestCase
 
         $boltdbCreateInfo = new BoltdbCreateInfo($name, $file, $priority, $prefetch, $permissions);
 
-        $this->assertEquals($name, $boltdbCreateInfo->name);
-        $this->assertEquals($file, $boltdbCreateInfo->file);
-        $this->assertEquals($priority, $boltdbCreateInfo->priority);
-        $this->assertEquals($prefetch, $boltdbCreateInfo->prefetch);
-        $this->assertEquals($permissions, $boltdbCreateInfo->permissions);
+        Assert::equals($boltdbCreateInfo->name, $name);
+        Assert::equals($boltdbCreateInfo->file, $file);
+        Assert::equals($boltdbCreateInfo->priority, $priority);
+        Assert::equals($boltdbCreateInfo->prefetch, $prefetch);
+        Assert::equals($boltdbCreateInfo->permissions, $permissions);
     }
 
     public function testDefaultValues(): void
     {
         $boltdbCreateInfo = new BoltdbCreateInfo('test_queue');
 
-        $this->assertEquals(BoltdbCreateInfo::PRIORITY_DEFAULT_VALUE, $boltdbCreateInfo->priority);
-        $this->assertEquals(BoltdbCreateInfo::PREFETCH_DEFAULT_VALUE, $boltdbCreateInfo->prefetch);
-        $this->assertEquals(BoltdbCreateInfo::FILE_DEFAULT_VALUE, $boltdbCreateInfo->file);
-        $this->assertEquals(BoltdbCreateInfo::PERMISSIONS_DEFAULT_VALUE, $boltdbCreateInfo->permissions);
+        Assert::equals($boltdbCreateInfo->priority, BoltdbCreateInfo::PRIORITY_DEFAULT_VALUE);
+        Assert::equals($boltdbCreateInfo->prefetch, BoltdbCreateInfo::PREFETCH_DEFAULT_VALUE);
+        Assert::equals($boltdbCreateInfo->file, BoltdbCreateInfo::FILE_DEFAULT_VALUE);
+        Assert::equals($boltdbCreateInfo->permissions, BoltdbCreateInfo::PERMISSIONS_DEFAULT_VALUE);
     }
 
     public function testToArray(): void
@@ -54,6 +56,6 @@ final class BoltdbCreateInfoTest extends TestCase
             'permissions' => 0755,
         ];
 
-        $this->assertEquals($expectedArray, $boltdbCreateInfo->toArray());
+        Assert::equals($boltdbCreateInfo->toArray(), $expectedArray);
     }
 }

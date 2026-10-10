@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumePartition;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
@@ -12,30 +11,30 @@ use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOffset;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerOptions;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\OffsetType;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
-use Spiral\RoadRunner\Jobs\Queue\Kafka\SASL;
 use Spiral\RoadRunner\Jobs\Queue\KafkaCreateInfo;
+use Testo\Assert;
+use Testo\Test;
 
-use function json_encode;
-
-final class KafkaCreateInfoTest extends TestCase
+#[Test]
+final class KafkaCreateInfoTest
 {
     public function testDefaultValues(): void
     {
         $createInfo = new KafkaCreateInfo('test');
 
-        $this->assertFalse($createInfo->autoCreateTopicsEnable);
-        $this->assertNull($createInfo->producerOptions);
-        $this->assertNull($createInfo->consumerOptions);
-        $this->assertNull($createInfo->groupOptions);
-        $this->assertSame(Driver::Kafka, $createInfo->getDriver());
-        $this->assertSame('test', $createInfo->getName());
-        $this->assertSame(10, $createInfo->priority);
-        $this->assertSame([
+        Assert::false($createInfo->autoCreateTopicsEnable);
+        Assert::null($createInfo->producerOptions);
+        Assert::null($createInfo->consumerOptions);
+        Assert::null($createInfo->groupOptions);
+        Assert::same($createInfo->getDriver(), Driver::Kafka);
+        Assert::same($createInfo->getName(), 'test');
+        Assert::same($createInfo->priority, 10);
+        Assert::same($createInfo->toArray(), [
             'name' => 'test',
             'driver' => 'kafka',
             'priority' => 10,
             'auto_create_topics_enable' => false,
-        ], $createInfo->toArray());
+        ]);
     }
 
     public function testCustomValues(): void
@@ -53,11 +52,10 @@ final class KafkaCreateInfoTest extends TestCase
             true,
             $producerOptions,
             $consumerOptions,
-            $groupOptions
+            $groupOptions,
         );
 
-        $this->assertSame(
-            <<<'JSON'
+        Assert::same(\json_encode($createInfo, JSON_PRETTY_PRINT), <<<'JSON'
 {
     "name": "test",
     "driver": "kafka",
@@ -100,9 +98,6 @@ final class KafkaCreateInfoTest extends TestCase
         "block_rebalance_on_poll": false
     }
 }
-JSON
-            ,
-            json_encode($createInfo, JSON_PRETTY_PRINT),
-        );
+JSON);
     }
 }

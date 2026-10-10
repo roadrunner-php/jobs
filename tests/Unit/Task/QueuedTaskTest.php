@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Task\QueuedTask;
+use Testo\Assert;
+use Testo\Test;
 
-final class QueuedTaskTest extends TestCase
+#[Test]
+final class QueuedTaskTest
 {
-    public function testGetters()
+    public function testGetters(): void
     {
         $id = '12345';
         $queue = 'default';
@@ -19,10 +21,10 @@ final class QueuedTaskTest extends TestCase
 
         $task = new QueuedTask($id, $queue, $name, $payload, $headers);
 
-        $this->assertEquals($id, $task->getId());
-        $this->assertEquals($queue, $task->getPipeline());
-        $this->assertEquals($name, $task->getName());
-        $this->assertEquals($payload, $task->getPayload());
-        $this->assertEquals($headers, $task->getHeaders());
+        Assert::equals($task->getId(), $id);
+        Assert::equals($task->getPipeline(), $queue);
+        Assert::equals($task->getName(), $name);
+        Assert::equals($task->getPayload(), $payload);
+        Assert::equals($task->getHeaders(), $headers);
     }
 }

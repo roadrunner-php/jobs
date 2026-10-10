@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Queue\PubSubCreateInfo;
+use Testo\Assert;
+use Testo\Test;
 
-final class PubSubCreateInfoTest extends TestCase
+#[Test]
+final class PubSubCreateInfoTest
 {
     public function testCreatePubSubCreateInfo(): void
     {
@@ -21,13 +23,13 @@ final class PubSubCreateInfoTest extends TestCase
             maxDeliveryAttempts: 15,
         );
 
-        $this->assertSame(Driver::PubSub, $pubSubCreateInfo->driver);
-        $this->assertSame('test_name', $pubSubCreateInfo->name);
-        $this->assertSame('test_project_id', $pubSubCreateInfo->projectId);
-        $this->assertSame('test_topic', $pubSubCreateInfo->topic);
-        $this->assertSame(3, $pubSubCreateInfo->priority);
-        $this->assertSame('test_dead_letter_topic', $pubSubCreateInfo->deadLetterTopic);
-        $this->assertSame(15, $pubSubCreateInfo->maxDeliveryAttempts);
+        Assert::same($pubSubCreateInfo->driver, Driver::PubSub);
+        Assert::same($pubSubCreateInfo->name, 'test_name');
+        Assert::same($pubSubCreateInfo->projectId, 'test_project_id');
+        Assert::same($pubSubCreateInfo->topic, 'test_topic');
+        Assert::same($pubSubCreateInfo->priority, 3);
+        Assert::same($pubSubCreateInfo->deadLetterTopic, 'test_dead_letter_topic');
+        Assert::same($pubSubCreateInfo->maxDeliveryAttempts, 15);
     }
 
     public function testCreatePubSubCreateInfoOnlyRequiredData(): void
@@ -38,13 +40,13 @@ final class PubSubCreateInfoTest extends TestCase
             topic: 'test_topic',
         );
 
-        $this->assertSame(Driver::PubSub, $pubSubCreateInfo->driver);
-        $this->assertSame('test_name', $pubSubCreateInfo->name);
-        $this->assertSame('test_project_id', $pubSubCreateInfo->projectId);
-        $this->assertSame('test_topic', $pubSubCreateInfo->topic);
-        $this->assertSame(10, $pubSubCreateInfo->priority);
-        $this->assertNull($pubSubCreateInfo->deadLetterTopic);
-        $this->assertSame(10, $pubSubCreateInfo->maxDeliveryAttempts);
+        Assert::same($pubSubCreateInfo->driver, Driver::PubSub);
+        Assert::same($pubSubCreateInfo->name, 'test_name');
+        Assert::same($pubSubCreateInfo->projectId, 'test_project_id');
+        Assert::same($pubSubCreateInfo->topic, 'test_topic');
+        Assert::same($pubSubCreateInfo->priority, 10);
+        Assert::null($pubSubCreateInfo->deadLetterTopic);
+        Assert::same($pubSubCreateInfo->maxDeliveryAttempts, 10);
     }
 
     public function testToArray(): void
@@ -68,7 +70,7 @@ final class PubSubCreateInfoTest extends TestCase
             'max_delivery_attempts' => 15,
         ];
 
-        $this->assertSame($expectedArray, $pubSubCreateInfo->toArray());
+        Assert::same($pubSubCreateInfo->toArray(), $expectedArray);
     }
 
     public function testToArrayOnlyRequiredData(): void
@@ -87,6 +89,6 @@ final class PubSubCreateInfoTest extends TestCase
             'topic' => 'test_topic',
         ];
 
-        $this->assertSame($expectedArray, $pubSubCreateInfo->toArray());
+        Assert::same($pubSubCreateInfo->toArray(), $expectedArray);
     }
 }

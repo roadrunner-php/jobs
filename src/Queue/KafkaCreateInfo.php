@@ -36,6 +36,7 @@ final class KafkaCreateInfo extends CreateInfo
         parent::__construct(Driver::Kafka, $name, $priority);
     }
 
+    #[\Override]
     public function toArray(): array
     {
         $info = [

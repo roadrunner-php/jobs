@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
-use DateInterval;
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\Acks;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\CompressionCodec;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ProducerOptions;
+use Testo\Assert;
+use Testo\Test;
 
-use function json_encode;
-
-final class ProducerOptionsTest extends TestCase
+#[Test]
+final class ProducerOptionsTest
 {
     public function testDefaultValues(): void
     {
         $options = new ProducerOptions();
 
-        $this->assertFalse($options->disableIdempotent);
-        $this->assertSame(Acks::AllISRAck, $options->requiredAcks);
-        $this->assertSame(1000012, $options->maxMessageBytes);
-        $this->assertNull($options->requestTimeout);
-        $this->assertNull($options->deliveryTimeout);
-        $this->assertNull($options->transactionTimeout);
-        $this->assertNull($options->compressionCodec);
+        Assert::false($options->disableIdempotent);
+        Assert::same($options->requiredAcks, Acks::AllISRAck);
+        Assert::same($options->maxMessageBytes, 1000012);
+        Assert::null($options->requestTimeout);
+        Assert::null($options->deliveryTimeout);
+        Assert::null($options->transactionTimeout);
+        Assert::null($options->compressionCodec);
     }
 
     public function testCustomValues(): void
@@ -33,19 +32,19 @@ final class ProducerOptionsTest extends TestCase
             true,
             Acks::NoAck,
             100,
-            new DateInterval('PT5S'),
-            new DateInterval('PT50S'),
-            new DateInterval('PT20S'),
-            CompressionCodec::Gzip
+            new \DateInterval('PT5S'),
+            new \DateInterval('PT50S'),
+            new \DateInterval('PT20S'),
+            CompressionCodec::Gzip,
         );
 
-        $this->assertTrue($options->disableIdempotent);
-        $this->assertSame(Acks::NoAck, $options->requiredAcks);
-        $this->assertSame(100, $options->maxMessageBytes);
-        $this->assertEquals(new DateInterval('PT5S'), $options->requestTimeout);
-        $this->assertEquals(new DateInterval('PT50S'), $options->deliveryTimeout);
-        $this->assertEquals(new DateInterval('PT20S'), $options->transactionTimeout);
-        $this->assertSame(CompressionCodec::Gzip, $options->compressionCodec);
+        Assert::true($options->disableIdempotent);
+        Assert::same($options->requiredAcks, Acks::NoAck);
+        Assert::same($options->maxMessageBytes, 100);
+        Assert::equals((array) $options->requestTimeout, (array) new \DateInterval('PT5S'));
+        Assert::equals((array) $options->deliveryTimeout, (array) new \DateInterval('PT50S'));
+        Assert::equals((array) $options->transactionTimeout, (array) new \DateInterval('PT20S'));
+        Assert::same($options->compressionCodec, CompressionCodec::Gzip);
     }
 
     public function testJsonSerialization(): void
@@ -54,14 +53,13 @@ final class ProducerOptionsTest extends TestCase
             true,
             Acks::AllISRAck,
             100,
-            new DateInterval('PT5S'),
-            new DateInterval('PT50S'),
-            new DateInterval('PT20S'),
-            CompressionCodec::Gzip
+            new \DateInterval('PT5S'),
+            new \DateInterval('PT50S'),
+            new \DateInterval('PT20S'),
+            CompressionCodec::Gzip,
         );
 
-        $this->assertSame(
-            <<<'JSON'
+        Assert::same(\json_encode($options, JSON_PRETTY_PRINT), <<<'JSON'
 {
     "disable_idempotent": true,
     "max_message_bytes": 100,
@@ -71,9 +69,6 @@ final class ProducerOptionsTest extends TestCase
     "required_acks": "AllISRAck",
     "compression_codec": "gzip"
 }
-JSON
-            ,
-            json_encode($options, JSON_PRETTY_PRINT),
-        );
+JSON);
     }
 }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Queue\Kafka;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Queue\Kafka\ConsumerGroupOptions;
+use Testo\Assert;
+use Testo\Test;
 
-final class ConsumerGroupOptionsTest extends TestCase
+#[Test]
+final class ConsumerGroupOptionsTest
 {
     public function testJsonSerialize(): void
     {
@@ -18,20 +20,20 @@ final class ConsumerGroupOptionsTest extends TestCase
             'block_rebalance_on_poll' => true,
         ];
 
-        $this->assertEquals($expected, $options->jsonSerialize());
+        Assert::equals($options->jsonSerialize(), $expected);
     }
 
     public function testDefaultBlockRebalanceOnPoll(): void
     {
         $options = new ConsumerGroupOptions('my-group');
 
-        $this->assertFalse($options->blockRebalanceOnPoll);
+        Assert::false($options->blockRebalanceOnPoll);
     }
 
     public function testNullableGroupId(): void
     {
         $options = new ConsumerGroupOptions();
 
-        $this->assertNull($options->groupId);
+        Assert::null($options->groupId);
     }
 }

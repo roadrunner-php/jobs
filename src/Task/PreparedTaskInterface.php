@@ -10,6 +10,4 @@ interface PreparedTaskInterface extends
     TaskInterface,
     OptionsInterface,
     WritableHeadersInterface,
-    MutatesDelayInterface
-{
-}
+    MutatesDelayInterface {}

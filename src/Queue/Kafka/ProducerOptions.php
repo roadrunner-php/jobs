@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Queue\Kafka;
 
-use DateInterval;
-
 final class ProducerOptions implements \JsonSerializable
 {
     public const DEFAULT_DISABLE_IDEMPOTENT_DEFAULT_VALUE = false;
@@ -20,14 +18,14 @@ final class ProducerOptions implements \JsonSerializable
      * @param positive-int $maxMessageBytes upper bounds the size of a record batch, overriding the default 1,000,012 bytes.
      * This mirrors Kafka's max.message.bytes.
      *
-     * @param DateInterval|null $requestTimeout sets how long Kafka broker's are allowed to respond produce requests,
+     * @param \DateInterval|null $requestTimeout sets how long Kafka broker's are allowed to respond produce requests,
      * overriding the default 10s. If a broker exceeds this duration, it will reply with a request timeout error.
      *
-     * @param DateInterval|null $deliveryTimeout sets a rough time of how long a record can sit around in a batch before
+     * @param \DateInterval|null $deliveryTimeout sets a rough time of how long a record can sit around in a batch before
      * timing out, overriding the unlimited default. If idempotency is enabled (as it is by default), this option is
      * only enforced if it is safe to do so without creating invalid sequence numbers.
      *
-     * @param DateInterval|null $transactionTimeout sets the allowed for a transaction, overriding the default 40s. It is
+     * @param \DateInterval|null $transactionTimeout sets the allowed for a transaction, overriding the default 40s. It is
      * a good idea to keep this less than a group's session timeout.
      *
      * @param CompressionCodec|null $compressionCodec sets the compression codec to use for producing records.
@@ -37,13 +35,13 @@ final class ProducerOptions implements \JsonSerializable
         public readonly bool $disableIdempotent = self::DEFAULT_DISABLE_IDEMPOTENT_DEFAULT_VALUE,
         public readonly ?Acks $requiredAcks = Acks::AllISRAck,
         public readonly int $maxMessageBytes = self::DEFAULT_MAX_MESSAGE_BYTES_DEFAULT_VALUE,
-        public readonly ?DateInterval $requestTimeout = null,
-        public readonly ?DateInterval $deliveryTimeout = null,
-        public readonly ?DateInterval $transactionTimeout = null,
+        public readonly ?\DateInterval $requestTimeout = null,
+        public readonly ?\DateInterval $deliveryTimeout = null,
+        public readonly ?\DateInterval $transactionTimeout = null,
         public readonly ?CompressionCodec $compressionCodec = null,
-    ) {
-    }
+    ) {}
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = [
@@ -74,7 +72,7 @@ final class ProducerOptions implements \JsonSerializable
         return $data;
     }
 
-    private function convertDateIntervalToString(DateInterval $interval): string
+    private function convertDateIntervalToString(\DateInterval $interval): string
     {
         return $interval->format('%s') . 's';
     }

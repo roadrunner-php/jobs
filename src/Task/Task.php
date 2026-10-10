@@ -29,13 +29,15 @@ abstract class Task implements TaskInterface
     /**
      * @return non-empty-string
      */
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getPayload(): string
     {
-        return (string)$this->payload;
+        return (string) $this->payload;
     }
 }

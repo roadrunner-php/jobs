@@ -8,28 +8,14 @@ use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsFactory;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
-use Traversable;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Test;
 
-final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
+#[Test]
+final class OptionsFactoryTest
 {
-    /**
-     * @dataProvider defaultDriversDataProvider
-     */
-    public function testCreateWithOptions(Driver $driver): void
-    {
-        $options = OptionsFactory::create($driver);
-        $this->assertInstanceOf(Options::class, $options);
-    }
-
-    public function testCreateWithKafkaOptions(): void
-    {
-        $options = OptionsFactory::create(Driver::Kafka);
-
-        $this->assertInstanceOf(KafkaOptions::class, $options);
-        $this->assertEquals('default', $options->getTopic());
-    }
-
-    public static function defaultDriversDataProvider(): Traversable
+    public static function defaultDriversDataProvider(): \Traversable
     {
         yield [Driver::SQS];
         yield [Driver::AMQP];
@@ -39,5 +25,20 @@ final class OptionsFactoryTest extends \PHPUnit\Framework\TestCase
         yield [Driver::NSQ];
         yield [Driver::NATS];
         yield [Driver::Redis];
+    }
+
+    #[DataProvider('defaultDriversDataProvider')]
+    public function testCreateWithOptions(Driver $driver): void
+    {
+        $options = OptionsFactory::create($driver);
+        Assert::instanceOf($options, Options::class);
+    }
+
+    public function testCreateWithKafkaOptions(): void
+    {
+        $options = OptionsFactory::create(Driver::Kafka);
+
+        Assert::instanceOf($options, KafkaOptions::class);
+        Assert::equals($options->getTopic(), 'default');
     }
 }

@@ -23,6 +23,7 @@ final class Jobs implements JobsInterface
         $this->rpc = $rpc->withCodec(new ProtobufCodec());
     }
 
+    #[\Override]
     public function create(CreateInfoInterface $info, ?OptionsInterface $options = null): QueueInterface
     {
         try {
@@ -35,13 +36,14 @@ final class Jobs implements JobsInterface
 
             return $this->connect($info->getName(), $options ?? OptionsFactory::create($info->getDriver()));
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
     /**
      * @param non-empty-string $queue
      */
+    #[\Override]
     public function connect(string $queue, ?OptionsInterface $options = null): QueueInterface
     {
         \assert($queue !== '', 'Precondition [queue !== ""] failed');
@@ -49,6 +51,7 @@ final class Jobs implements JobsInterface
         return new Queue($queue, $this->rpc, $options);
     }
 
+    #[\Override]
     public function pause(string|QueueInterface $queue, string|QueueInterface ...$queues): void
     {
         try {
@@ -59,10 +62,11 @@ final class Jobs implements JobsInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
+    #[\Override]
     public function resume(QueueInterface|string $queue, QueueInterface|string ...$queues): void
     {
         try {
@@ -73,7 +77,7 @@ final class Jobs implements JobsInterface
                 ]),
             );
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -81,6 +85,7 @@ final class Jobs implements JobsInterface
      * @return int<0, max>
      * @throws JobsException
      */
+    #[\Override]
     public function count(): int
     {
         return \iterator_count($this->getIterator());
@@ -90,6 +95,7 @@ final class Jobs implements JobsInterface
      * @return \Traversable<non-empty-string, QueueInterface>
      * @throws JobsException
      */
+    #[\Override]
     public function getIterator(): \Traversable
     {
         try {
@@ -101,7 +107,7 @@ final class Jobs implements JobsInterface
                 yield $queue => $this->connect($queue);
             }
         } catch (\Throwable $e) {
-            throw new JobsException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new JobsException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -117,8 +123,8 @@ final class Jobs implements JobsInterface
 
         foreach ($map as $key => $value) {
             $marshalled[$key] = match (true) {
-                \is_int($value) => (string)$value,
-                \is_object($value) && \method_exists($value, '__toString') => (string)$value->__toString(),
+                \is_int($value) => (string) $value,
+                \is_object($value) && \method_exists($value, '__toString') => (string) $value->__toString(),
                 $value instanceof \Stringable => $value->__toString(),
                 \is_string($value) => $value,
                 \is_bool($value) => $value ? 'true' : 'false',

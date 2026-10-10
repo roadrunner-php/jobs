@@ -19,13 +19,12 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
 
     /**
      * @param non-empty-string $name
-     * @param OptionsInterface|null $options
      * @param array<non-empty-string, array<string>> $headers
      */
     public function __construct(
         string $name,
         string|\Stringable $payload,
-        OptionsInterface $options = null,
+        ?OptionsInterface $options = null,
         array $headers = [],
     ) {
         $this->options = $options ?? new Options();
@@ -33,16 +32,13 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         parent::__construct($name, $payload, $headers);
     }
 
-    public function __clone()
-    {
-        $this->options = clone $this->options;
-    }
-
+    #[\Override]
     public function getOptions(): OptionsInterface
     {
         return $this->options;
     }
 
+    #[\Override]
     public function getDelay(): int
     {
         return $this->options->getDelay();
@@ -52,6 +48,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
+    #[\Override]
     public function withDelay(int $seconds): self
     {
         \assert($seconds >= 0, 'Precondition [seconds >= 0] failed');
@@ -67,6 +64,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
+    #[\Override]
     public function getPriority(): int
     {
         return $this->options->getPriority();
@@ -91,6 +89,7 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
+    #[\Override]
     public function getAutoAck(): bool
     {
         return $this->options->getAutoAck();
@@ -109,11 +108,17 @@ final class PreparedTask extends Task implements PreparedTaskInterface, OptionsA
         return $self;
     }
 
+    #[\Override]
     public function withOptions(OptionsInterface $options): OptionsAwareInterface
     {
         $self = clone $this;
         $self->options = $options;
 
         return $self;
+    }
+
+    public function __clone()
+    {
+        $this->options = clone $this->options;
     }
 }

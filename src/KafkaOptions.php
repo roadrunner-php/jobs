@@ -33,6 +33,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
+    #[\Override]
     public static function from(OptionsInterface $options): self
     {
         $self = new self('default', $options->getDelay(), $options->getPriority(), $options->getAutoAck());
@@ -108,6 +109,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
     /**
      * @return non-empty-string
      */
+    #[\Override]
     public function getTopic(): string
     {
         \assert($this->topic !== '', 'Precondition [topic !== ""] failed');
@@ -115,21 +117,25 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return $this->topic;
     }
 
+    #[\Override]
     public function getMetadata(): string
     {
         return $this->metadata;
     }
 
+    #[\Override]
     public function getOffset(): int
     {
         return $this->offset;
     }
 
+    #[\Override]
     public function getPartition(): int
     {
         return $this->partition;
     }
 
+    #[\Override]
     public function merge(OptionsInterface $options): OptionsInterface
     {
         /** @var KafkaOptions $self */
@@ -154,6 +160,7 @@ final class KafkaOptions extends Options implements KafkaOptionsInterface
         return $self;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [

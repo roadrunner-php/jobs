@@ -4,100 +4,23 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task\Factory;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\Exception\ReceivedTaskException;
+use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
-use Spiral\RoadRunner\Jobs\Serializer\JsonSerializer;
-use Spiral\RoadRunner\Jobs\Serializer\SerializerInterface;
 use Spiral\RoadRunner\Jobs\Task\Factory\ReceivedTaskFactory;
 use Spiral\RoadRunner\Jobs\Task\KafkaReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Expect;
+use Testo\Test;
 
-use Traversable;
-
-use function json_encode;
-
-final class ReceivedTaskFactoryTest extends TestCase
+#[Test]
+final class ReceivedTaskFactoryTest
 {
-
-    public function testEmptyHeader(): void
-    {
-        $this->expectException(ReceivedTaskException::class);
-        $this->expectExceptionMessage('Task payload does not have a valid header.');
-
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
-        $factory->create(new Payload(null));
-    }
-
-    public function testEmptyBody(): void
-    {
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
-        $task = $factory->create(new Payload(
-            null,
-            \json_encode([
-                'id' => 'job-id',
-                'queue' => 'job-queue',
-                'driver' => 'memory',
-                'pipeline' => 'job-pipeline',
-                'job' => 'job-name',
-                'headers' => ['foo' => 'bar'],
-            ])
-        ));
-
-        $this->assertSame('', $task->getPayload());
-    }
-
-    /**
-     * @dataProvider payloadsDataProvider
-     */
-    public function testCreate(Payload $payload, string $expectedTaskClass, Driver $expectedDriver): void
-    {
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
-
-        $task = $factory->create($payload);
-
-        $this->assertInstanceOf($expectedTaskClass, $task);
-        $this->assertSame($expectedDriver, $task->getDriver());
-
-        $this->assertSame('job-id', $task->getId());
-        $this->assertSame('job-pipeline', $task->getPipeline());
-        $this->assertSame('job-queue', $task->getQueue());
-        $this->assertSame('job-name', $task->getName());
-    }
-
-    public function testKafkaReceivedTaskShouldReceiveCorrectParams(): void
-    {
-        $factory = new ReceivedTaskFactory($this->createMock(WorkerInterface::class));
-
-        $task = $factory->create(
-            new Payload(
-                json_encode(['foo' => 'bar']),
-                json_encode([
-                    'id' => 'job-id',
-                    'queue' => 'job-queue',
-                    'pipeline' => 'job-pipeline',
-                    'job' => 'job-name',
-                    'partition' => 3,
-                    'offset' => 5,
-                    'headers' => ['foo' => 'bar'],
-                    'driver' => Driver::Kafka->value,
-                ])
-            ),
-        );
-
-        $this->assertInstanceOf(KafkaReceivedTask::class, $task);
-
-        $this->assertSame('job-id', $task->getId());
-        $this->assertSame('job-pipeline', $task->getPipeline());
-        $this->assertSame('job-queue', $task->getQueue());
-        $this->assertSame('job-name', $task->getName());
-        $this->assertSame(3, $task->getPartition());
-        $this->assertSame(5, $task->getOffset());
-    }
-
-    public static function payloadsDataProvider(): Traversable
+    public static function payloadsDataProvider(): \Traversable
     {
         foreach (Driver::cases() as $driver) {
             if ($driver === Driver::Kafka) {
@@ -106,15 +29,15 @@ final class ReceivedTaskFactoryTest extends TestCase
 
             yield $driver->value => [
                 new Payload(
-                    json_encode(['foo' => 'bar']),
-                    json_encode([
+                    \json_encode(['foo' => 'bar']),
+                    \json_encode([
                         'id' => 'job-id',
                         'queue' => 'job-queue',
                         'pipeline' => 'job-pipeline',
                         'job' => 'job-name',
                         'headers' => ['foo' => 'bar'],
                         'driver' => $driver->value,
-                    ])
+                    ]),
                 ),
                 ReceivedTask::class,
                 $driver,
@@ -124,14 +47,14 @@ final class ReceivedTaskFactoryTest extends TestCase
         // without driver, for backward compatibility
         yield 'without driver' => [
             new Payload(
-                json_encode(['foo' => 'bar']),
-                json_encode([
+                \json_encode(['foo' => 'bar']),
+                \json_encode([
                     'id' => 'job-id',
                     'queue' => 'job-queue',
                     'pipeline' => 'job-pipeline',
                     'job' => 'job-name',
                     'headers' => ['foo' => 'bar'],
-                ])
+                ]),
             ),
             ReceivedTask::class,
             Driver::Unknown,
@@ -140,8 +63,8 @@ final class ReceivedTaskFactoryTest extends TestCase
 
         yield 'kafka' => [
             new Payload(
-                json_encode(['foo' => 'bar']),
-                json_encode([
+                \json_encode(['foo' => 'bar']),
+                \json_encode([
                     'id' => 'job-id',
                     'queue' => 'job-queue',
                     'pipeline' => 'job-pipeline',
@@ -151,10 +74,90 @@ final class ReceivedTaskFactoryTest extends TestCase
                     'offset' => 5,
                     'headers' => ['foo' => 'bar'],
                     'driver' => Driver::Kafka->value,
-                ])
+                ]),
             ),
             KafkaReceivedTask::class,
             Driver::Kafka,
         ];
+    }
+
+    public function testEmptyHeader(): void
+    {
+        Expect::exception(ReceivedTaskException::class)->withMessageContaining('Task payload does not have a valid header.');
+
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
+        $factory->create(new Payload(null));
+    }
+
+    public function testMalformedHeader(): void
+    {
+        Expect::exception(SerializationException::class);
+
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
+        $factory->create(new Payload(null, '{"id":'));
+    }
+
+    public function testEmptyBody(): void
+    {
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
+        $task = $factory->create(new Payload(
+            null,
+            \json_encode([
+                'id' => 'job-id',
+                'queue' => 'job-queue',
+                'driver' => 'memory',
+                'pipeline' => 'job-pipeline',
+                'job' => 'job-name',
+                'headers' => ['foo' => 'bar'],
+            ]),
+        ));
+
+        Assert::same($task->getPayload(), '');
+    }
+
+    #[DataProvider('payloadsDataProvider')]
+    public function testCreate(Payload $payload, string $expectedTaskClass, Driver $expectedDriver): void
+    {
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
+
+        $task = $factory->create($payload);
+
+        Assert::instanceOf($task, $expectedTaskClass);
+        Assert::same($task->getDriver(), $expectedDriver);
+
+        Assert::same($task->getId(), 'job-id');
+        Assert::same($task->getPipeline(), 'job-pipeline');
+        Assert::same($task->getQueue(), 'job-queue');
+        Assert::same($task->getName(), 'job-name');
+    }
+
+    public function testKafkaReceivedTaskShouldReceiveCorrectParams(): void
+    {
+        $factory = new ReceivedTaskFactory(\Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing());
+
+        $task = $factory->create(
+            new Payload(
+                \json_encode(['foo' => 'bar']),
+                \json_encode([
+                    'id' => 'job-id',
+                    'queue' => 'job-queue',
+                    'pipeline' => 'job-pipeline',
+                    'job' => 'job-name',
+                    'partition' => 3,
+                    'offset' => 5,
+                    'headers' => ['foo' => 'bar'],
+                    'driver' => Driver::Kafka->value,
+                ]),
+            ),
+        );
+
+        Assert::instanceOf($task, KafkaReceivedTask::class);
+
+        Assert::same($task->getId(), 'job-id');
+        Assert::same($task->getPipeline(), 'job-pipeline');
+        Assert::same($task->getQueue(), 'job-queue');
+        Assert::same($task->getName(), 'job-name');
+        Assert::same($task->getPartition(), 3);
+        Assert::same($task->getOffset(), 5);
     }
 }

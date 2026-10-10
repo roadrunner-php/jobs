@@ -38,8 +38,8 @@ final class Consumer implements ConsumerInterface
     private readonly ReceivedTaskFactoryInterface $receivedTaskFactory;
 
     public function __construct(
-        WorkerInterface $worker = null,
-        ReceivedTaskFactoryInterface $receivedTaskFactory = null,
+        ?WorkerInterface $worker = null,
+        ?ReceivedTaskFactoryInterface $receivedTaskFactory = null,
     ) {
         $this->worker = $worker ?? Worker::create();
         $this->receivedTaskFactory = $receivedTaskFactory ?? new ReceivedTaskFactory($this->worker);
@@ -50,6 +50,7 @@ final class Consumer implements ConsumerInterface
      * @throws SerializationException
      * @psalm-suppress ArgumentTypeCoercion
      */
+    #[\Override]
     public function waitTask(): ?ReceivedTaskInterface
     {
         $payload = $this->worker->waitPayload();

@@ -5,67 +5,70 @@ declare(strict_types=1);
 namespace Spiral\RoadRunner\Jobs\Tests\Unit;
 
 use Spiral\RoadRunner\Jobs\Options;
+use Testo\Assert;
+use Testo\Test;
 
-class OptionsTest extends BaseTestCase
+#[Test]
+final class OptionsTest extends BaseTestCase
 {
     public function testDelay(): void
     {
         $options = new Options(
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
-        $this->assertSame($expected, $options->getDelay());
+        Assert::same($options->getDelay(), $expected);
     }
 
     public function testDelayImmutability(): void
     {
         $original = new Options(
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
-        $this->assertSame($expected, $original->getDelay());
+        Assert::same($original->getDelay(), $expected);
 
         $mutable = $original->withDelay($expected * 2);
 
-        $this->assertSame($expected, $original->getDelay());
-        $this->assertSame($expected * 2, $mutable->getDelay());
+        Assert::same($original->getDelay(), $expected);
+        Assert::same($mutable->getDelay(), $expected * 2);
     }
 
     public function testDelayCreationFromAnotherOne(): void
     {
         $copy = Options::from(
             $original = new Options(
-                $delay = \random_int(0, \PHP_INT_MAX)
+                $delay = \random_int(0, \PHP_INT_MAX),
             ),
         );
 
-        $this->assertNotSame($original, $copy);
+        Assert::notSame($copy, $original);
 
-        $this->assertSame($delay, $original->delay);
-        $this->assertSame($original->delay, $copy->delay);
+        Assert::same($original->delay, $delay);
+        Assert::same($copy->delay, $original->delay);
     }
 
     public function testDelayMergingWithDefaults(): void
     {
         $original = new Options(
-            $delay = \random_int(0, \PHP_INT_MAX)
+            $delay = \random_int(0, \PHP_INT_MAX),
         );
 
-        $this->assertSame($delay, $original->merge(new Options())->getDelay());
-        $this->assertSame($delay, (new Options())->merge($original)->getDelay());
+        Assert::same($original->merge(new Options())->getDelay(), $delay);
+        Assert::same((new Options())->merge($original)->getDelay(), $delay);
     }
 
     public function testDelayMergingByNewestValue(): void
     {
         $defaults = new Options(
-            $delay = 0xDEAD_BEEF
+            $delay = 0xDEAD_BEEF,
         );
 
         $modified = new Options(
             $delay * 2,
         );
 
-        $this->assertSame($modified->getDelay(), $defaults->merge($modified)->getDelay());
+        Assert::same($defaults->merge($modified)->getDelay(), $modified->getDelay());
     }
 
     public function testAutoAck(): void
@@ -73,10 +76,10 @@ class OptionsTest extends BaseTestCase
         $options = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            $expected = true
+            $expected = true,
         );
 
-        $this->assertSame($expected, $options->getAutoAck());
+        Assert::same($options->getAutoAck(), $expected);
     }
 
     public function testAutoAckImmutability(): void
@@ -84,15 +87,15 @@ class OptionsTest extends BaseTestCase
         $original = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            $expected = true
+            $expected = true,
         );
 
-        $this->assertSame($expected, $original->getAutoAck());
+        Assert::same($original->getAutoAck(), $expected);
 
         $mutable = $original->withAutoAck(false);
 
-        $this->assertSame(true, $original->getAutoAck());
-        $this->assertSame(false, $mutable->getAutoAck());
+        Assert::same($original->getAutoAck(), true);
+        Assert::same($mutable->getAutoAck(), false);
     }
 
     public function testAutoAckCreationFromAnotherOne(): void
@@ -101,14 +104,14 @@ class OptionsTest extends BaseTestCase
             $original = new Options(
                 Options::DEFAULT_DELAY,
                 Options::DEFAULT_PRIORITY,
-                $autoAck = true
+                $autoAck = true,
             ),
         );
 
-        $this->assertNotSame($original, $copy);
+        Assert::notSame($copy, $original);
 
-        $this->assertSame($autoAck, $original->autoAck);
-        $this->assertSame($original->autoAck, $copy->autoAck);
+        Assert::same($original->autoAck, $autoAck);
+        Assert::same($copy->autoAck, $original->autoAck);
     }
 
     public function testAutoAckMergingWithDefaults(): void
@@ -116,11 +119,11 @@ class OptionsTest extends BaseTestCase
         $original = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            $autoAck = true
+            $autoAck = true,
         );
 
-        $this->assertSame($autoAck, $original->merge(new Options())->getAutoAck());
-        $this->assertSame($autoAck, (new Options())->merge($original)->getAutoAck());
+        Assert::same($original->merge(new Options())->getAutoAck(), $autoAck);
+        Assert::same((new Options())->merge($original)->getAutoAck(), $autoAck);
     }
 
     public function testAutoAckMergingByNewestValue(): void
@@ -128,41 +131,41 @@ class OptionsTest extends BaseTestCase
         $defaults = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            false
+            false,
         );
 
         $modified = new Options(
             Options::DEFAULT_DELAY,
             Options::DEFAULT_PRIORITY,
-            true
+            true,
         );
 
-        $this->assertSame(true, $defaults->merge($modified)->getAutoAck());
+        Assert::same($defaults->merge($modified)->getAutoAck(), true);
     }
 
     public function testPriority(): void
     {
         $options = new Options(
             Options::DEFAULT_DELAY,
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
-        $this->assertSame($expected, $options->getPriority());
+        Assert::same($options->getPriority(), $expected);
     }
 
     public function testPriorityImmutability(): void
     {
         $original = new Options(
             Options::DEFAULT_DELAY,
-            $expected = 0xDEAD_BEEF
+            $expected = 0xDEAD_BEEF,
         );
 
-        $this->assertSame($expected, $original->getPriority());
+        Assert::same($original->getPriority(), $expected);
 
         $mutable = $original->withPriority($expected * 2);
 
-        $this->assertSame($expected, $original->getPriority());
-        $this->assertSame($expected * 2, $mutable->getPriority());
+        Assert::same($original->getPriority(), $expected);
+        Assert::same($mutable->getPriority(), $expected * 2);
     }
 
     public function testPriorityCreationFromAnotherOne(): void
@@ -170,32 +173,32 @@ class OptionsTest extends BaseTestCase
         $copy = Options::from(
             $original = new Options(
                 Options::DEFAULT_DELAY,
-                $priority = \random_int(0, \PHP_INT_MAX)
+                $priority = \random_int(0, \PHP_INT_MAX),
             ),
         );
 
-        $this->assertNotSame($original, $copy);
+        Assert::notSame($copy, $original);
 
-        $this->assertSame($priority, $original->priority);
-        $this->assertSame($original->priority, $copy->priority);
+        Assert::same($original->priority, $priority);
+        Assert::same($copy->priority, $original->priority);
     }
 
     public function testPriorityMergingWithDefaults(): void
     {
         $original = new Options(
             Options::DEFAULT_DELAY,
-            $priority = \random_int(0, \PHP_INT_MAX)
+            $priority = \random_int(0, \PHP_INT_MAX),
         );
 
-        $this->assertSame($priority, $original->merge(new Options())->getPriority());
-        $this->assertSame($priority, (new Options())->merge($original)->getPriority());
+        Assert::same($original->merge(new Options())->getPriority(), $priority);
+        Assert::same((new Options())->merge($original)->getPriority(), $priority);
     }
 
     public function testPriorityMergingByNewestValue(): void
     {
         $defaults = new Options(
             Options::DEFAULT_DELAY,
-            $priority = 0xDEAD_BEEF
+            $priority = 0xDEAD_BEEF,
         );
 
         $modified = new Options(
@@ -203,7 +206,7 @@ class OptionsTest extends BaseTestCase
             $priority * 2,
         );
 
-        $this->assertSame($modified->getPriority(), $defaults->merge($modified)->getPriority());
+        Assert::same($defaults->merge($modified)->getPriority(), $modified->getPriority());
     }
 
     public function testMergingWithNull(): void
@@ -211,26 +214,26 @@ class OptionsTest extends BaseTestCase
         $expected = new Options();
         $actual = $expected->mergeOptional(null);
 
-        $this->assertSame($expected, $actual);
+        Assert::same($actual, $expected);
     }
 
     public function testMergingWithNonNull(): void
     {
         $source = new Options(
-            0xDEAD_BEEF
+            0xDEAD_BEEF,
         );
 
         $actual = $source->mergeOptional(
             $modified = new Options(
-                0xDEAD_BEEF * 2
+                0xDEAD_BEEF * 2,
             ),
         );
 
         // An "$actual" is new object
-        $this->assertNotSame($actual, $source);
-        $this->assertNotSame($actual, $modified);
+        Assert::notSame($source, $actual);
+        Assert::notSame($modified, $actual);
 
         // Last options have been merged
-        $this->assertSame($modified->getDelay(), $actual->getDelay());
+        Assert::same($actual->getDelay(), $modified->getDelay());
     }
 }

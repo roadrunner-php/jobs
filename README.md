@@ -1,39 +1,48 @@
-<a href="https://roadrunner.dev" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/roadrunner-server/.github/assets/8040338/e6bde856-4ec6-4a52-bd5b-bfe78736c1ff">
-    <img align="center" src="https://github.com/roadrunner-server/.github/assets/8040338/040fb694-1dd3-4865-9d29-8e0748c2c8b8">
-  </picture>
-</a>
+<p align="center">
+    <a href="https://roadrunner.dev"><picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/roadrunner-server/.github/assets/8040338/e6bde856-4ec6-4a52-bd5b-bfe78736c1ff">
+        <img alt="RoadRunner" src="https://github.com/roadrunner-server/.github/assets/8040338/040fb694-1dd3-4865-9d29-8e0748c2c8b8" style="width: 6in; display: block">
+    </picture></a>
+</p>
 
-# RoadRunner Jobs Plugin
+<p align="center">PHP client for RoadRunner Jobs (Queues) plugin</p>
 
-[![PHP Version Require](https://poser.pugx.org/spiral/roadrunner-jobs/require/php)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner-jobs/v/stable)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![phpunit](https://github.com/spiral/roadrunner-jobs/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
-[![psalm](https://github.com/spiral/roadrunner-jobs/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/roadrunner-jobs/actions)
-[![Codecov](https://codecov.io/gh/roadrunner-php/jobs/branch/4.x/graph/badge.svg)](https://codecov.io/gh/roadrunner-php/jobs/)
-[![Total Downloads](https://poser.pugx.org/spiral/roadrunner-jobs/downloads)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![StyleCI](https://github.styleci.io/repos/388772135/shield?branch=master)](https://github.styleci.io/repos/388772135?branch=master)
-<a href="https://discord.gg/spiralphp"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
+<div align="center">
 
-This repository contains the codebase PHP bridge using RoadRunner Jobs plugin.
+[![Documentation](https://img.shields.io/badge/Documentation-blue?style=for-the-badge&logo=gitbook&logoColor=white)](https://docs.roadrunner.dev/docs/queues-and-jobs/overview-queues)
+[![Sponsor](https://img.shields.io/static/v1?style=for-the-badge&label=&message=Sponsor&logo=githubsponsors&logoColor=white&color=%23EA4AAA)](https://github.com/sponsors/roadrunner-server)
 
-## Installation
+[![Psalm Level](https://shepherd.dev/github/roadrunner-php/jobs/level.svg)](https://shepherd.dev/github/roadrunner-php/jobs)
+[![Type Coverage](https://shepherd.dev/github/roadrunner-php/jobs/coverage.svg)](https://shepherd.dev/github/roadrunner-php/jobs)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Froadrunner-php%2Fjobs%2F4.x)](https://dashboard.stryker-mutator.io/reports/github.com/roadrunner-php/jobs/4.x)
 
-To install application server and Jobs codebase
+</div>
+
+<br />
+
+This package lets PHP applications work with the [RoadRunner Jobs plugin](https://docs.roadrunner.dev/docs/queues-and-jobs/overview-queues): create and manage pipelines, push tasks to queues and consume them in RoadRunner workers.
+
+## Get Started
+
+### Installation
 
 ```bash
-composer require spiral/roadrunner-jobs
+composer require roadrunner/jobs
 ```
+
+[![PHP](https://img.shields.io/packagist/php-v/roadrunner/jobs.svg?style=flat-square&logo=php)](https://packagist.org/packages/roadrunner/jobs)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/roadrunner/jobs.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/roadrunner/jobs)
+[![License](https://img.shields.io/packagist/l/roadrunner/jobs.svg?style=flat-square)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/roadrunner/jobs.svg?style=flat-square)](https://packagist.org/packages/roadrunner/jobs/stats)
 
 You can use the convenient installer to download the latest available compatible version of RoadRunner assembly:
 
 ```bash
-composer require spiral/roadrunner-cli --dev
+composer require roadrunner/cli --dev
 vendor/bin/rr get
 ```
 
-## Configuration
+### Configuration
 
 First you need to add at least one jobs adapter to your RoadRunner configuration. For example, such a configuration would be quite feasible to run:
 
@@ -56,15 +65,13 @@ jobs:
 ```
 
 > **Note**
-> Read more about all available drivers on the [documentation](https://docs.roadrunner.dev/queues-and-jobs/overview-queues) page.
+> Read more about all available drivers on the [documentation](https://docs.roadrunner.dev/docs/queues-and-jobs/overview-queues) page.
 
 After starting the server with this configuration, one driver named `local` will be available to you.
 
-## Usage
+### Pushing Tasks
 
-### Producer
-
-The following code will allow writing and reading an arbitrary value from the RoadRunner server.
+The following code pushes a task to the `local` pipeline via RPC:
 
 ```php
 <?php
@@ -81,17 +88,46 @@ $jobs = new Jobs(RPC::create('tcp://127.0.0.1:6001'));
 $queue = $jobs->connect('local');
 
 // Create task prototype with default headers
-$task = $queue->create('ping', '{"site": "https://example.com"}') // Create task with "echo" name
-    ->withHeader('attempts', 4) // Number of attempts to execute the task
-    ->withHeader('retry-delay', 10); // Delay between attempts
+$task = $queue->create('ping', '{"site": "https://example.com"}') // Create task with "ping" name
+    ->withHeader('attempts', '4') // Number of attempts to execute the task
+    ->withHeader('retry-delay', '10'); // Delay between attempts
 
-// Push "echo" task to the queue
+// Push "ping" task to the queue
 $task = $queue->dispatch($task);
 
 var_dump($task->getId() . ' has been queued');
 ```
 
-### Consumer
+### Consuming Tasks
+
+The consumer runs inside a RoadRunner worker (`consumer.php` from the configuration above), receives tasks and acknowledges them:
+
+```php
+<?php
+
+use Spiral\RoadRunner\Jobs\Consumer;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$consumer = new Consumer();
+
+while ($task = $consumer->waitTask()) {
+    try {
+        $name = $task->getName(); // "ping"
+        $queue = $task->getQueue(); // "local"
+        $driver = $task->getDriver(); // Driver::Memory
+        $payload = $task->getPayload(); // {"site": "https://example.com"}
+
+        // Process task
+
+        $task->ack();
+    } catch (\Throwable $e) {
+        $task->requeue($e);
+    }
+}
+```
+
+## Task Acknowledgement
 
 The Consumer processes tasks from RoadRunner server and responds based on the processing outcome:
 
@@ -122,38 +158,6 @@ the `withDelay` method and pass the desired value before invoking the `nack` or 
 $task->withDelay(10)->requeue($exception);
 ```
 
-```php
-<?php
-
-use Spiral\RoadRunner\Jobs\Consumer;
-use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
-
-require __DIR__ . '/vendor/autoload.php';
-
-$consumer = new Spiral\RoadRunner\Jobs\Consumer();
-
-/** @var Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface $task */
-while ($task = $consumer->waitTask()) {
-    try {
-        $name = $task->getName(); // "ping"
-        $queue = $task->getQueue(); // "local"
-        $driver = $task->getDriver(); // "memory"
-        $payload = $task->getPayload(); // {"site": "https://example.com"}
-    
-        // Process task
-
-        $task->ack();
-    } catch (\Throwable $e) {
-        $task->requeue($e);
-    }
-}
-```
-
 <a href="https://spiral.dev/">
 <img src="https://user-images.githubusercontent.com/773481/220979012-e67b74b5-3db1-41b7-bdb0-8a042587dedc.jpg" alt="try Spiral Framework" />
 </a>
-
-## License
-
-The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained
-by [Spiral Scout](https://spiralscout.com).

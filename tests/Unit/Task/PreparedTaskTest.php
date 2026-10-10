@@ -4,79 +4,98 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\RoadRunner\Jobs\KafkaOptions;
 use Spiral\RoadRunner\Jobs\Options;
 use Spiral\RoadRunner\Jobs\OptionsInterface;
 use Spiral\RoadRunner\Jobs\Task\PreparedTask;
-use Traversable;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Test;
 
-final class PreparedTaskTest extends TestCase
+#[Test]
+final class PreparedTaskTest
 {
-    /** @dataProvider optionsDataProvider */
+    public static function optionsDataProvider(): \Traversable
+    {
+        yield [new Options(), null];
+        yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];
+        yield [new KafkaOptions('default'), new KafkaOptions('default')];
+        yield [(new KafkaOptions('default'))->withDelay(10), (new KafkaOptions('default'))->withDelay(10)];
+    }
+
+    #[DataProvider('optionsDataProvider')]
     public function testGetOptions(OptionsInterface $expected, ?OptionsInterface $options = null): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar', options: $options);
 
-        $this->assertEquals($expected, $task->getOptions());
+        Assert::equals($task->getOptions(), $expected);
     }
 
     public function testWithOptions(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar');
 
-        $this->assertSame(5, $task->withOptions(new Options(5))->getDelay());
-        $this->assertSame('changed', $task->withOptions(new KafkaOptions('changed'))->getOptions()->getTopic());
+        Assert::same($task->withOptions(new Options(5))->getDelay(), 5);
+        Assert::same($task->withOptions(new KafkaOptions('changed'))->getOptions()->getTopic(), 'changed');
     }
 
     public function testDelay(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar');
 
-        $this->assertEquals(0, $task->getDelay());
+        Assert::equals($task->getDelay(), 0);
 
         $task = $task->withDelay(100);
-        $this->assertEquals(100, $task->getDelay());
+        Assert::equals($task->getDelay(), 100);
     }
 
     public function testPriority(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar');
 
-        $this->assertEquals(0, $task->getPriority());
+        Assert::equals($task->getPriority(), 0);
 
         $task = $task->withPriority(100);
-        $this->assertEquals(100, $task->getPriority());
+        Assert::equals($task->getPriority(), 100);
     }
 
     public function testCreatingTaskWithHeaders(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar', options: null, headers: ['foo' => ['bar']]);
 
-        $this->assertSame(['foo' => ['bar']], $task->getHeaders());
+        Assert::same($task->getHeaders(), ['foo' => ['bar']]);
     }
 
     public function testCreatingTaskWithoutHeaders(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar');
 
-        $this->assertSame([], $task->getHeaders());
+        Assert::same($task->getHeaders(), []);
     }
 
     public function testAutoAck(): void
     {
         $task = new PreparedTask(name: 'foo', payload: 'bar');
-        $this->assertFalse($task->getAutoAck());
+        Assert::false($task->getAutoAck());
 
         $task = $task->withAutoAck(true);
-        $this->assertTrue($task->getAutoAck());
+        Assert::true($task->getAutoAck());
     }
 
-    public static function optionsDataProvider(): Traversable
+    public function testImmutableOptionsAreLeftUntouched(): void
     {
-        yield [new Options(), null];
-        yield [(new Options())->withDelay(5), (new Options())->withDelay(5)];
-        yield [new KafkaOptions('default'), new KafkaOptions('default')];
-        yield [(new KafkaOptions('default'))->withDelay(10), (new KafkaOptions('default'))->withDelay(10)];
+        $options = \Mockery::mock(OptionsInterface::class);
+        $options->shouldReceive('getDelay')->andReturn(5);
+        $options->shouldReceive('getPriority')->andReturn(2);
+        $options->shouldReceive('getAutoAck')->andReturn(true);
+
+        $task = new PreparedTask(name: 'foo', payload: 'bar', options: $options);
+
+        Assert::same($task->withDelay(100), $task);
+        Assert::same($task->withPriority(100), $task);
+        Assert::same($task->withAutoAck(false), $task);
+        Assert::same($task->getDelay(), 5);
+        Assert::same($task->getPriority(), 2);
+        Assert::true($task->getAutoAck());
     }
 }

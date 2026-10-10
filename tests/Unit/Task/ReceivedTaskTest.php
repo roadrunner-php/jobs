@@ -4,25 +4,37 @@ declare(strict_types=1);
 
 namespace Spiral\RoadRunner\Jobs\Tests\Unit\Task;
 
-use Generator;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Mockery\MockInterface;
+use Spiral\RoadRunner\Jobs\Exception\JobsException;
+use Spiral\RoadRunner\Jobs\Exception\SerializationException;
 use Spiral\RoadRunner\Jobs\Queue\Driver;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTask;
 use Spiral\RoadRunner\Jobs\Task\ReceivedTaskInterface;
 use Spiral\RoadRunner\Jobs\Task\Type;
 use Spiral\RoadRunner\Payload;
 use Spiral\RoadRunner\WorkerInterface;
+use Testo\Assert;
+use Testo\Data\DataProvider;
+use Testo\Lifecycle\BeforeTest;
+use Testo\Test;
 
-final class ReceivedTaskTest extends TestCase
+#[Test]
+final class ReceivedTaskTest
 {
-    private MockObject|WorkerInterface $worker;
+    private MockInterface|WorkerInterface $worker;
+
+    public static function provideFailData(): \Generator
+    {
+        yield 'default' => ['Some error message', false, null, []];
+        yield 'requeue' => ['Some error message', true, null, []];
+        yield 'delay' => ['Some error message', false, 10, []];
+        yield 'headers' => ['Some error message', false, null, ['foo' => 'bar']];
+    }
 
     public function testGetsPipeline(): void
     {
         $task = $this->createTask(pipeline: 'custom');
-        $this->assertSame('custom', $task->getPipeline());
+        Assert::same($task->getPipeline(), 'custom');
     }
 
     public function createTask(
@@ -35,7 +47,14 @@ final class ReceivedTaskTest extends TestCase
         array $headers = [],
     ): ReceivedTaskInterface {
         return new ReceivedTask(
-            $this->worker, $id, $driver, $pipeline, $name, $queue, $payload, $headers
+            $this->worker,
+            $id,
+            $driver,
+            $pipeline,
+            $name,
+            $queue,
+            $payload,
+            $headers,
         );
     }
 
@@ -43,74 +62,58 @@ final class ReceivedTaskTest extends TestCase
     {
         $task = $this->createTask(queue: 'broker-queue-name');
 
-        $this->assertEquals('broker-queue-name', $task->getQueue());
+        Assert::equals($task->getQueue(), 'broker-queue-name');
     }
 
     public function testGetsDriver(): void
     {
         $task = $this->createTask(driver: Driver::Kafka);
-        $this->assertEquals(Driver::Kafka, $task->getDriver());
+        Assert::equals($task->getDriver(), Driver::Kafka);
 
         $task = $this->createTask(driver: Driver::Unknown);
-        $this->assertEquals(Driver::Unknown, $task->getDriver());
+        Assert::equals($task->getDriver(), Driver::Unknown);
     }
 
     public function testComplete(): void
     {
         $task = $this->createTask();
 
-        $this->assertFalse($task->isCompleted());
-        $this->assertFalse($task->isFails());
-        $this->assertFalse($task->isSuccessful());
+        Assert::false($task->isCompleted());
+        Assert::false($task->isFails());
+        Assert::false($task->isSuccessful());
 
-        $this->worker->expects($this->once())
-            ->method('respond')
-            ->with(
-                $this->callback(function (Payload $payload) {
-                    $this->assertEquals('{"type":0,"data":[]}', $payload->body);
+        $this->worker->shouldReceive('respond')->once()->with(\Mockery::on(function (Payload $payload) {
+            Assert::equals($payload->body, '{"type":0,"data":[]}');
 
-                    return true;
-                }),
-            );
+            return true;
+        }), \Mockery::andAnyOtherArgs());
 
         $task->complete();
 
-        $this->assertTrue($task->isCompleted());
-        $this->assertTrue($task->isSuccessful());
-        $this->assertFalse($task->isFails());
+        Assert::true($task->isCompleted());
+        Assert::true($task->isSuccessful());
+        Assert::false($task->isFails());
     }
 
     public function testAck(): void
     {
         $task = $this->createTask();
 
-        $this->assertFalse($task->isCompleted());
-        $this->assertFalse($task->isFails());
-        $this->assertFalse($task->isSuccessful());
+        Assert::false($task->isCompleted());
+        Assert::false($task->isFails());
+        Assert::false($task->isSuccessful());
 
-        $this->worker->expects($this->once())
-            ->method('respond')
-            ->with(
-                $this->callback(function (Payload $payload) {
-                    $this->assertEquals('{"type":2,"data":[]}', $payload->body);
+        $this->worker->shouldReceive('respond')->once()->with(\Mockery::on(function (Payload $payload) {
+            Assert::equals($payload->body, '{"type":2,"data":[]}');
 
-                    return true;
-                }),
-            );
+            return true;
+        }), \Mockery::andAnyOtherArgs());
 
         $task->ack();
 
-        $this->assertTrue($task->isCompleted());
-        $this->assertTrue($task->isSuccessful());
-        $this->assertFalse($task->isFails());
-    }
-
-    public static function provideFailData(): Generator
-    {
-        yield 'default' => ['Some error message', false, null, []];
-        yield 'requeue' => ['Some error message', true, null, []];
-        yield 'delay' => ['Some error message', false, 10, []];
-        yield 'headers' => ['Some error message', false, null, ['foo' => 'bar']];
+        Assert::true($task->isCompleted());
+        Assert::true($task->isSuccessful());
+        Assert::false($task->isFails());
     }
 
     #[DataProvider('provideFailData')]
@@ -122,39 +125,31 @@ final class ReceivedTaskTest extends TestCase
             $task = $task->withDelay($delay);
         }
 
-        $this->assertFalse($task->isCompleted());
-        $this->assertFalse($task->isFails());
-        $this->assertFalse($task->isSuccessful());
+        Assert::false($task->isCompleted());
+        Assert::false($task->isFails());
+        Assert::false($task->isSuccessful());
 
-        $this->worker->expects($this->once())
-            ->method('respond')
-            ->with(
-                $this->callback(function (Payload $payload) use ($delay, $redelivery, $error) {
-                    $result = [
-                        'type' => Type::NACK,
-                        'data' => [
-                            'message' => $error,
-                            'redelivery' => $redelivery,
-                            'delay_seconds' => (int) $delay,
-                        ],
-                    ];
+        $this->worker->shouldReceive('respond')->once()->with(\Mockery::on(function (Payload $payload) use ($delay, $redelivery, $error) {
+            $result = [
+                'type' => Type::NACK,
+                'data' => [
+                    'message' => $error,
+                    'requeue' => $redelivery,
+                    'delay_seconds' => (int) $delay,
+                ],
+            ];
 
-                    $this->assertEquals(
-                        \json_encode($result),
-                        $payload->body,
-                    );
+            Assert::equals($payload->body, \json_encode($result));
 
-                    return true;
-                }),
-            );
+            return true;
+        }), \Mockery::andAnyOtherArgs());
 
         $task->nack(message: $error, redelivery: $redelivery);
 
-        $this->assertTrue($task->isFails());
-        $this->assertFalse($task->isSuccessful());
-        $this->assertTrue($task->isCompleted());
+        Assert::true($task->isFails());
+        Assert::false($task->isSuccessful());
+        Assert::true($task->isCompleted());
     }
-
 
     #[DataProvider('provideFailData')]
     public function testRequeue(string $error, bool $requeue, int|null $delay, array $headers): void
@@ -170,37 +165,33 @@ final class ReceivedTaskTest extends TestCase
             $headers[$key] = [$value];
         }
 
-        $this->assertFalse($task->isCompleted());
-        $this->assertFalse($task->isFails());
-        $this->assertFalse($task->isSuccessful());
+        Assert::false($task->isCompleted());
+        Assert::false($task->isFails());
+        Assert::false($task->isSuccessful());
 
-        $this->worker->expects($this->once())
-            ->method('respond')
-            ->with(
-                $this->callback(function (Payload $payload) use ($delay, $error, $headers) {
-                    $result = [
-                        'type' => Type::REQUEUE,
-                        'data' => [
-                            'message' => $error,
-                            'delay_seconds' => (int) $delay,
-                        ],
-                    ];
+        $this->worker->shouldReceive('respond')->once()->with(\Mockery::on(function (Payload $payload) use ($delay, $error, $headers) {
+            $result = [
+                'type' => Type::REQUEUE,
+                'data' => [
+                    'message' => $error,
+                    'delay_seconds' => (int) $delay,
+                ],
+            ];
 
-                    if (!empty($headers)) {
-                        $result['data']['headers'] = $headers;
-                    }
+            if (!empty($headers)) {
+                $result['data']['headers'] = $headers;
+            }
 
-                    $this->assertEquals(\json_encode($result), $payload->body,);
+            Assert::equals($payload->body, \json_encode($result));
 
-                    return true;
-                }),
-            );
+            return true;
+        }), \Mockery::andAnyOtherArgs());
 
         $task->requeue(message: $error);
 
-        $this->assertTrue($task->isFails());
-        $this->assertFalse($task->isSuccessful());
-        $this->assertTrue($task->isCompleted());
+        Assert::true($task->isFails());
+        Assert::false($task->isSuccessful());
+        Assert::true($task->isCompleted());
     }
 
     #[DataProvider('provideFailData')]
@@ -217,47 +208,69 @@ final class ReceivedTaskTest extends TestCase
             $headers[$key] = [$value];
         }
 
-        $this->assertFalse($task->isCompleted());
-        $this->assertFalse($task->isFails());
-        $this->assertFalse($task->isSuccessful());
+        Assert::false($task->isCompleted());
+        Assert::false($task->isFails());
+        Assert::false($task->isSuccessful());
 
-        $this->worker->expects($this->once())
-            ->method('respond')
-            ->with(
-                $this->callback(function (Payload $payload) use ($delay, $requeue, $error, $headers) {
-                    $result = [
-                        'type' => Type::ERROR,
-                        'data' => [
-                            'message' => $error,
-                            'requeue' => $requeue,
-                            'delay_seconds' => (int)$delay,
-                        ],
-                    ];
+        $this->worker->shouldReceive('respond')->once()->with(\Mockery::on(function (Payload $payload) use ($delay, $requeue, $error, $headers) {
+            $result = [
+                'type' => Type::ERROR,
+                'data' => [
+                    'message' => $error,
+                    'requeue' => $requeue,
+                    'delay_seconds' => (int) $delay,
+                ],
+            ];
 
-                    if (!empty($headers)) {
-                        $result['data']['headers'] = $headers;
-                    }
+            if (!empty($headers)) {
+                $result['data']['headers'] = $headers;
+            }
 
-                    $this->assertEquals(
-                        \json_encode($result),
-                        $payload->body,
-                    );
+            Assert::equals($payload->body, \json_encode($result));
 
-                    return true;
-                }),
-            );
+            return true;
+        }), \Mockery::andAnyOtherArgs());
 
         $task->fail(error: $error, requeue: $requeue);
 
-        $this->assertTrue($task->isFails());
-        $this->assertFalse($task->isSuccessful());
-        $this->assertTrue($task->isCompleted());
+        Assert::true($task->isFails());
+        Assert::false($task->isSuccessful());
+        Assert::true($task->isCompleted());
     }
 
+    public function testCompleteWrapsWorkerError(): void
+    {
+        $task = $this->createTask();
+        $this->worker->shouldReceive('respond')->andThrow(new \RuntimeException('Connection lost', 42));
+
+        try {
+            $task->complete();
+            Assert::fail('JobsException was not thrown');
+        } catch (JobsException $e) {
+            Assert::same($e->getMessage(), 'Connection lost');
+            Assert::same($e->getCode(), 42);
+        }
+
+        Assert::false($task->isCompleted());
+    }
+
+    public function testFailWithMessageThatCannotBeEncoded(): void
+    {
+        $task = $this->createTask();
+        $this->worker->shouldReceive('respond')->never();
+
+        try {
+            $task->fail("\xB1\x31");
+            Assert::fail('SerializationException was not thrown');
+        } catch (SerializationException) {
+        }
+
+        Assert::false($task->isCompleted());
+    }
+
+    #[BeforeTest]
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->worker = $this->createMock(WorkerInterface::class);
+        $this->worker = \Mockery::mock(WorkerInterface::class)->shouldIgnoreMissing();
     }
 }
