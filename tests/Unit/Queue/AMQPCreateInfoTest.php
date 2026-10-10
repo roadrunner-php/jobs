@@ -122,7 +122,6 @@ final class AMQPCreateInfoTest
             'requeue_on_fail' => true,
             'durable' => true,
             'exchange_durable' => true,
-            'consume_all' => true,
             'queue_headers' => [
                 'x-queue-type' => 'quorum',
             ],

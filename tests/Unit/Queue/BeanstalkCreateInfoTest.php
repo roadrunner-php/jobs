@@ -78,7 +78,6 @@ final class BeanstalkCreateInfoTest
             'tube_priority' => $tubePriority,
             'tube' => $tube,
             'reserve_timeout' => $reserveTimeout,
-            'consume_all' => $consumeAll,
         ];
 
         Assert::equals($beanstalkCreateInfo->toArray(), $expectedArray);
