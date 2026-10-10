@@ -27,18 +27,18 @@ This package lets PHP applications work with the [RoadRunner Jobs plugin](https:
 ### Installation
 
 ```bash
-composer require spiral/roadrunner-jobs
+composer require roadrunner/jobs
 ```
 
-[![PHP](https://img.shields.io/packagist/php-v/spiral/roadrunner-jobs.svg?style=flat-square&logo=php)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/spiral/roadrunner-jobs.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/spiral/roadrunner-jobs)
-[![License](https://img.shields.io/packagist/l/spiral/roadrunner-jobs.svg?style=flat-square)](LICENSE)
-[![Total Downloads](https://img.shields.io/packagist/dt/spiral/roadrunner-jobs.svg?style=flat-square)](https://packagist.org/packages/spiral/roadrunner-jobs/stats)
+[![PHP](https://img.shields.io/packagist/php-v/roadrunner/jobs.svg?style=flat-square&logo=php)](https://packagist.org/packages/roadrunner/jobs)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/roadrunner/jobs.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/roadrunner/jobs)
+[![License](https://img.shields.io/packagist/l/roadrunner/jobs.svg?style=flat-square)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/roadrunner/jobs.svg?style=flat-square)](https://packagist.org/packages/roadrunner/jobs/stats)
 
 You can use the convenient installer to download the latest available compatible version of RoadRunner assembly:
 
 ```bash
-composer require spiral/roadrunner-cli --dev
+composer require roadrunner/cli --dev
 vendor/bin/rr get
 ```
 
