@@ -61,8 +61,8 @@
         "ramsey/uuid": "^3 || ^4",
         "roadrunner/api-dto": "^2.1",
         "roadrunner/goridge": "^4.5",
-        "roadrunner/worker": "^3.8",
-        "spiral/roadrunner": "^3.0"
+        "roadrunner/roadrunner": "^3.0",
+        "roadrunner/worker": "^3.8"
     },
     "require-dev": {
         "google/protobuf": "^3.17 || ^4.0 || ^5.0",
